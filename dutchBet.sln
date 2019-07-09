@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dutchBet", "dutchBet\dutchBet.csproj", "{136EA763-DB93-480B-9A3C-A39BF69A471B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DutchBetTest", "DutchBetTest\DutchBetTest.csproj", "{93111C29-EB78-4DC3-94DE-D8AF485635DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{136EA763-DB93-480B-9A3C-A39BF69A471B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{136EA763-DB93-480B-9A3C-A39BF69A471B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{136EA763-DB93-480B-9A3C-A39BF69A471B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{136EA763-DB93-480B-9A3C-A39BF69A471B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93111C29-EB78-4DC3-94DE-D8AF485635DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93111C29-EB78-4DC3-94DE-D8AF485635DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93111C29-EB78-4DC3-94DE-D8AF485635DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93111C29-EB78-4DC3-94DE-D8AF485635DF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E5159533-51C4-4A91-9364-11B1A488496D}
+	EndGlobalSection
+EndGlobal
