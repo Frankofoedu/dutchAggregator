@@ -1,0 +1,105 @@
+﻿@model dutchBet.Models.MatchOddsBySite
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+<h2>Calculate</h2>
+
+@using (Html.BeginForm("Result", "Odds", FormMethod.Post))
+{
+    <div class="form-group">
+        <label>Teams</label>
+        @Html.EditorFor(m => m.Match)
+    </div>
+
+    <div class="container mt-2">
+        
+        <div class="row">
+            @for (int i = 0; i < 2; i++)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label>Site</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Site)
+                            </div>
+
+                            <div class="form-group">
+                                <label>1</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_1)
+                            </div>
+                            <div class="form-group">
+                                <label>X</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_X)
+                            </div>
+                            <div class="form-group">
+                                <label>2</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_2)
+                            </div>
+                            <div class="form-group">
+                                <label>1X</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_1X)
+                            </div>
+                            <div class="form-group">
+                                <label>12</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_12)
+                            </div>
+                            <div class="form-group">
+                                <label>X2</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_X2)
+                            </div>
+                            <div class="form-group">
+                                <label>Over 1.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Over1_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Under 1.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Under1_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Over 2.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Over2_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Under 2.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Under2_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Over 3.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Over3_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Under 3.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Under3_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Over 4.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Over4_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Under 4.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Under4_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Over 5.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Over5_5)
+                            </div>
+                            <div class="form-group">
+                                <label>Under 5.5</label>
+                                @Html.EditorFor(m => m.SiteAndOdds[i].Odd_Under5_5)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <input type="submit" value="Calculate" class="btn btn-primary" />
+}
