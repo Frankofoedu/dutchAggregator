@@ -13,7 +13,6 @@ namespace DutchBetTest
     class BetPawaOverview
     {
         public string League { get; set; }
-
         public List<BetPawaMatches> Matches { get; set; }
     }
 
