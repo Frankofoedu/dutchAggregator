@@ -47,13 +47,12 @@ namespace DutchBetTest
             //var v = Console.ReadLine();
             ChromeOptions opt = new ChromeOptions();
 
-            opt.AddArgument("headless");
+            opt.AddArgument("--headless");
 
-            ChromeDriverService service = ChromeDriverService.CreateDefaultService();
-            service.HideCommandPromptWindow = true;
+           
 
             var betOverview = new List<BetPawaOverview>();
-            using (var driver = new ChromeDriver())
+            using (var driver = new ChromeDriver())//opt))
             {
 
 
@@ -79,12 +78,12 @@ namespace DutchBetTest
 
                     //list of match showing win, draw and lose
                     var matches = driver.FindElements(By.CssSelector("div[class='events-container prematch']"));
-                   // var t = matches[0].FindElement(By.TagName("h3"));
-                   betOverview[i].Matches = GetMatches(matches);
-                   
+                    // var t = matches[0].FindElement(By.TagName("h3"));
+                    betOverview[i].Matches = GetMatches(matches);
+
                 }
 
-                
+
                 //*[@id="Popular-League-List"]/li[1]/a
                 Console.Write(x);
                 Console.Read();
