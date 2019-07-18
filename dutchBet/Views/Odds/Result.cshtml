@@ -1,0 +1,87 @@
+﻿@model IEnumerable<dutchBet.Models.TwoOddsReturn>
+
+@{
+    ViewBag.Title = "Result";
+}
+
+<h2>Result</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Team)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Game1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Game2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Site1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Site2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Odd1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Odd2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PercentageToPlay1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PercentageToPlay2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PercentageReturns)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Team)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Game1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Game2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Site1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Site2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Odd1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Odd2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PercentageToPlay1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PercentageToPlay2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PercentageReturns)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>

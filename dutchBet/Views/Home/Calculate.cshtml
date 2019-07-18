@@ -1,0 +1,78 @@
+﻿@model dutchBet.Models.Match
+
+@{
+    ViewBag.Title = "Calculate";
+}
+
+<h2>Calculate</h2>
+
+@using (Html.BeginForm("PostCalculate", "Home", FormMethod.Post)) { 
+    <div class="form-group">
+        <label>Teams</label>
+        @Html.EditorFor(m => m.Teams)
+    </div>
+
+    <div class="container mt-2" >
+        <div class="row">
+            <div class="form-group">
+                <label>Odd Name</label>
+                @Html.EditorFor(m => m.Odd1Name)
+            </div>
+        </div>
+
+        <div class="row">
+            @for (int i = 0; i < 6; i++)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label>Site</label>
+                                @Html.EditorFor(m => m.MatchOdds1[i].Site)
+                            </div>
+
+                            <div class="form-group">
+                                <label>Odd</label>
+                                @Html.EditorFor(m => m.MatchOdds1[i].Odd)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="container mt-2">
+        <div class="row">
+            <div class="form-group">
+                <label>Odd Name</label>
+                @Html.EditorFor(m => m.Odd2Name)
+            </div>
+        </div>
+
+        <div class="row">
+            @for (int i = 0; i < 6; i++)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label>Site</label>
+                                @Html.EditorFor(m => m.MatchOdds2[i].Site)
+                            </div>
+
+                            <div class="form-group">
+                                <label>Odd</label>
+                                @Html.EditorFor(m => m.MatchOdds2[i].Odd)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <input type="submit" value="Calculate" class="btn btn-primary"/>
+    }
