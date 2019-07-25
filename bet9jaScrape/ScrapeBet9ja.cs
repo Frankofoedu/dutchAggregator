@@ -6,36 +6,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace bet9jaScrape
+namespace Scraper
 {
 
     public class Bet9ja
     {
         public string League { get; set; }
-        public List<Matches> Matches { get; set; }
+        public List<Bet9jaMatches> Matches { get; set; }
     }
 
-    public class Matches
+    public class Bet9jaMatches
     {
         public string TeamNames { get; set; }
-        public List<Odds> Odds { get; set; }
+        public string MatchTime { get; set; }
+        public List<Bet9jaOdds> Odds { get; set; }
     }
-    public class Odds
+    public class Bet9jaOdds
     {
+        public string Type { get; set; }
         public string Selection { get; set; }
         public string Value { get; set; }
     }
-
     public class ScrapeBet9ja
     {
         public List<Bet9ja> Scrape()
         {
             ChromeOptions opt = new ChromeOptions();
 
-            opt.AddArgument("headless");
+            //opt.AddArgument("--headless");
 
             ChromeDriverService service = ChromeDriverService.CreateDefaultService();
-            service.HideCommandPromptWindow = true;
+            //service.HideCommandPromptWindow = true;
 
             var Bet9jaData = new List<Bet9ja>();
             using (var driver = new ChromeDriver())
@@ -43,100 +44,144 @@ namespace bet9jaScrape
                 //navigate to url for today's matches
                 driver.Navigate().GoToUrl("https://web.bet9ja.com/Sport/OddsToday.aspx?IDSport=590");
 
-                driver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, 10);
-                //gets all leagues for today
-                var webElements = driver.FindElements(By.XPath("//div[contains(@class, 'match-league-wrap')]/div[contains(@class, 'match-league')]"));
+
+                var curindex = 0;
+                var total = 1;
+
+                var curId = "";
+                var nextId = "n";
+
+                var sb = new Bet9ja();
+
+                while (curindex < total)
+                {
+                    System.Threading.Thread.Sleep(5000);
+
+                    //gets all leagues for today
+                    var webElements = driver.FindElements(By.XPath("//div[contains(@class, 'oddsViewPanel')]/div[contains(@class, 'divOdds')]/div[contains(@class, 'SEs')]/div[contains(@class, 'item')]"));
+
+                    //reset total count to count of all the matches in the page from the initial (1)
+                    if (total == 1)
+                    {
+                        total = webElements.Count;
+                    }
+                    else //what to do if total is no more at the initial value (1)
+                    {
+                        if (total != webElements.Count) //what to do if total no longer matches with count of all the matches in the page. Most likely due so some matches have started.
+                        {
+                            total = webElements.Count; // assign the new count to total
+
+                            if (nextId != "") // nextId is empty if the previous was the last
+                            {
+                                for (int i = 0; i < webElements.Count; i++)
+                                {
+                                    if (webElements[i].FindElement(By.ClassName("ID")).Text == nextId)
+                                    {
+                                        curindex = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                        }
+                    }
+
+                    curId = webElements[curindex].FindElement(By.ClassName("ID")).Text;
+                    if ((curindex + 1) < total)
+                    {
+                        nextId = webElements[curindex + 1].FindElement(By.ClassName("ID")).Text;
+                    }
+                    else
+                    { nextId = ""; }
+
+                    if (webElements[curindex].GetAttribute("class").Contains("firstItemGroup"))
+                    {
+                        if (sb.Matches != null)
+                        {
+                            Bet9jaData.Add(sb);
+                        }
+
+                        sb = new Bet9ja() { League = GetLeague(webElements[curindex]), Matches = new List<Bet9jaMatches>() };
+
+                    }
 
 
-                //foreach (var webelement in webElements)
-                //{
-                //    var sb = new Bet9ja { League = GetLeague(webelement) };
 
-                //    sb.Matches = GetMatches(webelement);
+                    //total = webElements.Count;
 
-                //    Bet9jaData.Add(sb);
-                //}
+                    var matchdiv = webElements[curindex].FindElement(By.ClassName("Event"));
+                    matchdiv.Click();
+
+                    System.Threading.Thread.Sleep(5000);
+
+                    var SElement = driver.FindElement(By.XPath("//*[@id=\"divDett\"]"));
+                    var match = GetMatch(SElement);
+
+                    sb.Matches.Add(match);
+
+                    IJavaScriptExecutor js = driver as IJavaScriptExecutor;
+                    js.ExecuteScript("history.back()");
+
+                    curindex++;
+                }
+
+                if (sb.Matches != null)
+                {
+                    Bet9jaData.Add(sb);
+                }
 
                 return Bet9jaData;
             }
         }
 
-        //string GetLeague(IWebElement elem)
-        //{
-        //    var rtn = "";
+        string GetLeague(IWebElement elem)
+        {
+            var rtn = "";
 
-        //    var a = elem.FindElement(By.XPath(".//div[contains(@class, 'league-title')]/span[contains(@class, 'text')]"));
-        //    rtn = a.Text;
+            var a = elem.FindElement(By.XPath(".//div[contains(@class, 'EventParent')]"));
+            rtn = a.Text;
 
-        //    return rtn;
-        //}
+            return rtn;
+        }
 
+        Bet9jaMatches GetMatch(IWebElement element)
+        {
+            var oddDivs = element.FindElements(By.ClassName("SEItem"));
 
+            var teamName = element.FindElement(By.Id("SEOddsDescSE")).Text;
+            var time = element.FindElement(By.Id("SEOddsDataSE")).Text;
 
-        //List<Matches> GetMatches(IWebElement element)
-        //{
-        //    var bpMatches = new List<Matches>();
+            var selectionAndOdds = new List<Bet9jaOdds>();
 
-        //    var matchDivs = element.FindElements(By.XPath(".//div[contains(@class, 'match-table')]/div[contains(@class, 'match-row')]"));
+            foreach (var oddGroup in oddDivs)
+            {
+                var type = oddGroup.FindElement(By.ClassName("SECQ")).Text;
+                var odds = oddGroup.FindElements(By.ClassName("SEOdd"));
 
-        //    foreach (var item in matchDivs)
-        //    {
-        //        var selectionAndOdds = new List<Odds>();
-        //        var teamNames = item.FindElement(By.XPath(".//div[contains(@class, 'left-team-cell')]/div/div[contains(@class, 'teams')]")).GetAttribute("title");
-        //        var _1X2 = item.FindElements(By.XPath(".//div[contains(@class, 'market-cell')]/div[contains(@class, 'm-market')]"))[0];
+                if (odds == null)
+                {
+                    continue;
+                }
+                if (odds.Count < 1)
+                {
+                    continue;
+                }
 
-        //        var _1 = _1X2.FindElements(By.ClassName("m-outcome"))[0];
-        //        if (_1.GetAttribute("class").Contains("m-outcome--disabled"))
-        //        {
-        //            var _1odd = new Odds() { Selection = "1", Value = "0" };
-        //            selectionAndOdds.Add(_1odd);
-        //        }
-        //        else
-        //        {
-        //            var _1odd = new Odds()
-        //            {
-        //                Selection = "1",
-        //                Value = _1.FindElement(By.ClassName("m-outcome-odds")).Text
-        //            };
-        //            selectionAndOdds.Add(_1odd);
-        //        }
+                foreach (var odd in odds)
+                {
+                    var sNoDivs = odd.FindElements(By.TagName("div"));
 
-        //        var _X = _1X2.FindElements(By.ClassName("m-outcome"))[1];
-        //        if (_X.GetAttribute("class").Contains("m-outcome--disabled"))
-        //        {
-        //            var _Xodd = new Odds() { Selection = "X", Value = "0" };
-        //            selectionAndOdds.Add(_Xodd);
-        //        }
-        //        else
-        //        {
-        //            var _Xodd = new Odds()
-        //            {
-        //                Selection = "X",
-        //                Value = _X.FindElement(By.ClassName("m-outcome-odds")).Text
-        //            };
-        //            selectionAndOdds.Add(_Xodd);
-        //        }
+                    var SnO = new Bet9jaOdds() { Type = type, Selection = sNoDivs[0].Text.Trim(), Value = sNoDivs[1].Text.Trim() };
+                    selectionAndOdds.Add(SnO);
+                }
+            }
 
-        //        var _2 = _1X2.FindElements(By.ClassName("m-outcome"))[2];
-        //        if (_2.GetAttribute("class").Contains("m-outcome--disabled"))
-        //        {
-        //            var _2odd = new Odds() { Selection = "2", Value = "0" };
-        //            selectionAndOdds.Add(_2odd);
-        //        }
-        //        else
-        //        {
-        //            var _2odd = new Odds()
-        //            {
-        //                Selection = "2",
-        //                Value = _2.FindElement(By.ClassName("m-outcome-odds")).Text
-        //            };
-        //            selectionAndOdds.Add(_2odd);
-        //        }
-
-        //        bpMatches.Add(new Matches { TeamNames = teamNames, Odds = selectionAndOdds });
-        //    }
-
-        //    return bpMatches;
-        //}
+            var m = new Bet9jaMatches() { TeamNames = teamName, MatchTime = time, Odds = selectionAndOdds };
+            return m;
+        }
     }
 }

@@ -71,5 +71,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\bet9jaScrape\Scraper.csproj">
+      <Project>{AF3B5207-F938-4F16-85EB-C58463F59FE0}</Project>
+      <Name>Scraper</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
