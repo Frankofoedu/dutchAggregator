@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -34,13 +35,15 @@ namespace DutchBetTest
         public string Type { get; set; }
         public string Selection { get; set; }
         public string Value { get; set; }
+
+        public string dict { get { return MainType + Type; } set { _ = MainType + Type; } }
     }
 
     class BetPawaContext : DbContext
     {
         public BetPawaContext(): base(@"Server =.\SQLEXPRESS; Database=BetPawa;Trusted_Connection=True;")
         {
-
+            
         }
         public DbSet<BetPawaOverview> BetPawaOverviews { get; set; }
         public DbSet<BetPawaMatches> BetPawaMatches { get; set; }
