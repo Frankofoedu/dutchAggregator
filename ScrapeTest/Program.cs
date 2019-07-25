@@ -1,4 +1,4 @@
-﻿using bet9jaScrape;
+﻿using Scraper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +12,15 @@ namespace ScrapeTest
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Testing scrapper");
-            var action = new TestFullScrape();
+            Console.WriteLine("Testing scrapper...");
+            var action = new ScrapeBet9ja();
+
+            Console.WriteLine("Starting Bet9jaScrape...");
             var rtn = action.Scrape();
 
-            Console.WriteLine("Testing scrapper again");
+            Console.WriteLine("Done with Bet9jaScrape...");
 
+            Console.WriteLine("Displaying data... \n\n\n");
             foreach (var item in rtn)
             {
                 Console.WriteLine(item);
@@ -31,12 +34,38 @@ namespace ScrapeTest
                 }
             }
 
-            Console.Write("\n\n\n");
+            Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
 
             Console.WriteLine(SaveToXML(rtn, "bet9ja.xml"));
-            
 
-            Console.Read();
+
+            Console.WriteLine("Starting BetPawaScrape...");
+
+            var betpawa = new ScrapeBetPawa();
+
+            var betpawartn = betpawa.Scrape();
+
+            Console.WriteLine("Done with BetPawaScrape...");
+
+            Console.WriteLine("Displaying data... \n\n\n");
+            foreach (var item in betpawartn)
+            {
+                Console.WriteLine(item);
+                foreach (var i in item.Matches)
+                {
+                    Console.WriteLine("---" + i.TeamNames);
+                    foreach (var odd in i.Odds)
+                    {
+                        Console.WriteLine("--------" + odd.MainType + " - " + odd.Type + " - " + odd.Selection + " :: " + odd.Value);
+                    }
+                }
+            }
+
+            Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
+
+            Console.WriteLine(SaveToXML(betpawartn, "betPawa.xml"));
+
+            Console.ReadLine();
         }
 
         /// <summary>
@@ -44,8 +73,8 @@ namespace ScrapeTest
         /// </summary>
         /// <param name="obj">Object to be saved</param>
         /// <param name="FileName">File path of the new XML file</param>
-        /// <returns>Confirmation that file was saved.</returns>
-        public static string SaveToXML(List<Bet9ja> obj, string FileName)
+        ///// <returns>Confirmation that file was saved.</returns>
+        public static string SaveToXML<T>(List<T> obj, string FileName)
         {
             try
             {

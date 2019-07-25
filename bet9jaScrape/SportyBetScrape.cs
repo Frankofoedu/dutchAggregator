@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sportyBetScrape
+namespace Scraper
 {
     public class SportyBet
     {
@@ -28,16 +28,16 @@ namespace sportyBetScrape
     /// <summary>
     /// scrape sportybet url- https://www.sportybet.com/ng/sport/football/today
     /// </summary>
-    public class ScrapeSportyBet
+    public class SportyBetScrape
     {
         public List<SportyBet> Scrape()
         {
             ChromeOptions opt = new ChromeOptions();
 
-            opt.AddArgument("headless");
+            //opt.AddArgument("headless");
 
             ChromeDriverService service = ChromeDriverService.CreateDefaultService();
-            service.HideCommandPromptWindow = true;
+            //service.HideCommandPromptWindow = true;
 
             var SportyBetData = new List<SportyBet>();
             using (var driver = new ChromeDriver())

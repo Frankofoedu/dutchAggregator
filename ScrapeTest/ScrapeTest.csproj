@@ -49,15 +49,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\bet9jaScrape\bet9jaScrape.csproj">
-      <Project>{af3b5207-f938-4f16-85eb-c58463f59fe0}</Project>
-      <Name>bet9jaScrape</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="chromedriver.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\bet9jaScrape\Scraper.csproj">
+      <Project>{AF3B5207-F938-4F16-85EB-C58463F59FE0}</Project>
+      <Name>Scraper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
