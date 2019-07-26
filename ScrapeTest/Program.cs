@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -10,8 +11,19 @@ namespace ScrapeTest
 {
     class Program
     {
+
+        // HttpClient is intended to be instantiated once per application, rather than per-use. See Remarks.
+        static readonly HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
+            
+            Console.WriteLine("TeStInG BEtPawa");
+            var at = new ScrapeBetPawa();
+            at.ScrapeDaily(client);
+
+            Console.WriteLine("Done with Betpawa");
+            Console.Read();
+
             Console.WriteLine("Testing scrapper...");
             var action = new ScrapeBet9ja();
 
