@@ -10,6 +10,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using Scraper;
+using Scraper.Models;
 
 namespace DutchBetTest
 {
