@@ -64,32 +64,32 @@ namespace ScrapeTest
 
             Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
 
-            Console.WriteLine(SaveToXML(rtn, "bet9ja.xml"));
+            Console.WriteLine(SaveToXML(rtn, "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
 
-            Console.WriteLine("Starting BetPawaScrape...");
+            //Console.WriteLine("Starting BetPawaScrape...");
 
-            var betpawa = new ScrapeBetPawa();
+            //var betpawa = new ScrapeBetPawa();
 
-            var betpawartn = betpawa.Scrape();
+            //var betpawartn = betpawa.Scrape();
 
-            Console.WriteLine("Done with BetPawaScrape...");
+            //Console.WriteLine("Done with BetPawaScrape...");
 
-            Console.WriteLine("Displaying data... \n\n\n");
-            foreach (var item in betpawartn)
-            {
-                Console.WriteLine(item);
-                foreach (var i in item.Matches)
-                {
-                    Console.WriteLine("---" + i.TeamNames);
-                    foreach (var odd in i.Odds)
-                    {
-                        Console.WriteLine("--------" + odd.MainType + " - " + odd.Type + " - " + odd.Selection + " :: " + odd.Value);
-                    }
-                }
-            }
+            //Console.WriteLine("Displaying data... \n\n\n");
+            //foreach (var item in betpawartn)
+            //{
+            //    Console.WriteLine(item);
+            //    foreach (var i in item.Matches)
+            //    {
+            //        Console.WriteLine("---" + i.TeamNames);
+            //        foreach (var odd in i.Odds)
+            //        {
+            //            Console.WriteLine("--------" + odd.MainType + " - " + odd.Type + " - " + odd.Selection + " :: " + odd.Value);
+            //        }
+            //    }
+            //}
 
-            Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
+            //Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
 
             Console.WriteLine(SaveToXML(betpawartn, "betPawa.xml"));
             Console.WriteLine(SaveToXML(new List<ScrapeMerryBet> { msc }, "merryBet.xml"));

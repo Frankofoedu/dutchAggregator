@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrapeTest", "ScrapeTest\Sc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sportyBetScrape", "sportyBetScrape\sportyBetScrape.csproj", "{DB4BAD01-130B-4D36-8FB8-BD731CB4E60C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Classes", "Classes\Classes.csproj", "{C5D59D79-A05D-4880-8069-ED50FED9FC41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DB4BAD01-130B-4D36-8FB8-BD731CB4E60C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB4BAD01-130B-4D36-8FB8-BD731CB4E60C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB4BAD01-130B-4D36-8FB8-BD731CB4E60C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5D59D79-A05D-4880-8069-ED50FED9FC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5D59D79-A05D-4880-8069-ED50FED9FC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5D59D79-A05D-4880-8069-ED50FED9FC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5D59D79-A05D-4880-8069-ED50FED9FC41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

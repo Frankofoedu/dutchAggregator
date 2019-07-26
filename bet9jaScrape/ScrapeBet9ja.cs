@@ -26,6 +26,14 @@ namespace Scraper
         public string Type { get; set; }
         public string Selection { get; set; }
         public string Value { get; set; }
+
+        public string SelectionFull
+        {
+            get
+            {
+                return (Type + "-" + Selection).ToLower();
+            }
+        }
     }
     public class ScrapeBet9ja
     {
