@@ -91,7 +91,7 @@ namespace ScrapeTest
 
             //Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
 
-            Console.WriteLine(SaveToXML(betpawartn, "betPawa.xml"));
+          //  Console.WriteLine(SaveToXML(betpawartn, "betPawa.xml"));
             Console.WriteLine(SaveToXML(new List<ScrapeMerryBet> { msc }, "merryBet.xml"));
 
             Console.ReadLine();
