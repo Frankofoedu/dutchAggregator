@@ -11,15 +11,31 @@ namespace ScrapeTest
 {
     class Program
     {
+       static void test()
+        {
+           // long ts = 1564228800000;
+            var s = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime;
+          //  var date = new DateTime();
+           
+
+            Console.WriteLine(s.ToString("HH:mm"));
+
+            Console.Read();
+        }
 
         // HttpClient is intended to be instantiated once per application, rather than per-use. See Remarks.
         static readonly HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
+            Console.WriteLine("Testing Merrybet");
+            var msc = new ScrapeMerryBet();
+            msc.ScrapeDaily(client);
             
             Console.WriteLine("TeStInG BEtPawa");
             var at = new ScrapeBetPawa();
-            at.ScrapeDaily(client);
+            var bps = at.ScrapeDaily(client);
+
+            Console.WriteLine(SaveToXML(bps, "betPawa.xml"));
 
             Console.WriteLine("Done with Betpawa");
             Console.Read();
@@ -76,6 +92,7 @@ namespace ScrapeTest
             Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
 
             Console.WriteLine(SaveToXML(betpawartn, "betPawa.xml"));
+            Console.WriteLine(SaveToXML(new List<ScrapeMerryBet> { msc }, "merryBet.xml"));
 
             Console.ReadLine();
         }

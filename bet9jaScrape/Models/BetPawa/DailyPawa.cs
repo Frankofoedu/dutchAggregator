@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,8 +24,8 @@ namespace Scraper.Models
         public string Type { get; set; }
         public string Selection { get; set; }
         public string Value { get; set; }
-
-        public string MapType { get { return MainType + Type; } set { _ = MainType + Type; } }
+        [NotMapped]
+        public string MapType { get { return MainType + Type; } }
 
     }
 
