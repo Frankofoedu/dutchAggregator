@@ -12,12 +12,12 @@ namespace ScrapeTest
 {
     class Program
     {
-       static void test()
+        static void test()
         {
-           // long ts = 1564228800000;
+            // long ts = 1564228800000;
             var s = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime;
-          //  var date = new DateTime();
-           
+            //  var date = new DateTime();
+
 
             Console.WriteLine(s.ToString("HH:mm"));
 
@@ -30,13 +30,14 @@ namespace ScrapeTest
         {
             Console.WriteLine("Testing Merrybet");
             var msc = new ScrapeMerryBet();
-            msc.ScrapeDaily(client);
-            
+            var mscrtn = msc.ScrapeDaily(client);
+            Console.WriteLine(Jobs.SaveToXML(mscrtn, "merryBet.xml"));
+
             Console.WriteLine("TeStInG BEtPawa");
             var at = new ScrapeBetPawa();
             var bps = at.ScrapeDaily(client);
 
-            Console.WriteLine(SaveToXML(bps, "betPawa.xml"));
+            Console.WriteLine(Jobs.SaveToXML(bps, "betPawa.xml"));
 
             Console.ReadLine();
         }
@@ -88,23 +89,21 @@ namespace ScrapeTest
 
             var betpawa = new ScrapeBetPawa();
 
-          //  Console.WriteLine(SaveToXML(betpawartn, "betPawa.xml"));
-            Console.WriteLine(SaveToXML(new List<ScrapeMerryBet> { msc }, "merryBet.xml"));
+            var betpawartn = betpawa.ScrapeDaily(client);
+
+            Console.WriteLine(Jobs.SaveToXML(betpawartn, "betPawa.xml"));
 
             Console.WriteLine("Done with BetPawaScrape...");
 
             Console.WriteLine("Displaying data... \n\n\n");
             foreach (var item in betpawartn)
             {
-                Console.WriteLine(item);
-                foreach (var i in item.Matches)
+                Console.WriteLine(item.TeamNames);
+                foreach (var odd in item.Odds)
                 {
-                    Console.WriteLine("---" + i.TeamNames);
-                    foreach (var odd in i.Odds)
-                    {
-                        Console.WriteLine("--------" + odd.MainType + " - " + odd.Type + " - " + odd.Selection + " :: " + odd.Value);
-                    }
+                    Console.WriteLine("--------" + odd.MainType + " - " + odd.Type + " - " + odd.Selection + " :: " + odd.Value);
                 }
+
             }
 
             Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
