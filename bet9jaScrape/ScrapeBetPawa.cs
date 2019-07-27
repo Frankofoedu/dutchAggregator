@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Classes;
+using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using Scraper.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

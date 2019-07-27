@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Classes
 {
-    public class NormaliseSelection
+    public class NormalisedSelection
     {
         public string Normal { get; set; }
         public string Bet9ja { get; set; }

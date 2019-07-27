@@ -1,4 +1,5 @@
-﻿using dutchBet.Models;
+﻿using Classes;
+using dutchBet.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,5 +73,59 @@ namespace dutchBet.Controllers
             return View(ProfitableReturns);
         }
 
+        
+        public List<NormalisedSelection> NormalisedSelections { get; set; }
+        public ActionResult NormaliseOddSelection()
+        {
+            if (System.IO.File.Exists("NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>("NormalisedSelection.xml");
+            }
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>("bet9ja7-26-2019.xml");
+            var bet9jaMatches = new List<Bet9jaMatches>();
+            bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
+            bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>("betPawa7-26-2019.xml").OrderByDescending(m => m.Odds.Count());
+
+            var largestSelectionMatchBet9ja = bet9jaMatches.First();
+            var largestSelectionMatchBetPawa = betPawaMatches.First();
+
+            ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m=>m.SelectionFull);
+            ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.MapType);
+
+            var max = largestSelectionMatchBet9ja.Odds.Count > largestSelectionMatchBetPawa.Odds.Count ? 
+                largestSelectionMatchBet9ja.Odds.Count : largestSelectionMatchBetPawa.Odds.Count;
+
+            ViewBag.Max = max;
+
+            return View(NormalisedSelections);
+        }
+
+        [HttpPost]
+        public ActionResult NormaliseOddSelection(List<NormalisedSelection> NS)
+        {
+            ViewBag.Msg= Jobs.SaveToXML(NS, "NormalisedSelection.xml");
+
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>("bet9ja7-26-2019.xml");
+            var bet9jaMatches = new List<Bet9jaMatches>();
+            bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
+            bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>("betPawa7-26-2019.xml").OrderByDescending(m => m.Odds.Count());
+
+            var largestSelectionMatchBet9ja = bet9jaMatches.First();
+            var largestSelectionMatchBetPawa = betPawaMatches.First();
+
+            ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull);
+            ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.MapType);
+
+            var max = largestSelectionMatchBet9ja.Odds.Count > largestSelectionMatchBetPawa.Odds.Count ?
+                largestSelectionMatchBet9ja.Odds.Count : largestSelectionMatchBetPawa.Odds.Count;
+
+            ViewBag.Max = max;
+
+            return View(NormalisedSelections);
+        }
     }
 }

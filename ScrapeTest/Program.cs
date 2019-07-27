@@ -1,4 +1,5 @@
-﻿using Scraper;
+﻿using Classes;
+using Scraper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace ScrapeTest
 {
     class Program
     {
-       static void test()
+        static void test()
         {
-           // long ts = 1564228800000;
+            // long ts = 1564228800000;
             var s = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime;
-          //  var date = new DateTime();
-           
+            //  var date = new DateTime();
+
 
             Console.WriteLine(s.ToString("HH:mm"));
 
@@ -29,18 +30,20 @@ namespace ScrapeTest
         {
             Console.WriteLine("Testing Merrybet");
             var msc = new ScrapeMerryBet();
-            var mbs = msc.ScrapeDaily(client);
-            
+            var mscrtn = msc.ScrapeDaily(client);
+            Console.WriteLine(Jobs.SaveToXML(mscrtn, "merryBet.xml"));
+
             Console.WriteLine("TeStInG BEtPawa");
             var at = new ScrapeBetPawa();
             var bps = at.ScrapeDaily(client);
 
-            Console.WriteLine(SaveToXML(bps, "betPawa.xml"));
+            Console.WriteLine(Jobs.SaveToXML(bps, "betPawa.xml"));
 
-            Console.WriteLine("Done with Betpawa");
-            Console.Read();
+            Console.ReadLine();
+        }
 
-            Console.WriteLine("Testing scrapper...");
+        public static void ScrapeAndSaveBet9jaToday()
+        {
             var action = new ScrapeBet9ja();
 
             Console.WriteLine("Starting Bet9jaScrape...");
@@ -64,77 +67,49 @@ namespace ScrapeTest
 
             Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
 
-            Console.WriteLine(SaveToXML(rtn, "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
+            Console.WriteLine(Jobs.SaveToXML(rtn, "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
-
-            //Console.WriteLine("Starting BetPawaScrape...");
-
-            //var betpawa = new ScrapeBetPawa();
-
-            //var betpawartn = betpawa.Scrape();
-
-            //Console.WriteLine("Done with BetPawaScrape...");
-
-            //Console.WriteLine("Displaying data... \n\n\n");
-            //foreach (var item in betpawartn)
-            //{
-            //    Console.WriteLine(item);
-            //    foreach (var i in item.Matches)
-            //    {
-            //        Console.WriteLine("---" + i.TeamNames);
-            //        foreach (var odd in i.Odds)
-            //        {
-            //            Console.WriteLine("--------" + odd.MainType + " - " + odd.Type + " - " + odd.Selection + " :: " + odd.Value);
-            //        }
-            //    }
-            //}
-
-            //Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
-
-          //  Console.WriteLine(SaveToXML(betpawartn, "betPawa.xml"));
-
-            Console.WriteLine(SaveToXML(mbs, "merryBet.xml"));
-
-            Console.ReadLine();
         }
 
-        /// <summary>
-        /// Saves file to XML
-        /// </summary>
-        /// <param name="obj">Object to be saved</param>
-        /// <param name="FileName">File path of the new XML file</param>
-        ///// <returns>Confirmation that file was saved.</returns>
-        public static string SaveToXML<T>(List<T> obj, string FileName)
+        public static void ScrapeAndSaveBetPawaDaily()
         {
-            try
+
+            Console.WriteLine("TeStInG BEtPawa");
+            var at = new ScrapeBetPawa();
+            at.ScrapeDaily(client);
+
+            Console.WriteLine("Done with Betpawa");
+            Console.Read();
+
+        }
+        public static void ScrapeAndSaveBetPawa()
+        {
+
+            Console.WriteLine("Starting BetPawaScrape...");
+
+            var betpawa = new ScrapeBetPawa();
+
+            var betpawartn = betpawa.ScrapeDaily(client);
+
+            Console.WriteLine(Jobs.SaveToXML(betpawartn, "betPawa.xml"));
+
+            Console.WriteLine("Done with BetPawaScrape...");
+
+            Console.WriteLine("Displaying data... \n\n\n");
+            foreach (var item in betpawartn)
             {
-                using (var writer = new System.IO.StreamWriter(FileName))
+                Console.WriteLine(item.TeamNames);
+                foreach (var odd in item.Odds)
                 {
-                    var xmlSerializer = new XmlSerializer(obj.GetType());
-                    xmlSerializer.Serialize(writer, obj);
-                    writer.Flush();
+                    Console.WriteLine("--------" + odd.MainType + " - " + odd.Type + " - " + odd.Selection + " :: " + odd.Value);
                 }
-                return "Object saved to XML file.";
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
-            }
-        }
 
-
-        /// <summary>
-        /// Loads file to XML
-        /// </summary>
-        /// <param name="FileName">File path of the XML file</param>
-        /// <returns>Bet9ja object from XML file</returns>
-        public static Bet9ja LoadFromXML(string FileName)
-        {
-            using (var stream = System.IO.File.OpenRead(FileName))
-            {
-                var xmlSerializer = new XmlSerializer(typeof(Bet9ja));
-                return xmlSerializer.Deserialize(stream) as Bet9ja;
             }
+
+            Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
+
+            Console.WriteLine(Jobs.SaveToXML(betpawartn, "betPawa" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
+
         }
     }
 }
