@@ -224,6 +224,7 @@
     <Content Include="Views\Home\PostCalculate.cshtml" />
     <Content Include="Views\Odds\Index.cshtml" />
     <Content Include="Views\Odds\Result.cshtml" />
+    <Content Include="Views\Home\NormaliseOddSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -256,6 +257,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Classes\Classes.csproj">
+      <Project>{C5D59D79-A05D-4880-8069-ED50FED9FC41}</Project>
+      <Name>Classes</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

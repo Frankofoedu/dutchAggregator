@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scraper.Models
+namespace Classes
 {
     public class BetPawa
     {
@@ -35,7 +35,8 @@ namespace Scraper.Models
 
     }
 
-  
+
+
     [NotMapped]
     public class Rootobject
     {
@@ -115,7 +116,7 @@ namespace Scraper.Models
 
 
     #region Returned data
- 
+
     public class Datum
     {
         public string Name { get; set; }

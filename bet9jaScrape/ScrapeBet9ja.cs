@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Classes;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
@@ -9,32 +10,6 @@ using System.Threading.Tasks;
 namespace Scraper
 {
 
-    public class Bet9ja
-    {
-        public string League { get; set; }
-        public List<Bet9jaMatches> Matches { get; set; }
-    }
-
-    public class Bet9jaMatches
-    {
-        public string TeamNames { get; set; }
-        public string MatchTime { get; set; }
-        public List<Bet9jaOdds> Odds { get; set; }
-    }
-    public class Bet9jaOdds
-    {
-        public string Type { get; set; }
-        public string Selection { get; set; }
-        public string Value { get; set; }
-
-        public string SelectionFull
-        {
-            get
-            {
-                return (Type + "-" + Selection).ToLower();
-            }
-        }
-    }
     public class ScrapeBet9ja
     {
         public List<Bet9ja> Scrape()
