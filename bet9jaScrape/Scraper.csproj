@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\BetPawa\DailyPawa.cs" />
+    <Compile Include="Models\ErrorHandler.cs" />
     <Compile Include="Models\MerryBet\MerrybetData.cs" />
     <Compile Include="Models\MerryBet\SearchData.cs" />
     <Compile Include="Models\BetPawa\Pawa.cs" />

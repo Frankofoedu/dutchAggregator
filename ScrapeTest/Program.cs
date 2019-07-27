@@ -29,7 +29,7 @@ namespace ScrapeTest
         {
             Console.WriteLine("Testing Merrybet");
             var msc = new ScrapeMerryBet();
-            msc.ScrapeDaily(client);
+            var mbs = msc.ScrapeDaily(client);
             
             Console.WriteLine("TeStInG BEtPawa");
             var at = new ScrapeBetPawa();
@@ -92,7 +92,8 @@ namespace ScrapeTest
             //Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
 
           //  Console.WriteLine(SaveToXML(betpawartn, "betPawa.xml"));
-            Console.WriteLine(SaveToXML(new List<ScrapeMerryBet> { msc }, "merryBet.xml"));
+
+            Console.WriteLine(SaveToXML(mbs, "merryBet.xml"));
 
             Console.ReadLine();
         }

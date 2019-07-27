@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -39,6 +40,8 @@ namespace Scraper.Models.MerryBet
         {
             public int code { get; set; }
             public string description { get; set; }
+
+            [JsonConverter(typeof(IgnoreUnexpectedArraysConverter<Data>))]
             public Data data { get; set; }
         }
 

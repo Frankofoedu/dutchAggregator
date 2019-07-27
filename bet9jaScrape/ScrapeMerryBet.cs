@@ -18,6 +18,7 @@ namespace Scraper
             var currdate = DateTime.Now.ToString("yyyy'-'MM'-'dd");
             var tomodate = DateTime.Now.AddDays(1).ToString("yyyy'-'MM'-'dd");
             var listEvents = new List<MerrybetData>();
+            var jsonSettings = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
 
 
             try
@@ -28,10 +29,11 @@ namespace Scraper
 
                 //get next day data
                 string SecondresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + currdate).Result;
-                //get first day list of events
+
+                //get first day list of events id
                 var t = JsonConvert.DeserializeObject<SearchData>(FirstresponseBody).data.Select(x => x.eventId).ToList();
 
-                //get second day list of events and add to previous list
+                //get second day list of events id and add to previous list
                 t.AddRange(JsonConvert.DeserializeObject<SearchData>(SecondresponseBody).data.Select(x => x.eventId).ToList());
 
                 for (int i = 0; i < t.Count; i++)
@@ -40,30 +42,35 @@ namespace Scraper
                     var eventId = t[i];
 
                     //get data for event
-                    var singleresponse = client.GetStringAsync("https://merrybet.com/rest/market/events/" + eventId);
-                    var singleEventData = JsonConvert.DeserializeObject<MBData.ReceivedDataMerryBet>(FirstresponseBody);
+                    var singleresponse = client.GetStringAsync("https://merrybet.com/rest/market/events/" + eventId).Result;
+                    var singleEventData = JsonConvert.DeserializeObject<MBData.ReceivedDataMerryBet>(singleresponse);
 
-                    var events = singleEventData.data.eventGames[i];
-
-                    var mbOdds = new List<DailyMerrybetOdds>();
-                    for (int j = 0; j < events.outcomes.Count; j++)
+                    if (singleEventData.data != null)
                     {
-                        var outcome = events.outcomes[j];
 
-                        mbOdds.Add(new DailyMerrybetOdds() { MainType = events.gameName, Selection = outcome.outcomeName, Value = outcome.outcomeOdds.ToString() });
+                        var mbOdds = singleEventData.data.eventGames.
+                                                        SelectMany(x => x.outcomes.
+                                                        Select(m => new DailyMerrybetOdds()
+                                                        { MainType = x.gameName, Selection = m.outcomeName, Value = m.outcomeOdds.ToString() }))
+                                                        .ToList();
+
+
+                        var mbOddsnGames = new MerrybetData()
+                        {
+                            DateOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime.Date.ToString(),
+                            League = singleEventData.data.category3Name,
+                            TeamNames = singleEventData.data.eventName,
+                            Odds = mbOdds,
+                            TimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime.TimeOfDay.ToString()
+                        };
+
+                        listEvents.Add(mbOddsnGames);
 
                     }
-
-                    var mbOddsnGames = new MerrybetData()
+                    else
                     {
-                        DateOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime.Date.ToString(),
-                        League = singleEventData.data.category3Name,
-                        TeamNames = singleEventData.data.eventName,
-                        Odds = mbOdds,
-                        TimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime.TimeOfDay.ToString()
-                    };
-
-                    listEvents.Add(mbOddsnGames);
+                        Console.WriteLine("No data returned");
+                    }
                 }
 
                 return listEvents;
