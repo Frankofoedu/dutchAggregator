@@ -77,22 +77,23 @@ namespace dutchBet.Controllers
         public List<NormalisedSelection> NormalisedSelections { get; set; }
         public ActionResult NormaliseOddSelection()
         {
-            if (System.IO.File.Exists("NormalisedSelection.xml"))
+            var folder =  System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            if (System.IO.File.Exists( folder + "NormalisedSelection.xml"))
             {
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>("NormalisedSelection.xml");
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
             }
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>("bet9ja7-26-2019.xml");
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja7-26-2019.xml");
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
             bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>("betPawa7-26-2019.xml").OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa7-26-2019.xml").OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
 
-            ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m=>m.SelectionFull);
-            ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.MapType);
+            ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m=>m.SelectionFull).ToList();
+            ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
 
             var max = largestSelectionMatchBet9ja.Odds.Count > largestSelectionMatchBetPawa.Odds.Count ? 
                 largestSelectionMatchBet9ja.Odds.Count : largestSelectionMatchBetPawa.Odds.Count;
@@ -105,20 +106,21 @@ namespace dutchBet.Controllers
         [HttpPost]
         public ActionResult NormaliseOddSelection(List<NormalisedSelection> NS)
         {
-            ViewBag.Msg= Jobs.SaveToXML(NS, "NormalisedSelection.xml");
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            ViewBag.Msg= Jobs.SaveToXML(NS, folder + "NormalisedSelection.xml");
 
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>("bet9ja7-26-2019.xml");
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja7-26-2019.xml");
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
             bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>("betPawa7-26-2019.xml").OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa7-26-2019.xml").OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
 
-            ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull);
-            ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.MapType);
+            ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull).ToList();
+            ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
 
             var max = largestSelectionMatchBet9ja.Odds.Count > largestSelectionMatchBetPawa.Odds.Count ?
                 largestSelectionMatchBet9ja.Odds.Count : largestSelectionMatchBetPawa.Odds.Count;
