@@ -12,8 +12,11 @@ namespace Classes
         public int Id { get; set; }
         public string TeamNames { get; set; }
         public string TimeOfMatch { get; set; }
-        public string DateOfMatch { get; set; }
+        public DateTime DateOfMatch { get; set; }
         public List<Classes.BetPawaOdds> Odds { get; set; }
     }
+
+
+
 
 }

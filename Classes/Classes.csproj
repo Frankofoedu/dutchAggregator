@@ -47,11 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bet9ja.cs" />
+    <Compile Include="BetPawaData\SingleReceivedData.cs" />
     <Compile Include="Jobs.cs" />
     <Compile Include="DailyBetPawa.cs" />
     <Compile Include="BetPawa.cs" />
     <Compile Include="NormalisedSelection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
