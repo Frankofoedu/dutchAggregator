@@ -31,7 +31,13 @@ namespace Classes
         public string Selection { get; set; }
         public string Value { get; set; }
 
-        public string MapType { get { return MainType + Type; } set { _ = MainType + Type; } }
+        public string SelectionFull
+        {
+            get
+            {
+                return (MainType + "-" + Type + "-" + Selection).ToLower();
+            }
+        }
 
     }
 

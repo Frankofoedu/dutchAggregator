@@ -56,11 +56,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\BetPawa\DailyPawa.cs" />
     <Compile Include="Models\ErrorHandler.cs" />
     <Compile Include="Models\MerryBet\MerrybetData.cs" />
     <Compile Include="Models\MerryBet\SearchData.cs" />
-    <Compile Include="Models\BetPawa\Pawa.cs" />
     <Compile Include="ScrapeBet9ja.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrapeBetPawa.cs" />
