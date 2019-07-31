@@ -1,12 +1,11 @@
 ﻿@using Classes;
-@model List<NormalisedSelection>
+@model NormalisedSelection
 
 @{
     ViewBag.Title = "NormaliseOddSelection";
     var Bet9jaOdds = (List<Bet9jaOdds>)ViewBag.Bet9jaOdds;
     var BetPawaOdds = (List<BetPawaOdds>)ViewBag.BetPawaOdds;
 
-    int max = ViewBag.Max;
     string msg = ViewBag.Msg;
 }
 
@@ -14,13 +13,22 @@
 
 @if (!string.IsNullOrWhiteSpace(msg))
 {
-    <div class="alert alert-dismissable alert-success">
-        @msg
-    </div>
+    if (msg.Contains("Error"))
+    {
+        <div class="alert alert-dismissable alert-danger">
+            @msg
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-dismissable alert-success">
+            @msg
+        </div>      
+    }
 }
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-10">
             <div class="row">
                 <div class="col-xs-6">
                     <h2>Bet9ja</h2>
@@ -43,36 +51,40 @@
             </div>
 
         </div>
-        <div class="col-md-6">
+        <div class="col-md-2">
             <form method="post">
-
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Normalised</th>
-                            <th>Bet9ja</th>
-                            <th>Betpawa</th>
-                            <th>Merrybet</th>
-                            <th>Nairabet</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @for (int i = 0; i < 50; i++)
-                        {
-                            <tr>
-                                <td>@Html.EditorFor(m => m[i].Normal)</td>
-                                <td>@Html.EditorFor(m => m[i].Bet9ja)</td>
-                                <td>@Html.EditorFor(m => m[i].BetPawa)</td>
-                                <td>@Html.EditorFor(m => m[i].MerryBet)</td>
-                                <td>@Html.EditorFor(m => m[i].NairaBet)</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-
+                <div class="row">
+                    <div class="form-group">
+                        <label>Normalised</label>
+                        @Html.EditorFor(m => m.Normal, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Bet9ja</label>
+                        @Html.EditorFor(m => m.Bet9ja, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Betpawa</label>
+                        @Html.EditorFor(m => m.BetPawa, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Merrybet</label>
+                        @Html.EditorFor(m => m.MerryBet, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Nairabet</label>
+                        @Html.EditorFor(m => m.NairaBet, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
                 <input type="submit" value="Submit" class="btn btn-primary btn-lg" />
+                @Html.ActionLink("Clear", "NormaliseOddSelection", "Home", new { area = "" }, new { @class = "btn btn-default" })
             </form>
         </div>
     </div>

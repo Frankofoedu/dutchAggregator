@@ -75,6 +75,7 @@ namespace dutchBet.Controllers
 
         
         public List<NormalisedSelection> NormalisedSelections { get; set; }
+        public NormalisedSelection SubmittedNormal { get; set; }
         public ActionResult NormaliseOddSelection()
         {
             var folder =  System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
@@ -82,6 +83,7 @@ namespace dutchBet.Controllers
             {
                 NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
             }
+
             var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja7-26-2019.xml");
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
@@ -92,22 +94,43 @@ namespace dutchBet.Controllers
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
 
+            if (NormalisedSelections != null)
+            {
+                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
+                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
+            }
+
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m=>m.SelectionFull).ToList();
             ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
 
-            var max = largestSelectionMatchBet9ja.Odds.Count > largestSelectionMatchBetPawa.Odds.Count ? 
-                largestSelectionMatchBet9ja.Odds.Count : largestSelectionMatchBetPawa.Odds.Count;
-
-            ViewBag.Max = max;
-
-            return View(NormalisedSelections);
+            return View(SubmittedNormal);
         }
 
         [HttpPost]
-        public ActionResult NormaliseOddSelection(List<NormalisedSelection> NS)
+        public ActionResult NormaliseOddSelection(NormalisedSelection NS)
         {
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
-            ViewBag.Msg= Jobs.SaveToXML(NS, folder + "NormalisedSelection.xml");
+
+            if (System.IO.File.Exists(folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
+            }
+            else
+            {
+                NormalisedSelections = new List<NormalisedSelection>();
+            }
+
+            if (NormalisedSelections!=null && NormalisedSelections.Any(m=>m.Normal == NS.Normal))
+            {
+                ViewBag.Msg = "Error! The Normal already exists.";
+            }
+            else
+            {
+                NormalisedSelections.Add(NS);
+                ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, folder + "NormalisedSelection.xml");
+            }
+
+            
 
             var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja7-26-2019.xml");
             var bet9jaMatches = new List<Bet9jaMatches>();
@@ -122,12 +145,10 @@ namespace dutchBet.Controllers
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull).ToList();
             ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
 
-            var max = largestSelectionMatchBet9ja.Odds.Count > largestSelectionMatchBetPawa.Odds.Count ?
-                largestSelectionMatchBet9ja.Odds.Count : largestSelectionMatchBetPawa.Odds.Count;
+            largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
+            largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
 
-            ViewBag.Max = max;
-
-            return View(NormalisedSelections);
+            return View(NS);
         }
     }
 }
