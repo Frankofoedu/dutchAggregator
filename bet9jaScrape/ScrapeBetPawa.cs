@@ -1,4 +1,5 @@
 ﻿using Classes;
+using Classes.BetPawaData;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -78,20 +79,22 @@ namespace Scraper
         public List<DailyPawaMatches> ScrapeDaily(HttpClient client)
         {
             var betOverview = new List<DailyPawaMatches>();
-          
+
+            Console.WriteLine("-----Scraping started");
+
             try
             {
                 //get all initial page
                 string responseBody = client.GetStringAsync("https://www.betpawa.ng/events/ws/getUpcomingEvents2/_1X2/2").Result;
 
-                var paths = new List<string>();
+                var paths = new List<int>();
 
                 
 
                 var t = JsonConvert.DeserializeObject<Rootobject>(responseBody);
 
-                //get all paths for initial matches that showed up
-                paths.AddRange(t.Data.Events.Where(x => x.StartsRaw.Date <= DateTime.Today.AddDays(1)).Select(p => p.Path));
+                //get all ids for initial matches that showed up
+                paths.AddRange(t.Data.Events.Where(x => x.StartsRaw.Date <= DateTime.Today.AddDays(1)).Select(p => p.Id));
 
 
                 var listEventsIds = GetRemainingEvents(t.Data.RemainingEventIds, 1);
@@ -118,48 +121,33 @@ namespace Scraper
                             if (!(item.StartsRaw.Date <= DateTime.Today.AddDays(1)))
                                 break;
 
-                            paths.Add(item.Path);
+                            paths.Add(item.Id);
                             
                         }                        
                     }
                 }
 
-                var Mlinks = new List<string>();
                 var bpMatches = new List<BetPawaMatches>();
 
-                Console.WriteLine("-----Scraping started");
-                using (var driver = new ChromeDriver())
+                for (int i = 0; i < paths.Count; i++)
                 {
-                    for (int i = 0; i < paths.Count; i++)
-                    {
+                    var id = paths[i];
+                    //get data for each match
+                    string oddsResponseBody = client.GetStringAsync("https://www.betpawa.ng/events/ws/getPricesForEvent/" + id).Result;
 
-                        var url = "https://www.betpawa.ng/" + paths[i];
+                    var data = JsonConvert.DeserializeObject<SingleReceivedData.RootObject>(oddsResponseBody);
 
-                        driver.Navigate().GoToUrl(url);
+                    betOverview.Add(new DailyPawaMatches() {
+                        League = data.Data.League,
+                        DateOfMatch = DateTime.Parse(data.Data.StartsRaw).Date,
+                        TeamNames = data.Data.Name, TimeOfMatch = DateTime.Parse(data.Data.StartsRaw).TimeOfDay.ToString(),
+                        Odds = data.Data.Markets.SelectMany(x => x.Prices.Select(
+                            m => new BetPawaOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name, Value = m.Cost })).ToList()
+                    });
 
-                        // driver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, 10);
+                } 
 
-                        Thread.Sleep(5000);
-
-                        var leagueName = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]/div[4]/div/div[1]/div/div/span[1]/a")).Text;
-                        var teamNames = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]/div[4]/div/div[1]/div/h2")).Text;
-
-                        var matchTime = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]/div[4]/div/div[1]/div/span/span[2]")).Text;
-
-                        var matchDate = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]/div[4]/div/div[1]/div/span/span[1]")).Text;
-
-                        var SelectAndOddsHtml = driver.FindElements(By.CssSelector("div[class='events-container']"));
-
-                        var SelectAndOdds = GetOdds(SelectAndOddsHtml);
-
-
-                        betOverview.Add(new DailyPawaMatches() { League = leagueName, DateOfMatch = matchDate, TeamNames = teamNames, TimeOfMatch = matchTime, Odds = SelectAndOdds });
-                     
-                    }
-
-
-
-                }
+               
 
                 Console.WriteLine("-----Scraping Done");
 

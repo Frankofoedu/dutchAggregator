@@ -28,16 +28,18 @@ namespace ScrapeTest
         static readonly HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
-            Console.WriteLine("Testing Merrybet");
-            var msc = new ScrapeMerryBet();
-            var mscrtn = msc.ScrapeDaily(client);
-            Console.WriteLine(Jobs.SaveToXML(mscrtn, "merryBet.xml"));
+           
 
             Console.WriteLine("TeStInG BEtPawa");
             var at = new ScrapeBetPawa();
             var bps = at.ScrapeDaily(client);
 
             Console.WriteLine(Jobs.SaveToXML(bps, "betPawa.xml"));
+
+            Console.WriteLine("Testing Merrybet");
+            var msc = new ScrapeMerryBet();
+            var mscrtn = msc.ScrapeDaily(client);
+            Console.WriteLine(Jobs.SaveToXML(mscrtn, "merryBet.xml"));
 
             Console.ReadLine();
         }
