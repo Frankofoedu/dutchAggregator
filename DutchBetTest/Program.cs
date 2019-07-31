@@ -41,7 +41,7 @@ namespace DutchBetTest
 
             Console.WriteLine("Fetching Matches");
             bet9jaData.ForEach(n => bet9jatodaymatches.AddRange(n.Matches));
-            betpawatodaymatches.AddRange(betPawaData.Where(m => m.DateOfMatch == "Fri 26/07"));
+            betpawatodaymatches.AddRange(betPawaData.Where(m => m.DateOfMatch == DateTime.Parse("Fri 26/07")));
 
             var totalFound = 0;
 

@@ -150,5 +150,31 @@ namespace dutchBet.Controllers
 
             return View(NS);
         }
+        public ActionResult ViewNormal()
+        {
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            if (System.IO.File.Exists(folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
+            }
+
+            return View(NormalisedSelections);
+        }
+
+        [HttpPost]
+        public ActionResult ViewNormal( string normal)
+        {
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            if (System.IO.File.Exists(folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
+            }
+
+            NormalisedSelections.RemoveAll( n=>  n.Normal == normal);
+
+            Jobs.SaveToXML(NormalisedSelections, folder + "NormalisedSelection.xml");
+
+            return View(NormalisedSelections);
+        }
     }
 }

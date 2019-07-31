@@ -83,8 +83,9 @@
                         @Html.EditorFor(m => m.NairaBet, new { htmlAttributes = new { @class = "form-control" } })
                     </div>
                 </div>
-                <input type="submit" value="Submit" class="btn btn-primary btn-lg" />
+                <input type="submit" value="Submit" class="btn btn-primary" />
                 @Html.ActionLink("Clear", "NormaliseOddSelection", "Home", new { area = "" }, new { @class = "btn btn-default" })
+                @Html.ActionLink("Clear", "ViewNormal", "Home", new { area = "" }, new { @class = "btn btn-default" })
             </form>
         </div>
     </div>

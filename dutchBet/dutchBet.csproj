@@ -228,6 +228,7 @@
     <Content Include="Views\Odds\Index.cshtml" />
     <Content Include="Views\Odds\Result.cshtml" />
     <Content Include="Views\Home\NormaliseOddSelection.cshtml" />
+    <Content Include="Views\Home\ViewNormal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
