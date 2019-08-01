@@ -41,6 +41,7 @@ namespace ScrapeTest
             var mscrtn = msc.ScrapeDaily(client);
             Console.WriteLine(Jobs.SaveToXML(mscrtn, "merryBet.xml"));
 
+            Console.WriteLine("Finished All Jobs");
             Console.ReadLine();
         }
 

@@ -28,7 +28,7 @@ namespace Scraper
                 string FirstresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + currdate).Result;
 
                 //get next day data
-                string SecondresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + currdate).Result;
+                string SecondresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + tomodate).Result;
 
                 //get first day list of events id
                 var t = JsonConvert.DeserializeObject<SearchData>(FirstresponseBody).data.Select(x => x.eventId).ToList();
