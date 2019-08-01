@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scraper.Models
+namespace Classes
 {
     public class IgnoreUnexpectedArraysConverter<T> : IgnoreUnexpectedArraysConverterBase
     {

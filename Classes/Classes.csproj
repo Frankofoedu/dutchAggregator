@@ -48,11 +48,15 @@
   <ItemGroup>
     <Compile Include="Bet9ja.cs" />
     <Compile Include="BetPawaData\SingleReceivedData.cs" />
+    <Compile Include="ErrorHandler.cs" />
     <Compile Include="Jobs.cs" />
     <Compile Include="DailyBetPawa.cs" />
     <Compile Include="BetPawa.cs" />
+    <Compile Include="MerryBet\MerrybetData.cs" />
+    <Compile Include="MerryBet\SearchData.cs" />
     <Compile Include="NormalisedSelection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TwoWayCompare.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

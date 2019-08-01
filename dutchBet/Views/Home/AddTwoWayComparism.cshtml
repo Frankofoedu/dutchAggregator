@@ -1,0 +1,107 @@
+﻿@using Classes;
+@model Classes.TwoWayCompare
+
+@{
+    ViewBag.Title = "AddTwoWayComparism";
+
+    var NS = (List<NormalisedSelection>)ViewBag.NS;
+    var TwoWay = (List<TwoWayCompare>)ViewBag.TwoWay;
+
+    string msg = ViewBag.Msg;
+}
+
+<h2>AddTwoWayComparism</h2>
+
+@if (!string.IsNullOrWhiteSpace(msg))
+{
+    if (msg.Contains("Error"))
+    {
+        <div class="alert alert-dismissable alert-danger">
+            @msg
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-dismissable alert-success">
+            @msg
+        </div>
+    }
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Normals</h2>
+                <ul class="list-unstyled">
+                    @if (NS != null)
+                    {
+                        for (int i = 0; i < NS.Count; i++)
+                        {
+                            <li>@NS[i].Normal</li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="col-sm-6">
+                
+                <div class="row">
+                    <div class=" col-xs-12">
+                        <div class="form-horizontal">
+                            <h4>TwoWayCompare</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Selection1, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Selection1, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Selection1, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Selection2, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Selection2, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Selection2, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Create" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class=" col-xs-12">
+                        <h2>Saved Two-Way Compares</h2>
+                        <ul class="list-unstyled">
+                            @if (TwoWay != null)
+                            {
+                                for (int i = 0; i < TwoWay.Count; i++)
+                                {
+                                    <li>@(TwoWay[i].Selection1 + " ___ " + TwoWay[i].Selection2)</li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

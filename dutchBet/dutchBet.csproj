@@ -229,6 +229,7 @@
     <Content Include="Views\Odds\Result.cshtml" />
     <Content Include="Views\Home\NormaliseOddSelection.cshtml" />
     <Content Include="Views\Home\ViewNormal.cshtml" />
+    <Content Include="Views\Home\AddTwoWayComparism.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

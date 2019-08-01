@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Scraper.Models.MerryBet;
+using Classes.MerryBet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,11 +57,11 @@ namespace Scraper
 
                         var mbOddsnGames = new MerrybetData()
                         {
-                            DateOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime.Date.ToString(),
+                            DateOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime.Date.ToString(),
                             League = singleEventData.data.category3Name,
                             TeamNames = singleEventData.data.eventName,
                             Odds = mbOdds,
-                            TimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime.TimeOfDay.ToString()
+                            TimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime.TimeOfDay.ToString()
                         };
 
                         listEvents.Add(mbOddsnGames);

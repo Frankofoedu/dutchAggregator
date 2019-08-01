@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scraper.Models.MerryBet
+namespace Classes.MerryBet
 {
 
     public class Outcome
