@@ -56,7 +56,8 @@ namespace Scraper
 
                             var teamNames = singleEventData.data.eventName.Split('-');
 
-                            mbOdds.ForEach(m => m.Selection.Replace(teamNames[0], "1").Replace(teamNames[1], "2"));
+                            mbOdds.ForEach(
+                                m => m.Selection = m.Selection.Replace(teamNames[0].Trim(), "1").Replace(teamNames[1].Trim(), "2"));
 
                             var mbOddsnGames = new MerrybetData()
                             {
