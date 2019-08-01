@@ -1,4 +1,5 @@
 ﻿using Classes;
+using Classes.MerryBet;
 using dutchBet.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,13 @@ namespace dutchBet.Controllers
 {
     public class HomeController : Controller
     {
+        
+        public Match MatchToCalculate { get; set; }
+        public List<NormalisedSelection> NormalisedSelections { get; set; }
+        public NormalisedSelection SubmittedNormal { get; set; }
+        public List<TwoWayCompare> TwoWayCompares { get; set; }
+        public TwoWayCompare TwoWayCompare { get; set; }
+
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
@@ -17,7 +25,6 @@ namespace dutchBet.Controllers
             return View();
         }
 
-        public Match MatchToCalculate { get; set; }
         public ActionResult Calculate()
         {
             ViewBag.Title = "Bet Calculate";
@@ -52,29 +59,23 @@ namespace dutchBet.Controllers
 
                     var rtn = actions.calculateForTwoOdds(odd1.Odd, odd2.Odd);
 
-                        rtn.Site1 = odd1.Site;
-                        rtn.Site2 = odd2.Site;
+                    rtn.Site1 = odd1.Site;
+                    rtn.Site2 = odd2.Site;
 
-                        rtn.Game1 = match.Odd1Name;
-                        rtn.Game2 = match.Odd2Name;
+                    rtn.Game1 = match.Odd1Name;
+                    rtn.Game2 = match.Odd2Name;
 
-                        rtn.Team = match.Teams;
+                    rtn.Team = match.Teams;
 
-                        ProfitableReturns.Add(rtn);
+                    ProfitableReturns.Add(rtn);
                 }
-
             }
-
-
-
 
             ViewBag.Title = "Profitable Returns";
 
             return View(ProfitableReturns);
         }
 
-        
-        public List<NormalisedSelection> NormalisedSelections { get; set; }
         public ActionResult NormaliseOddSelection()
         {
             var folder =  System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
@@ -82,39 +83,66 @@ namespace dutchBet.Controllers
             {
                 NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
             }
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja7-26-2019.xml");
+
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja.xml");
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
             bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa7-26-2019.xml").OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa.xml").OrderByDescending(m => m.Odds.Count());
+
+            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(folder + "merryBet.xml").OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
+            var largestSelectionMatchMerryBet = merrybetMatches.First();
+
+            if (NormalisedSelections != null)
+            {
+                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
+                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
+                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet == x.SelectionFull));
+            }
 
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m=>m.SelectionFull).ToList();
             ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
+            ViewBag.MerryBetOdds = largestSelectionMatchMerryBet.Odds.OrderBy(m => m.SelectionFull).ToList();
 
-            var max = largestSelectionMatchBet9ja.Odds.Count > largestSelectionMatchBetPawa.Odds.Count ? 
-                largestSelectionMatchBet9ja.Odds.Count : largestSelectionMatchBetPawa.Odds.Count;
-
-            ViewBag.Max = max;
-
-            return View(NormalisedSelections);
+            return View(SubmittedNormal);
         }
 
         [HttpPost]
-        public ActionResult NormaliseOddSelection(List<NormalisedSelection> NS)
+        public ActionResult NormaliseOddSelection(NormalisedSelection NS)
         {
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
-            ViewBag.Msg= Jobs.SaveToXML(NS, folder + "NormalisedSelection.xml");
 
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja7-26-2019.xml");
+            if (System.IO.File.Exists(folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
+            }
+            else
+            {
+                NormalisedSelections = new List<NormalisedSelection>();
+            }
+
+            if (NormalisedSelections!=null && NormalisedSelections.Any(m=>m.Normal == NS.Normal))
+            {
+                ViewBag.Msg = "Error! The Normal already exists.";
+            }
+            else
+            {
+                NormalisedSelections.Add(NS);
+                ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, folder + "NormalisedSelection.xml");
+            }
+
+            
+
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja.xml");
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
             bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa7-26-2019.xml").OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa.xml").OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
@@ -122,12 +150,84 @@ namespace dutchBet.Controllers
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull).ToList();
             ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
 
-            var max = largestSelectionMatchBet9ja.Odds.Count > largestSelectionMatchBetPawa.Odds.Count ?
-                largestSelectionMatchBet9ja.Odds.Count : largestSelectionMatchBetPawa.Odds.Count;
+            largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
+            largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
 
-            ViewBag.Max = max;
+            return View(NS);
+        }
+        public ActionResult ViewNormal()
+        {
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            if (System.IO.File.Exists(folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
+            }
 
             return View(NormalisedSelections);
+        }
+
+        [HttpPost]
+        public ActionResult ViewNormal( string normal)
+        {
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            if (System.IO.File.Exists(folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
+            }
+
+            NormalisedSelections.RemoveAll( n=>  n.Normal == normal);
+
+            Jobs.SaveToXML(NormalisedSelections, folder + "NormalisedSelection.xml");
+
+            return View(NormalisedSelections);
+        }
+
+
+        public ActionResult AddTwoWayComparism()
+        {
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            if (System.IO.File.Exists(folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
+            }
+            if (System.IO.File.Exists(folder + "TwoWayComparism.xml"))
+            {
+                TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(folder + "TwoWayComparism.xml");
+            }
+
+            ViewBag.NS = NormalisedSelections;
+            ViewBag.TwoWay = TwoWayCompares;
+
+            return View(TwoWayCompare);
+        }
+
+        [HttpPost]
+        public ActionResult AddTwoWayComparism(TwoWayCompare TWC)
+        {
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            if (System.IO.File.Exists(folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
+            }
+            if (System.IO.File.Exists(folder + "TwoWayComparism.xml"))
+            {
+                TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(folder + "TwoWayComparism.xml");
+            }
+
+            if (TwoWayCompares.Any(m=>(m.Selection1 == TWC.Selection1 && m.Selection2== TWC.Selection2) || 
+                (m.Selection1 == TWC.Selection2 && m.Selection2 == TWC.Selection1)))
+            {
+                ViewBag.Msg = "Error! Current Selections already exists";
+            }
+            else {
+                TwoWayCompares.Add(TWC);
+                ViewBag.Msg = Jobs.SaveToXML(TwoWayCompares, folder + "NormalisedSelection.xml");
+            }
+
+            ViewBag.NS = NormalisedSelections;
+            ViewBag.TwoWay = TwoWayCompares;
+
+            return View(TwoWayCompare);
         }
     }
 }

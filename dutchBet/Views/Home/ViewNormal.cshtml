@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Classes.NormalisedSelection>
+
+@{
+    ViewBag.Title = "ViewNormal";
+}
+
+<h2>ViewNormal</h2>
+
+<p>
+    @Html.ActionLink("Create New", "NormaliseOddSelection")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Normal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Bet9ja)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BetPawa)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NairaBet)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MerryBet)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SportyBet)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Normal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Bet9ja)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BetPawa)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NairaBet)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MerryBet)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SportyBet)
+        </td>
+        <td>
+            @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }, new {@class = "btn btn-link" } ) |*@
+            <form method="post">
+                <input name="normal" type="hidden" value="@item.Normal"/>
+                <button type="submit" class="btn btn-link">Delete</button>
+            </form>
+        </td>
+    </tr>
+}
+
+</table>

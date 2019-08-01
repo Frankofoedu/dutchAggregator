@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Scraper.Models.MerryBet;
+using Classes.MerryBet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,10 +31,10 @@ namespace Scraper
                 string SecondresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + tomodate).Result;
 
                 //get first day list of events id
-                var t = JsonConvert.DeserializeObject<SearchData>(FirstresponseBody).data.Select(x => x.eventId).ToList();
+                var t = JsonConvert.DeserializeObject<SearchData>(FirstresponseBody).data.Where(m=>m.category1Name == "Soccer").Select(x => x.eventId).ToList();
 
                 //get second day list of events id and add to previous list
-                t.AddRange(JsonConvert.DeserializeObject<SearchData>(SecondresponseBody).data.Select(x => x.eventId).ToList());
+                t.AddRange(JsonConvert.DeserializeObject<SearchData>(SecondresponseBody).data.Where(m=>m.category1Name == "Soccer").Select(x => x.eventId).ToList());
 
                 for (int i = 0; i < t.Count; i++)
                 {
@@ -48,23 +48,27 @@ namespace Scraper
                     if (singleEventData.data != null)
                     {
 
-                        var mbOdds = singleEventData.data.eventGames.
-                                                        SelectMany(x => x.outcomes.
-                                                        Select(m => new DailyMerrybetOdds()
-                                                        { MainType = x.gameName, Selection = m.outcomeName, Value = m.outcomeOdds.ToString() }))
-                                                        .ToList();
+                            var mbOdds = singleEventData.data.eventGames.
+                                                            SelectMany(x => x.outcomes.
+                                                            Select(m => new DailyMerrybetOdds()
+                                                            { MainType = x.gameName, Selection = m.outcomeName, Value = m.outcomeOdds.ToString() }))
+                                                            .ToList();
 
+                            var teamNames = singleEventData.data.eventName.Split('-');
 
-                        var mbOddsnGames = new MerrybetData()
-                        {
-                            DateOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime.Date.ToString(),
-                            League = singleEventData.data.category3Name,
-                            TeamNames = singleEventData.data.eventName,
-                            Odds = mbOdds,
-                            TimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(1564234200000).DateTime.TimeOfDay.ToString()
-                        };
+                            mbOdds.ForEach(
+                                m => m.Selection = m.Selection.Replace(teamNames[0].Trim(), "1").Replace(teamNames[1].Trim(), "2"));
 
-                        listEvents.Add(mbOddsnGames);
+                            var mbOddsnGames = new MerrybetData()
+                            {
+                                DateOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime.Date.ToString(),
+                                League = singleEventData.data.category3Name,
+                                TeamNames = singleEventData.data.eventName,
+                                Odds = mbOdds,
+                                TimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime.ToLocalTime().TimeOfDay.ToString()
+                            };
+
+                            listEvents.Add(mbOddsnGames);
 
                     }
                     else
