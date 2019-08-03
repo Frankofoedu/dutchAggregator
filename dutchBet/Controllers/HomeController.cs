@@ -135,7 +135,7 @@ namespace dutchBet.Controllers
                 ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, folder + "NormalisedSelection.xml");
             }
 
-            
+
 
             var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja.xml");
             var bet9jaMatches = new List<Bet9jaMatches>();
@@ -144,14 +144,22 @@ namespace dutchBet.Controllers
 
             var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa.xml").OrderByDescending(m => m.Odds.Count());
 
+            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(folder + "merryBet.xml").OrderByDescending(m => m.Odds.Count());
+
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
+            var largestSelectionMatchMerryBet = merrybetMatches.First();
+
+            if (NormalisedSelections != null)
+            {
+                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
+                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
+                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet == x.SelectionFull));
+            }
 
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull).ToList();
             ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
-
-            largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
-            largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
+            ViewBag.MerryBetOdds = largestSelectionMatchMerryBet.Odds.OrderBy(m => m.SelectionFull).ToList();
 
             return View(NS);
         }
@@ -213,6 +221,7 @@ namespace dutchBet.Controllers
             {
                 TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(folder + "TwoWayComparism.xml");
             }
+            else { TwoWayCompares = new List<TwoWayCompare>(); }
 
             if (TwoWayCompares.Any(m=>(m.Selection1 == TWC.Selection1 && m.Selection2== TWC.Selection2) || 
                 (m.Selection1 == TWC.Selection2 && m.Selection2 == TWC.Selection1)))
@@ -221,7 +230,7 @@ namespace dutchBet.Controllers
             }
             else {
                 TwoWayCompares.Add(TWC);
-                ViewBag.Msg = Jobs.SaveToXML(TwoWayCompares, folder + "NormalisedSelection.xml");
+                ViewBag.Msg = Jobs.SaveToXML(TwoWayCompares, folder + "TwoWayComparism.xml");
             }
 
             ViewBag.NS = NormalisedSelections;
