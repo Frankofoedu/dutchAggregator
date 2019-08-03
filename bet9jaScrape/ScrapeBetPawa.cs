@@ -142,7 +142,7 @@ namespace Scraper
                         DateOfMatch = DateTime.Parse(data.Data.StartsRaw).Date,
                         TeamNames = data.Data.Name, TimeOfMatch = DateTime.Parse(data.Data.StartsRaw).TimeOfDay.ToString(),
                         Odds = data.Data.Markets.SelectMany(x => x.Prices.Select(
-                            m => new BetPawaOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name, Value = m.Cost })).ToList()
+                            m => new BetPawaOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name + m.Hcp, Value = m.Cost })).ToList()
                     });
 
                 } 
