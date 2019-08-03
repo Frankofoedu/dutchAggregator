@@ -16,7 +16,7 @@ namespace ScrapeTest
         static readonly HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
-           
+            ScrapeAndSaveBet9jaToday();
 
             //Console.WriteLine("TeStInG BEtPawa");
             //var at = new ScrapeBetPawa();
@@ -38,27 +38,27 @@ namespace ScrapeTest
             var action = new ScrapeBet9ja();
 
             Console.WriteLine("Starting Bet9jaScrape...");
-            var rtn = action.Scrape();
+            var rtn = action.ScrapeJsonAsync(client).Result;
 
             Console.WriteLine("Done with Bet9jaScrape...");
 
             Console.WriteLine("Displaying data... \n\n\n");
-            foreach (var item in rtn)
-            {
-                Console.WriteLine(item);
-                foreach (var i in item.Matches)
-                {
-                    Console.WriteLine("---" + i.TeamNames);
-                    foreach (var odd in i.Odds)
-                    {
-                        Console.WriteLine("--------" + odd.Selection + " :: " + odd.Value);
-                    }
-                }
-            }
+            //foreach (var item in rtn)
+            //{
+            //    Console.WriteLine(item);
+            //    foreach (var i in item.Matches)
+            //    {
+            //        Console.WriteLine("---" + i.TeamNames);
+            //        foreach (var odd in i.Odds)
+            //        {
+            //            Console.WriteLine("--------" + odd.Selection + " :: " + odd.Value);
+            //        }
+            //    }
+            //}
 
             Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
 
-            Console.WriteLine(Jobs.SaveToXML(rtn, "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
+          Console.WriteLine(Jobs.SaveToXML(rtn, "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
         }
 

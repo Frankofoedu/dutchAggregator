@@ -1,17 +1,109 @@
 ﻿using Classes;
+using Classes.Bet9jaData;
+using Classes.Bet9jaData.Single;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Scraper
 {
+    public class SendData
+    {
+        public int IDSottoEvento { get; set; }
+        public int IDGruppoQuota { get; set; }
+    }
+
 
     public class ScrapeBet9ja
     {
+        public async Task<List<Bet9ja>> ScrapeJsonAsync(HttpClient client)
+        {
+            var listEvents = new List<Bet9ja>();
+            try
+            {
+                //request to get all matches
+
+                var payload = "{\"IDSport\":590,\"IDGruppoQuota\":-1}";
+
+                HttpContent c = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                var uri = "https://web.bet9ja.com/Controls/ControlsWS.asmx/OddsTodayFullEvent";
+                var response = await client.PostAsync(uri, c);
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadAsStringAsync();
+
+                    var t = JsonConvert.DeserializeObject<Bet9jaReceivedData>(data);
+
+                    var soccerData = t.d.Where(x => x.Sport.Trim() == "Soccer").FirstOrDefault();
+
+                    if (soccerData != null)
+                    {
+                        //get list of ids for todays match
+                        var listIds = soccerData.Detail.SottoEventiList.Select(m => m.IDSottoEvento).ToList();
+
+                        foreach (var id in listIds)
+                        {
+
+                            var postObject = JsonConvert.SerializeObject(new SendData() { IDSottoEvento = id,  IDGruppoQuota = 0 });
+
+                            var httpResponse = client.PostAsync("https://web.bet9ja.com/Controls/ControlsWS.asmx/GetSubEventDetails",
+                                           new StringContent(postObject, Encoding.UTF8, "application/json")).Result;
+                           
+                            if (httpResponse.IsSuccessStatusCode)
+                            {
+                                var d = await httpResponse.Content.ReadAsStringAsync();
+
+                                //var g = new JObject(d);
+
+                                var singleData = JsonConvert.DeserializeObject<Bet9jaSingleReceivedData>(d);
+
+                                if (singleData != null)
+                                {
+
+                                    var y = singleData.d.ClassiQuotaList;
+                                    var oddsngames = new List<Bet9jaMatches>();
+                                    foreach (var item in y)
+                                    {
+                                        var odds = new List<Bet9jaOdds>();
+                                        foreach (var m in item.QuoteList)
+                                        {
+                                            odds.Add(new Bet9jaOdds { Value = m.Quota, Selection = m.TipoQuota, Type = item.ClasseQuota });
+                                        }
+                                        oddsngames.Add(new Bet9jaMatches { Odds = odds, MatchTime = singleData.d.SrtDataInizio, TeamNames = singleData.d.SottoEvento });
+                                    }
+
+                                    listEvents.Add(new Bet9ja { League = singleData.d.Evento, Matches = oddsngames });
+                                    
+                                    
+                                }
+
+                            }
+                        }
+                        return listEvents;
+                    }
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\n Http Exception Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+
+            return null;
+        }
         public List<Bet9ja> Scrape()
         {
             ChromeOptions opt = new ChromeOptions();

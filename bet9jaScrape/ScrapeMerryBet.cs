@@ -82,6 +82,11 @@ namespace Scraper
             }
             catch (HttpRequestException e)
             {
+                Console.WriteLine("\n Http Exception Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+            catch (Exception e)
+            {
                 Console.WriteLine("\nException Caught!");
                 Console.WriteLine("Message :{0} ", e.Message);
             }

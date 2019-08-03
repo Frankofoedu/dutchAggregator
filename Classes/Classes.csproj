@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bet9ja.cs" />
+    <Compile Include="Bet9jaData\Bet9jaReceivedData.cs" />
+    <Compile Include="Bet9jaData\Bet9jaSingleReceivedData.cs" />
     <Compile Include="BetPawaData\SingleReceivedData.cs" />
     <Compile Include="ErrorHandler.cs" />
     <Compile Include="Jobs.cs" />
