@@ -22,7 +22,7 @@ namespace ScrapeTest
             //var at = new ScrapeBetPawa();
             //var bps = at.ScrapeDaily(client);
 
-            //Console.WriteLine(Jobs.SaveToXML(bps, "betPawa.xml"));
+            Console.WriteLine(Jobs.SaveToXML(bps, "betPawa.xml"));
 
             Console.WriteLine("Testing Merrybet");
             var msc = new ScrapeMerryBet();
