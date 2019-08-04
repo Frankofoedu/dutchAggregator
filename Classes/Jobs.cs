@@ -82,6 +82,137 @@ namespace Classes
             return M1homeArr.Intersect(M2homeArr).Any() && M1awayArr.Intersect(M2awayArr).Any();
         }
 
+        public static Bet9jaMatches SameMatch(DailyPawaMatches M1, List<Bet9jaMatches> Ms2)
+        {
+            var bet9jaMatches = Ms2.Where(m => Jobs.SameMatch(m.TeamNames, M1.TeamNames)).ToList();
+
+            if (bet9jaMatches.Count <= 0)
+            {
+                return null;
+            }
+            else if (bet9jaMatches.Count == 1)
+            {
+                return bet9jaMatches[0];
+            }
+            else
+            {
+                var timeB9Matches = bet9jaMatches.Where(n=> DateTime.Parse(n.MatchTime).TimeOfDay.ToString() == M1.TimeOfMatch).ToList();
+
+                if (timeB9Matches.Count == 1)
+                {
+                    return timeB9Matches[0];
+                }
+                else
+                {
+                    var homeNawayM1 = new List<string>();
+                    var homeNawayM2 = new List<string>();
+
+                    M1.TeamNames.Split('-').ToList().ForEach(m => homeNawayM1.Add(m.Trim().ToLower().Replace(" ", "")));
+
+                    List<int> LevenshteinScores = new List<int>();
+                    foreach (var M2 in Ms2)
+                    {
+                        M2.TeamNames.Split('-').ToList().ForEach(m => homeNawayM2.Add(m.Trim().ToLower().Replace(" ", "")));
+
+                        LevenshteinScores.Add(ComputeLevenshteinDistance(homeNawayM1[0], homeNawayM2[0]) + ComputeLevenshteinDistance(homeNawayM1[1], homeNawayM2[1]));
+                    }
+
+                    var i = LevenshteinScores.IndexOf(LevenshteinScores.Min());
+                    return Ms2[i];
+                }
+            }
+        }
+
+        public static MerryBet.MerrybetData SameMatch(DailyPawaMatches M1, List<MerryBet.MerrybetData> Ms2)
+        {
+            var merrybetMatches = Ms2.Where(m => Jobs.SameMatch(m.TeamNames, M1.TeamNames)).ToList();
+
+            if (merrybetMatches.Count <= 0)
+            {
+                return null;
+            }
+            else if (merrybetMatches.Count == 1)
+            {
+                return merrybetMatches[0];
+            }
+            else
+            {
+                var timeMBMatches = merrybetMatches.Where(n => n.TimeOfMatch == M1.TimeOfMatch).ToList();
+
+                if (timeMBMatches.Count == 1)
+                {
+                    return timeMBMatches[0];
+                }
+                else
+                {
+                    var homeNawayM1 = new List<string>();
+                    var homeNawayM2 = new List<string>();
+
+                    M1.TeamNames.Split('-').ToList().ForEach(m => homeNawayM1.Add(m.Trim().ToLower().Replace(" ", "")));
+
+                    List<int> LevenshteinScores = new List<int>();
+                    foreach (var M2 in Ms2)
+                    {
+                        M2.TeamNames.Split('-').ToList().ForEach(m => homeNawayM2.Add(m.Trim().ToLower().Replace(" ", "")));
+
+                        LevenshteinScores.Add(ComputeLevenshteinDistance(homeNawayM1[0], homeNawayM2[0]) + ComputeLevenshteinDistance(homeNawayM1[1], homeNawayM2[1]));
+                    }
+
+                    var i = LevenshteinScores.IndexOf(LevenshteinScores.Min());
+                    return Ms2[i];
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Compute the Levenshtein Distance between two strings.
+        /// </summary>
+        public static int ComputeLevenshteinDistance(string s, string t)
+        {
+            int n = s.Length;
+            int m = t.Length;
+            int[,] d = new int[n + 1, m + 1];
+
+            // Step 1
+            if (n == 0)
+            {
+                return m;
+            }
+
+            if (m == 0)
+            {
+                return n;
+            }
+
+            // Step 2
+            for (int i = 0; i <= n; d[i, 0] = i++)
+            {
+            }
+
+            for (int j = 0; j <= m; d[0, j] = j++)
+            {
+            }
+
+            // Step 3
+            for (int i = 1; i <= n; i++)
+            {
+                //Step 4
+                for (int j = 1; j <= m; j++)
+                {
+                    // Step 5
+                    int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+
+                    // Step 6
+                    d[i, j] = Math.Min(
+                        Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
+                        d[i - 1, j - 1] + cost);
+                }
+            }
+            // Step 7
+            return d[n, m];
+        }
+
         public static CalcClasses.TwoOddsReturn calculateForTwoOdds(double odd1, double odd2)
         {
             var x = 1.0 / (odd1 + odd2) * odd2;

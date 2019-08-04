@@ -32,7 +32,7 @@ namespace DutchBetTest
 
             Console.WriteLine("Started...");
 
-            TestNameComparison();
+            Analyse();
 
             Console.WriteLine("Done...");
             Console.ReadLine();
@@ -79,8 +79,8 @@ namespace DutchBetTest
 
             foreach (var bpMatch in betPawaMatches)
             {
-                var b9Match = bet9jaMatches.FirstOrDefault(m => Jobs.SameMatch(m.TeamNames, bpMatch.TeamNames));
-                var mbMatch = merrybetMatches.FirstOrDefault(m => Jobs.SameMatch(m.TeamNames, bpMatch.TeamNames));
+                var b9Match = Jobs.SameMatch(bpMatch, bet9jaMatches);
+                var mbMatch = Jobs.SameMatch(bpMatch, merrybetMatches);
 
                 foreach (var item in TwoWayCompares)
                 {
@@ -276,24 +276,23 @@ namespace DutchBetTest
 
             foreach (var item in betPawaMatches)
             {
-                var bet9jaMatch = bet9jaMatches.FirstOrDefault(m => Jobs.SameMatch(m.TeamNames, item.TeamNames));
+                var bet9jaMatch = Jobs.SameMatch(item, bet9jaMatches);
 
-                if (bet9jaMatch == null)
+                if (bet9jaMatch==null)
                 {
                     Console.WriteLine(item.TeamNames + " ----- Not Found");
                 }
-                else
-                {
+                else {
                     totalFound++;
                     Console.WriteLine(item.TeamNames + " ----- " + bet9jaMatch.TeamNames + "--- Found");
                 }
             }
 
             Console.WriteLine(totalFound + "/" + betPawaMatches.Count + " betpawa teams were found in Bet9ja");
-
+            totalFound = 0;
             foreach (var item in betPawaMatches)
             {
-                var merrybetMatch = merrybetMatches.FirstOrDefault(m => Jobs.SameMatch(m.TeamNames, item.TeamNames));
+                var merrybetMatch = Jobs.SameMatch(item, merrybetMatches);
 
                 if (merrybetMatch == null)
                 {
