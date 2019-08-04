@@ -16,18 +16,19 @@ namespace ScrapeTest
         static readonly HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
             ScrapeAndSaveBet9jaToday();
 
             Console.WriteLine("TeStInG BEtPawa");
             var at = new ScrapeBetPawa();
             var bps = at.ScrapeDaily(client);
 
-            Console.WriteLine(Jobs.SaveToXML(bps, "betPawa.xml"));
+            Console.WriteLine(Jobs.SaveToXML(bps, folder + "betPawa" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
             Console.WriteLine("Testing Merrybet");
             var msc = new ScrapeMerryBet();
             var mscrtn = msc.ScrapeDaily(client);
-            Console.WriteLine(Jobs.SaveToXML(mscrtn, "merryBet.xml"));
+            Console.WriteLine(Jobs.SaveToXML(mscrtn, folder + "merryBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
             Console.WriteLine("Finished All Jobs");
             Console.ReadLine();
@@ -35,6 +36,7 @@ namespace ScrapeTest
 
         public static void ScrapeAndSaveBet9jaToday()
         {
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
             var action = new ScrapeBet9ja();
 
             Console.WriteLine("Starting Bet9jaScrape...");
@@ -42,23 +44,7 @@ namespace ScrapeTest
 
             Console.WriteLine("Done with Bet9jaScrape...");
 
-            Console.WriteLine("Displaying data... \n\n\n");
-            //foreach (var item in rtn)
-            //{
-            //    Console.WriteLine(item);
-            //    foreach (var i in item.Matches)
-            //    {
-            //        Console.WriteLine("---" + i.TeamNames);
-            //        foreach (var odd in i.Odds)
-            //        {
-            //            Console.WriteLine("--------" + odd.Selection + " :: " + odd.Value);
-            //        }
-            //    }
-            //}
-
-            Console.WriteLine("\n\n\n Done with displaying data... \n\n\n");
-
-          Console.WriteLine(Jobs.SaveToXML(rtn, "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
+            Console.WriteLine(Jobs.SaveToXML(rtn, folder + "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
         }
 
