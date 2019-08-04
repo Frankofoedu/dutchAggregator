@@ -70,6 +70,7 @@ namespace Scraper
 
                                     var y = singleData.d.ClassiQuotaList;
                                     var oddsngames = new List<Bet9jaMatches>();
+                                    var listmatch = new List<Bet9jaMatches>();
                                     foreach (var item in y)
                                     {
                                         var odds = new List<Bet9jaOdds>();
@@ -77,16 +78,35 @@ namespace Scraper
                                         {
                                             odds.Add(new Bet9jaOdds { Value = m.Quota, Selection = m.TipoQuota, Type = item.ClasseQuota });
                                         }
-                                        oddsngames.Add(new Bet9jaMatches { Odds = odds, MatchTime = singleData.d.SrtDataInizio, TeamNames = singleData.d.SottoEvento });
+                                        listmatch.Add(new Bet9jaMatches { Odds = odds, MatchTime = singleData.d.SrtDataInizio, TeamNames = singleData.d.SottoEvento });
                                     }
 
+                                    var compOdds =listmatch.GroupBy(x => x.TeamNames).First().SelectMany(m => m.Odds);
+
+
+                                    oddsngames.Add(new Bet9jaMatches { Odds = compOdds.ToList(), MatchTime = singleData.d.SrtDataInizio, TeamNames = singleData.d.SottoEvento });
+                                    //var j = new List<Bet9jaMatches>().Add(new Bet9jaMatches{)
+
                                     listEvents.Add(new Bet9ja { League = singleData.d.Evento, Matches = oddsngames });
-                                    
-                                    
+
+                                   
                                 }
 
                             }
                         }
+
+                        var qbets = listEvents.GroupBy(x => x.League).ToList();
+                        listEvents.Clear();
+                        foreach (var item in qbets)
+                        {
+                            var tbets = item;
+
+                            var bb = tbets.SelectMany(cb => cb.Matches);
+
+                            listEvents.Add(new Bet9ja { League = item.Key, Matches = bb.ToList() });
+                        }
+
+                        //.Select(m => new Bet9ja { League = m.Key, Matches = m.ToList() });
                         return listEvents;
                     }
                 }
