@@ -18,9 +18,9 @@ namespace ScrapeTest
         {
             ScrapeAndSaveBet9jaToday();
 
-            //Console.WriteLine("TeStInG BEtPawa");
-            //var at = new ScrapeBetPawa();
-            //var bps = at.ScrapeDaily(client);
+            Console.WriteLine("TeStInG BEtPawa");
+            var at = new ScrapeBetPawa();
+            var bps = at.ScrapeDaily(client);
 
             Console.WriteLine(Jobs.SaveToXML(bps, "betPawa.xml"));
 
