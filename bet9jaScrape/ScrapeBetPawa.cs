@@ -89,7 +89,7 @@ namespace Scraper
 
                 var paths = new List<int>();
 
-                
+
 
                 var t = JsonConvert.DeserializeObject<Rootobject>(responseBody);
 
@@ -99,6 +99,30 @@ namespace Scraper
 
                 var listEventsIds = GetRemainingEvents(t.Data.RemainingEventIds, 1);
 
+                //implement task class
+                //var tasks = listEventsIds.Select(
+
+                //    urls => client.PostAsync("https://www.betpawa.ng/events/ws/getEventsByIds",
+                //                   new StringContent(JsonConvert.SerializeObject(new SendData()
+                //                   { MarketTypeGrouping = "_1X2", EventIds = urls }), 
+                //                   Encoding.UTF8, "application/json"))
+
+
+                //);
+
+                //await Task.WhenAll(tasks);
+
+                //var responses = tasks.Select(task => task.Result);
+
+                //foreach (var item in responses)
+                //{
+                //    if (item.IsSuccessStatusCode)
+                //    {
+
+                //    }
+                //}
+                //end task implement
+
                 foreach (var ids in listEventsIds)
                 {
                     var postObject = JsonConvert.SerializeObject(new SendData() { MarketTypeGrouping = "_1X2", EventIds = ids });
@@ -107,14 +131,14 @@ namespace Scraper
                     var response = client.PostAsync("https://www.betpawa.ng/events/ws/getEventsByIds",
                                    new StringContent(postObject, Encoding.UTF8, "application/json")).Result;
 
-                   
+
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine("-----Response received");
-                        var m =  response.Content.ReadAsStringAsync().Result;
+                        var m = response.Content.ReadAsStringAsync().Result;
 
                         //add path for event id
-                       var data = JsonConvert.DeserializeObject<RootObject>(m);
+                        var data = JsonConvert.DeserializeObject<RootObject>(m);
 
                         foreach (var item in data.Data)
                         {
@@ -122,8 +146,8 @@ namespace Scraper
                                 break;
 
                             paths.Add(item.Id);
-                            
-                        }                        
+
+                        }
                     }
                 }
 
@@ -137,17 +161,19 @@ namespace Scraper
 
                     var data = JsonConvert.DeserializeObject<SingleReceivedData.RootObject>(oddsResponseBody);
 
-                    betOverview.Add(new DailyPawaMatches() {
+                    betOverview.Add(new DailyPawaMatches()
+                    {
                         League = data.Data.League,
                         DateOfMatch = DateTime.Parse(data.Data.StartsRaw).Date,
-                        TeamNames = data.Data.Name, TimeOfMatch = DateTime.Parse(data.Data.StartsRaw).TimeOfDay.ToString(),
+                        TeamNames = data.Data.Name,
+                        TimeOfMatch = DateTime.Parse(data.Data.StartsRaw).TimeOfDay.ToString(),
                         Odds = data.Data.Markets.SelectMany(x => x.Prices.Select(
                             m => new BetPawaOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name + m.Hcp, Value = m.Cost })).ToList()
                     });
 
-                } 
+                }
 
-               
+
 
                 Console.WriteLine("-----Scraping Done");
 
@@ -163,7 +189,7 @@ namespace Scraper
         }
 
 
-       List<int[]> GetRemainingEvents(int[] events, int currentGroup)
+        List<int[]> GetRemainingEvents(int[] events, int currentGroup)
         {
             bool isRemaining = true;
             var data = new List<int[]>();
