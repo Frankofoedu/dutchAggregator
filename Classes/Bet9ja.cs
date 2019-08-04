@@ -17,6 +17,7 @@ namespace Classes
         public string TeamNames { get; set; }
         public string MatchTime { get; set; }
         public List<Bet9jaOdds> Odds { get; set; }
+       
     }
     public class Bet9jaOdds
     {

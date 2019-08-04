@@ -62,7 +62,7 @@ namespace ScrapeTest
         public static void ScrapeAndSaveBetPawa()
         {
 
-            Console.WriteLine("Starting BetPawaScrape...");
+            Console.WriteLine("Starting BetPawaScrape... at :" + DateTime.Now.ToString());
 
             var betpawa = new ScrapeBetPawa();
 
@@ -70,7 +70,7 @@ namespace ScrapeTest
 
             Console.WriteLine(Jobs.SaveToXML(betpawartn, "betPawa.xml"));
 
-            Console.WriteLine("Done with BetPawaScrape...");
+            Console.WriteLine("Done with BetPawaScrape... at: " + DateTime.Now.ToString());
 
             Console.WriteLine("Displaying data... \n\n\n");
             foreach (var item in betpawartn)

@@ -78,20 +78,23 @@ namespace dutchBet.Controllers
 
         public ActionResult NormaliseOddSelection()
         {
-            var folder =  System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            var folder = //Server.MapPath("~/xml/");
+                System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+
+
             if (System.IO.File.Exists( folder + "NormalisedSelection.xml"))
             {
                 NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(folder + "NormalisedSelection.xml");
             }
 
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja.xml");
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja8-4-2019.xml");
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
-            bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+              bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa.xml").OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa8-4-2019.xml").OrderByDescending(m => m.Odds.Count());
 
-            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(folder + "merryBet.xml").OrderByDescending(m => m.Odds.Count());
+            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(folder + "merryBet8-4-2019.xml").OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
