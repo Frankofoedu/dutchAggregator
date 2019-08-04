@@ -18,11 +18,21 @@ namespace DutchBetTest
 {
     class Program
     {
+        static string folder;
+        static string bet9jaFilePath;
+        static string betPawaFilePath;
+        static string merryBetFilePath;
+
         static void Main(string[] args)
         {
+            folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            bet9jaFilePath = folder + "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
+            betPawaFilePath = folder + "betPawa" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
+            merryBetFilePath = folder + "merryBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
+
             Console.WriteLine("Started...");
 
-            Analyse();
+            TestNameComparison();
 
             Console.WriteLine("Done...");
             Console.ReadLine();
@@ -30,7 +40,6 @@ namespace DutchBetTest
 
         public static void Analyse()
         {
-            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
             var NormalisedSelections = new List<NormalisedSelection>();
             var TwoWayCompares = new List<TwoWayCompare>();
             var ProfitableReturns = new List<TwoOddsReturn>();
@@ -45,14 +54,14 @@ namespace DutchBetTest
                 TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(folder + "TwoWayComparism.xml");
             }
 
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(folder + "bet9ja.xml");
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(bet9jaFilePath);
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
             bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(folder + "betPawa.xml").OrderByDescending(m => m.Odds.Count()).ToList();
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(betPawaFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(folder + "merryBet.xml").OrderByDescending(m => m.Odds.Count()).ToList();
+            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(merryBetFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
 
             var maxCount = 0;
 
@@ -233,42 +242,41 @@ namespace DutchBetTest
             Console.WriteLine("Profitable = " + profitable);
         }
 
-        public static void TestNameComparisonDailyBetPawaMatches()
+        public static void TestNameComparison()
         {
 
             Console.WriteLine("Loading bet9ja data from file");
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>("bet9ja7-26-2019.xml");
+
+            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(bet9jaFilePath);
+            var bet9jaMatches = new List<Bet9jaMatches>();
+            bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
+            bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+
 
             Console.WriteLine("Loading betPawa data from file");
-            var betPawaData = Jobs.LoadFromXML<DailyPawaMatches>("betPawa7-26-2019.xml");
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(betPawaFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var betpawatodaymatches = new List<DailyPawaMatches>();
-            var bet9jatodaymatches = new List<Bet9jaMatches>();
+            Console.WriteLine("Loading merrybet data from file");
+            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(merryBetFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
 
-            Console.WriteLine("Fetching Matches");
-            bet9jaData.ForEach(n => bet9jatodaymatches.AddRange(n.Matches));
-            betpawatodaymatches.AddRange(betPawaData.Where(m => m.DateOfMatch == DateTime.Parse("Fri 26/07")));
+
+
+
+            Console.WriteLine("\nbetpawa matches\n");
+            betPawaMatches.ForEach(m => Console.WriteLine(m.TeamNames));
+
+            Console.WriteLine("\n\nbet9ja matches\n");
+            bet9jaMatches.ForEach(m => Console.WriteLine(m.TeamNames));
+
+            Console.WriteLine("\n\nmerrybet matches\n");
+            merrybetMatches.ForEach(m => Console.WriteLine(m.TeamNames));
+
 
             var totalFound = 0;
 
-            Console.WriteLine("Checking for matching teams");
-
-            var max = betpawatodaymatches.Max(m => DateTime.Parse(m.TimeOfMatch).TimeOfDay);
-            var min = betpawatodaymatches.Min(m => DateTime.Parse(m.TimeOfMatch).TimeOfDay);
-
-            var bet9jaTimeFiltered = bet9jatodaymatches.Where(m => DateTime.ParseExact(m.MatchTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture).TimeOfDay >= min &&
-            DateTime.ParseExact(m.MatchTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture).TimeOfDay <= max).ToList();
-
-            Console.WriteLine("\nbetpawa matches\n");
-            betpawatodaymatches.ForEach(m => Console.WriteLine(m.TeamNames));
-
-            Console.WriteLine("\n\nbet9ja matches\n");
-
-            bet9jaTimeFiltered.ForEach(m => Console.WriteLine(m.TeamNames));
-
-            foreach (var item in betpawatodaymatches)
+            foreach (var item in betPawaMatches)
             {
-                var bet9jaMatch = bet9jatodaymatches.FirstOrDefault(m => Jobs.SameMatch(m.TeamNames, item.TeamNames));
+                var bet9jaMatch = bet9jaMatches.FirstOrDefault(m => Jobs.SameMatch(m.TeamNames, item.TeamNames));
 
                 if (bet9jaMatch == null)
                 {
@@ -277,12 +285,28 @@ namespace DutchBetTest
                 else
                 {
                     totalFound++;
-                    Console.WriteLine(item.TeamNames + " ----- Found");
+                    Console.WriteLine(item.TeamNames + " ----- " + bet9jaMatch.TeamNames + "--- Found");
                 }
             }
 
-            Console.WriteLine(totalFound + "/" + betpawatodaymatches.Count + " betpawa teams were found in Bet9ja");
+            Console.WriteLine(totalFound + "/" + betPawaMatches.Count + " betpawa teams were found in Bet9ja");
 
+            foreach (var item in betPawaMatches)
+            {
+                var merrybetMatch = merrybetMatches.FirstOrDefault(m => Jobs.SameMatch(m.TeamNames, item.TeamNames));
+
+                if (merrybetMatch == null)
+                {
+                    Console.WriteLine(item.TeamNames + " ----- Not Found");
+                }
+                else
+                {
+                    totalFound++;
+                    Console.WriteLine(item.TeamNames + " ----- " + merrybetMatch.TeamNames + "--- Found");
+                }
+            }
+
+            Console.WriteLine(totalFound + "/" + betPawaMatches.Count + " betpawa teams were found in Merrybet");
         }
 
 
