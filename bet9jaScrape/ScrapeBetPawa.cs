@@ -76,12 +76,8 @@ namespace Scraper
             return betOverview;
         }
 
-        public List<DailyPawaMatches> ScrapeDaily()
+        public List<DailyPawaMatches> ScrapeDaily(HttpClient client)
         {
-            using (var client = new HttpClient())
-                {
-
-                 
                 var betOverview = new List<DailyPawaMatches>();
 
                 Console.WriteLine("-----Scraping started");
@@ -190,7 +186,6 @@ namespace Scraper
                 }
 
                 return null;
-                }
         }
 
 

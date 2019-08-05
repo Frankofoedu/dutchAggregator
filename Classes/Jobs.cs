@@ -82,12 +82,29 @@ namespace Classes
             return M1homeArr.Intersect(M2homeArr).Any() && M1awayArr.Intersect(M2awayArr).Any();
         }
 
+        class B9MatchWithDistance
+        {
+            public int Distance { get; set; }
+            public Bet9jaMatches Match { get; set; }
+        }
         public static Bet9jaMatches SameMatch(DailyPawaMatches M1, List<Bet9jaMatches> Ms2)
         {
             var bet9jaMatches = Ms2.Where(m => Jobs.SameMatch(m.TeamNames, M1.TeamNames)).ToList();
 
             if (bet9jaMatches.Count <= 0)
             {
+                var timeB9Matches = Ms2.Where(n => DateTime.Parse(n.MatchTime).TimeOfDay.ToString() == M1.TimeOfMatch).ToList();
+
+                var LM = timeB9Matches.Select(m => new B9MatchWithDistance() {
+                    Distance = ComputeLevenshteinDistance(M1.TeamNames, m.TeamNames),
+                    Match = m
+                }).OrderBy(n=>n.Distance).ToList();
+
+                if (LM.Count > 0)
+                {
+                    if (LM[0].Distance <= 10) { return LM[0].Match;}
+                }
+
                 return null;
             }
             else if (bet9jaMatches.Count == 1)
@@ -104,31 +121,42 @@ namespace Classes
                 }
                 else
                 {
-                    var homeNawayM1 = new List<string>();
-                    var homeNawayM2 = new List<string>();
-
-                    M1.TeamNames.Split('-').ToList().ForEach(m => homeNawayM1.Add(m.Trim().ToLower().Replace(" ", "")));
-
                     List<int> LevenshteinScores = new List<int>();
-                    foreach (var M2 in Ms2)
+                    foreach (var M2 in timeB9Matches)
                     {
-                        M2.TeamNames.Split('-').ToList().ForEach(m => homeNawayM2.Add(m.Trim().ToLower().Replace(" ", "")));
-
-                        LevenshteinScores.Add(ComputeLevenshteinDistance(homeNawayM1[0], homeNawayM2[0]) + ComputeLevenshteinDistance(homeNawayM1[1], homeNawayM2[1]));
+                        LevenshteinScores.Add(ComputeLevenshteinDistance(M1.TeamNames, M2.TeamNames));
                     }
 
                     var i = LevenshteinScores.IndexOf(LevenshteinScores.Min());
-                    return Ms2[i];
+                    return timeB9Matches[i];
                 }
             }
         }
 
+        class MbMatchWithDistance
+        {
+            public int Distance { get; set; }
+            public MerryBet.MerrybetData Match { get; set; }
+        }
         public static MerryBet.MerrybetData SameMatch(DailyPawaMatches M1, List<MerryBet.MerrybetData> Ms2)
         {
             var merrybetMatches = Ms2.Where(m => Jobs.SameMatch(m.TeamNames, M1.TeamNames)).ToList();
 
             if (merrybetMatches.Count <= 0)
             {
+                var timeMbMatches = Ms2.Where(n => n.TimeOfMatch == M1.TimeOfMatch).ToList();
+
+                var LM = timeMbMatches.Select(m => new MbMatchWithDistance()
+                {
+                    Distance = ComputeLevenshteinDistance(M1.TeamNames, m.TeamNames),
+                    Match = m
+                }).OrderBy(n => n.Distance).ToList();
+
+                if (LM.Count > 0)
+                {
+                    if (LM[0].Distance <= 10) { return LM[0].Match; }
+                }
+
                 return null;
             }
             else if (merrybetMatches.Count == 1)

@@ -12,7 +12,7 @@ namespace Scraper
 
     public class ScrapeMerryBet
     {
-        public List<MerrybetData> ScrapeDaily()
+        public List<MerrybetData> ScrapeDaily(HttpClient client)
         {
                 var currdate = DateTime.Now.ToString("yyyy'-'MM'-'dd");
                 var tomodate = DateTime.Now.AddDays(1).ToString("yyyy'-'MM'-'dd");
@@ -22,9 +22,6 @@ namespace Scraper
 
                 try
                 {
-
-                    using (var client = new HttpClient())
-                    {
 
                         //get todays data
                         string FirstresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + currdate).Result;
@@ -80,7 +77,6 @@ namespace Scraper
                         }
 
                         return listEvents;
-                    }
                 }
                 catch (HttpRequestException e)
                 {
