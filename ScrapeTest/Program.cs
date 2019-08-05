@@ -14,12 +14,19 @@ namespace ScrapeTest
     {
         // HttpClient is intended to be instantiated once per application, rather than per-use. See Remarks.
         static readonly HttpClient client = new HttpClient();
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+
+
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+            //var spt = new ScrapeSportyBet();
+            //var sptData = spt.ScrapeSportyBetDailyAsync(client).Result;
+
+          //  Console.WriteLine(Jobs.SaveToXML(sptData, folder +  "sportybet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
+
             ScrapeAndSaveBet9jaToday();
 
-            Console.WriteLine("TeStInG BEtPawa");
+            Console.WriteLine("TestInG BEtPawa");
             var at = new ScrapeBetPawa();
             var bps = at.ScrapeDaily(client);
 
@@ -32,6 +39,9 @@ namespace ScrapeTest
 
             Console.WriteLine("Finished All Jobs");
             Console.ReadLine();
+
+
+
         }
 
         public static void ScrapeAndSaveBet9jaToday()

@@ -145,21 +145,14 @@ namespace Classes
                 }
                 else
                 {
-                    var homeNawayM1 = new List<string>();
-                    var homeNawayM2 = new List<string>();
-
-                    M1.TeamNames.Split('-').ToList().ForEach(m => homeNawayM1.Add(m.Trim().ToLower().Replace(" ", "")));
-
                     List<int> LevenshteinScores = new List<int>();
-                    foreach (var M2 in Ms2)
+                    foreach (var M2 in timeMBMatches)
                     {
-                        M2.TeamNames.Split('-').ToList().ForEach(m => homeNawayM2.Add(m.Trim().ToLower().Replace(" ", "")));
-
-                        LevenshteinScores.Add(ComputeLevenshteinDistance(homeNawayM1[0], homeNawayM2[0]) + ComputeLevenshteinDistance(homeNawayM1[1], homeNawayM2[1]));
+                        LevenshteinScores.Add(ComputeLevenshteinDistance(M1.TeamNames, M2.TeamNames));
                     }
 
                     var i = LevenshteinScores.IndexOf(LevenshteinScores.Min());
-                    return Ms2[i];
+                    return timeMBMatches[i];
                 }
             }
         }
