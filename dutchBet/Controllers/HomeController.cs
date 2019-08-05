@@ -77,15 +77,15 @@ namespace dutchBet.Controllers
             return View(ProfitableReturns);
         }
 
-        public ActionResult NormaliseOddSelection()
+        public ActionResult NormaliseOddSelection(string normal)
         {
-           // var folder = Server.MapPath("~/xml/");
-                //System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
-
-
             if (System.IO.File.Exists(BetConstants.normalizedFilePath))
             {
                 NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
+            }
+            if (!string.IsNullOrWhiteSpace(normal) & NormalisedSelections!=null)
+            {
+                SubmittedNormal = NormalisedSelections.FirstOrDefault(m => m.Normal == normal);
             }
 
             var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
@@ -93,30 +93,38 @@ namespace dutchBet.Controllers
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
               bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
+            var SportyData = Jobs.LoadFromXML<SportyBet>(BetConstants.sportyBetFilePath);
+            var sportyBetMatches = new List<SportyBetMatches>();
+            SportyData.ForEach(n => sportyBetMatches.AddRange(n.Matches));
+            sportyBetMatches = sportyBetMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+
             var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
+            var merryBetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
-            var largestSelectionMatchMerryBet = merrybetMatches.First();
+            var largestSelectionMatchMerryBet = merryBetMatches.First();
+            var largestSelectionMatchSportyBet = sportyBetMatches.First();
 
             if (NormalisedSelections != null)
             {
                 largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
                 largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
                 largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet == x.SelectionFull));
+                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet == x.SelectionFull));
             }
 
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m=>m.SelectionFull).ToList();
             ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
             ViewBag.MerryBetOdds = largestSelectionMatchMerryBet.Odds.OrderBy(m => m.SelectionFull).ToList();
+            ViewBag.SportyBetOdds = largestSelectionMatchSportyBet.Odds.OrderBy(m => m.SelectionFull).ToList();
 
             return View(SubmittedNormal);
         }
 
         [HttpPost]
-        public ActionResult NormaliseOddSelection(NormalisedSelection NS)
+        public ActionResult NormaliseOddSelection(string normal, NormalisedSelection NS)
         {
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
 
@@ -129,7 +137,25 @@ namespace dutchBet.Controllers
                 NormalisedSelections = new List<NormalisedSelection>();
             }
 
-            if (NormalisedSelections!=null && NormalisedSelections.Any(m=>m.Normal == NS.Normal))
+            if (!string.IsNullOrWhiteSpace(normal) && NormalisedSelections != null && NS.Normal == normal)
+            {
+                var editNormal = NormalisedSelections.FirstOrDefault(n => n.Normal == normal);
+                if (editNormal ==null)
+                {
+                    ViewBag.Msg = "Error! The Normal to edit does not exist.";
+                }
+                else
+                {
+                    editNormal.NairaBet = NS.NairaBet;
+                    editNormal.MerryBet = NS.MerryBet;
+                    editNormal.Bet9ja = NS.Bet9ja;
+                    editNormal.BetPawa = NS.BetPawa;
+                    editNormal.SportyBet = NS.SportyBet;
+
+                    ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
+                }
+            }
+            else if (NormalisedSelections!=null && NormalisedSelections.Any(m=>m.Normal == NS.Normal))
             {
                 ViewBag.Msg = "Error! The Normal already exists.";
             }
@@ -139,31 +165,37 @@ namespace dutchBet.Controllers
                 ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
             }
 
-
-
             var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
-            bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+            bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+
+            var SportyData = Jobs.LoadFromXML<SportyBet>(BetConstants.sportyBetFilePath);
+            var sportyBetMatches = new List<SportyBetMatches>();
+            SportyData.ForEach(n => sportyBetMatches.AddRange(n.Matches));
+            sportyBetMatches = sportyBetMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
             var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
+            var merryBetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
-            var largestSelectionMatchMerryBet = merrybetMatches.First();
+            var largestSelectionMatchMerryBet = merryBetMatches.First();
+            var largestSelectionMatchSportyBet = sportyBetMatches.First();
 
             if (NormalisedSelections != null)
             {
                 largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
                 largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
                 largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet == x.SelectionFull));
+                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet == x.SelectionFull));
             }
 
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull).ToList();
             ViewBag.BetPawaOdds = largestSelectionMatchBetPawa.Odds.OrderBy(m => m.SelectionFull).ToList();
             ViewBag.MerryBetOdds = largestSelectionMatchMerryBet.Odds.OrderBy(m => m.SelectionFull).ToList();
+            ViewBag.SportyBetOdds = largestSelectionMatchSportyBet.Odds.OrderBy(m => m.SelectionFull).ToList();
 
             return View(NS);
         }

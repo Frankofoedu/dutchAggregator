@@ -37,6 +37,11 @@ namespace ScrapeTest
             var mscrtn = msc.ScrapeDaily(client);
             Console.WriteLine(Jobs.SaveToXML(mscrtn, folder + "merryBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
+            Console.WriteLine("Testing Sportybet");
+            var ssb = new ScrapeSportyBet();
+            var ssbrtn = await ssb.ScrapeSportyBetDailyAsync(client);
+            Console.WriteLine(Jobs.SaveToXML(ssbrtn, folder + "sportyBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
+
             Console.WriteLine("Finished All Jobs");
             Console.ReadLine();
 

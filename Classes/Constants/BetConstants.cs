@@ -13,6 +13,7 @@ namespace Classes.Constants
         public static readonly string bet9jaFilePath = folder + "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
         public static readonly string betPawaFilePath =folder + "betPawa" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
         public static readonly string merryBetFilePath = folder + "merryBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
+        public static readonly string sportyBetFilePath = folder + "sportyBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
         public static readonly string normalizedFilePath = folder + "NormalisedSelection.xml";
     }
 }
