@@ -228,6 +228,8 @@ namespace DutchBetTest
                 }
             }
 
+            Console.WriteLine("/n");
+
             int profitable = 0;
             foreach (var item in ProfitableReturns)
             {
