@@ -28,13 +28,13 @@ namespace ScrapeTest
 
             Console.WriteLine("TestInG BEtPawa");
             var at = new ScrapeBetPawa();
-            var bps = at.ScrapeDaily(client);
+            var bps = at.ScrapeDaily();
 
             Console.WriteLine(Jobs.SaveToXML(bps, folder + "betPawa" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
             Console.WriteLine("Testing Merrybet");
             var msc = new ScrapeMerryBet();
-            var mscrtn = msc.ScrapeDaily(client);
+            var mscrtn = msc.ScrapeDaily();
             Console.WriteLine(Jobs.SaveToXML(mscrtn, folder + "merryBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
             Console.WriteLine("Finished All Jobs");
@@ -50,7 +50,7 @@ namespace ScrapeTest
             var action = new ScrapeBet9ja();
 
             Console.WriteLine("Starting Bet9jaScrape...");
-            var rtn = action.ScrapeJsonAsync(client).Result;
+            var rtn = action.ScrapeJsonAsync().Result;
 
             Console.WriteLine("Done with Bet9jaScrape...");
 
@@ -63,7 +63,7 @@ namespace ScrapeTest
 
             Console.WriteLine("TeStInG BEtPawa");
             var at = new ScrapeBetPawa();
-            at.ScrapeDaily(client);
+            at.ScrapeDaily();
 
             Console.WriteLine("Done with Betpawa");
             Console.Read();
@@ -76,7 +76,7 @@ namespace ScrapeTest
 
             var betpawa = new ScrapeBetPawa();
 
-            var betpawartn = betpawa.ScrapeDaily(client);
+            var betpawartn = betpawa.ScrapeDaily();
 
             Console.WriteLine(Jobs.SaveToXML(betpawartn, "betPawa.xml"));
 
