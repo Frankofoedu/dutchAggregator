@@ -23,91 +23,96 @@ namespace Scraper
 
     public class ScrapeBet9ja
     {
-        public async Task<List<Bet9ja>> ScrapeJsonAsync(HttpClient client)
+        public async Task<List<Bet9ja>> ScrapeJsonAsync()
         {
             var listEvents = new List<Bet9ja>();
             try
             {
-                //request to get all matches
 
-                var payload = "{\"IDSport\":590,\"IDGruppoQuota\":-1}";
-
-                HttpContent c = new StringContent(payload, Encoding.UTF8, "application/json");
-
-                var uri = "https://web.bet9ja.com/Controls/ControlsWS.asmx/OddsTodayFullEvent";
-                var response = await client.PostAsync(uri, c);
-                if (response.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    var data = await response.Content.ReadAsStringAsync();
 
-                    var t = JsonConvert.DeserializeObject<Bet9jaReceivedData>(data);
+                    //request to get all matches
 
-                    var soccerData = t.d.Where(x => x.Sport.Trim() == "Soccer").FirstOrDefault();
+                    var payload = "{\"IDSport\":590,\"IDGruppoQuota\":-1}";
 
-                    if (soccerData != null)
+                    HttpContent c = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                    var uri = "https://web.bet9ja.com/Controls/ControlsWS.asmx/OddsTodayFullEvent";
+                    var response = await client.PostAsync(uri, c);
+                    if (response.IsSuccessStatusCode)
                     {
-                        //get list of ids for todays match
-                        var listIds = soccerData.Detail.SottoEventiList.Select(m => m.IDSottoEvento).ToList();
+                        var data = await response.Content.ReadAsStringAsync();
 
-                        foreach (var id in listIds)
+                        var t = JsonConvert.DeserializeObject<Bet9jaReceivedData>(data);
+
+                        var soccerData = t.d.Where(x => x.Sport.Trim() == "Soccer").FirstOrDefault();
+
+                        if (soccerData != null)
                         {
+                            //get list of ids for todays match
+                            var listIds = soccerData.Detail.SottoEventiList.Select(m => m.IDSottoEvento).ToList();
 
-                            var postObject = JsonConvert.SerializeObject(new SendData() { IDSottoEvento = id,  IDGruppoQuota = 0 });
-
-                            var httpResponse = client.PostAsync("https://web.bet9ja.com/Controls/ControlsWS.asmx/GetSubEventDetails",
-                                           new StringContent(postObject, Encoding.UTF8, "application/json")).Result;
-                           
-                            if (httpResponse.IsSuccessStatusCode)
+                            foreach (var id in listIds)
                             {
-                                var d = await httpResponse.Content.ReadAsStringAsync();
 
-                                //var g = new JObject(d);
+                                var postObject = JsonConvert.SerializeObject(new SendData() { IDSottoEvento = id, IDGruppoQuota = 0 });
 
-                                var singleData = JsonConvert.DeserializeObject<Bet9jaSingleReceivedData>(d);
+                                var httpResponse = client.PostAsync("https://web.bet9ja.com/Controls/ControlsWS.asmx/GetSubEventDetails",
+                                               new StringContent(postObject, Encoding.UTF8, "application/json")).Result;
 
-                                if (singleData != null)
+                                if (httpResponse.IsSuccessStatusCode)
                                 {
+                                    var d = await httpResponse.Content.ReadAsStringAsync();
 
-                                    var y = singleData.d.ClassiQuotaList;
-                                    var oddsngames = new List<Bet9jaMatches>();
-                                    var listmatch = new List<Bet9jaMatches>();
-                                    foreach (var item in y)
+                                    //var g = new JObject(d);
+
+                                    var singleData = JsonConvert.DeserializeObject<Bet9jaSingleReceivedData>(d);
+
+                                    if (singleData != null)
                                     {
-                                        var odds = new List<Bet9jaOdds>();
-                                        foreach (var m in item.QuoteList)
+
+                                        var y = singleData.d.ClassiQuotaList;
+                                        var oddsngames = new List<Bet9jaMatches>();
+                                        var listmatch = new List<Bet9jaMatches>();
+                                        foreach (var item in y)
                                         {
-                                            odds.Add(new Bet9jaOdds { Value = m.Quota, Selection = m.TipoQuota, Type = item.ClasseQuota });
+                                            var odds = new List<Bet9jaOdds>();
+                                            foreach (var m in item.QuoteList)
+                                            {
+                                                odds.Add(new Bet9jaOdds { Value = m.Quota, Selection = m.TipoQuota, Type = item.ClasseQuota });
+                                            }
+                                            listmatch.Add(new Bet9jaMatches { Odds = odds, MatchTime = singleData.d.SrtDataInizio, TeamNames = singleData.d.SottoEvento });
                                         }
-                                        listmatch.Add(new Bet9jaMatches { Odds = odds, MatchTime = singleData.d.SrtDataInizio, TeamNames = singleData.d.SottoEvento });
+
+                                        var compOdds = listmatch.GroupBy(x => x.TeamNames).First().SelectMany(m => m.Odds);
+
+
+                                        oddsngames.Add(new Bet9jaMatches { Odds = compOdds.ToList(), MatchTime = singleData.d.SrtDataInizio, TeamNames = singleData.d.SottoEvento });
+                                        //var j = new List<Bet9jaMatches>().Add(new Bet9jaMatches{)
+
+                                        listEvents.Add(new Bet9ja { League = singleData.d.Evento, Matches = oddsngames });
+
+
                                     }
 
-                                    var compOdds =listmatch.GroupBy(x => x.TeamNames).First().SelectMany(m => m.Odds);
-
-
-                                    oddsngames.Add(new Bet9jaMatches { Odds = compOdds.ToList(), MatchTime = singleData.d.SrtDataInizio, TeamNames = singleData.d.SottoEvento });
-                                    //var j = new List<Bet9jaMatches>().Add(new Bet9jaMatches{)
-
-                                    listEvents.Add(new Bet9ja { League = singleData.d.Evento, Matches = oddsngames });
-
-                                   
                                 }
-
                             }
+
+                            var qbets = listEvents.GroupBy(x => x.League).ToList();
+                            listEvents.Clear();
+                            foreach (var item in qbets)
+                            {
+                                var tbets = item;
+
+                                var bb = tbets.SelectMany(cb => cb.Matches);
+
+                                listEvents.Add(new Bet9ja { League = item.Key, Matches = bb.ToList() });
+                            }
+
+                            //.Select(m => new Bet9ja { League = m.Key, Matches = m.ToList() });
+                            return listEvents;
                         }
-
-                        var qbets = listEvents.GroupBy(x => x.League).ToList();
-                        listEvents.Clear();
-                        foreach (var item in qbets)
-                        {
-                            var tbets = item;
-
-                            var bb = tbets.SelectMany(cb => cb.Matches);
-
-                            listEvents.Add(new Bet9ja { League = item.Key, Matches = bb.ToList() });
-                        }
-
-                        //.Select(m => new Bet9ja { League = m.Key, Matches = m.ToList() });
-                        return listEvents;
                     }
                 }
             }
