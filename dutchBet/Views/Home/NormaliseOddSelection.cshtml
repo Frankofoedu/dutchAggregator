@@ -7,6 +7,7 @@
     var Bet9jaOdds = (List<Bet9jaOdds>)ViewBag.Bet9jaOdds;
     var BetPawaOdds = (List<BetPawaOdds>)ViewBag.BetPawaOdds;
     var Merrybet = (List<DailyMerrybetOdds>)ViewBag.MerryBetOdds;
+    var Sportybet = (List<SportyBetOdds>)ViewBag.SportyBetOdds;
 
     string msg = ViewBag.Msg;
 }
@@ -32,7 +33,7 @@
     <div class="row">
         <div class="col-md-10">
             <div class="row">
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                     <h2>Bet9ja</h2>
                     <ul class="list-unstyled">
                         @for (int i = 0; i < Bet9jaOdds.Count; i++)
@@ -41,7 +42,7 @@
                         }
                     </ul>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                     <h2>BetPawa</h2>
                     <ul class="list-unstyled">
                         @for (int i = 0; i < BetPawaOdds.Count; i++)
@@ -50,12 +51,21 @@
                         }
                     </ul>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                     <h2>Merrybet</h2>
                     <ul class="list-unstyled">
                         @for (int i = 0; i < Merrybet.Count; i++)
                         {
                             <li style="border-bottom:1px solid red">@Merrybet[i].SelectionFull</li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-xs-3">
+                    <h2>SportyBet</h2>
+                    <ul class="list-unstyled">
+                        @for (int i = 0; i < Sportybet.Count; i++)
+                        {
+                            <li style="border-bottom:1px solid red">@Sportybet[i].SelectionFull</li>
                         }
                     </ul>
                 </div>
@@ -90,13 +100,13 @@
                 </div>
                 <div class="row">
                     <div class="form-group">
-                        <label>Nairabet</label>
-                        @Html.EditorFor(m => m.NairaBet, new { htmlAttributes = new { @class = "form-control" } })
+                        <label>Sportybet</label>
+                        @Html.EditorFor(m => m.SportyBet, new { htmlAttributes = new { @class = "form-control" } })
                     </div>
                 </div>
                 <input type="submit" value="Submit" class="btn btn-primary" />
                 @Html.ActionLink("Clear", "NormaliseOddSelection", "Home", new { area = "" }, new { @class = "btn btn-default" })
-                @Html.ActionLink("Clear", "ViewNormal", "Home", new { area = "" }, new { @class = "btn btn-default" })
+                @Html.ActionLink("View All", "ViewNormal", "Home", new { area = "" }, new { @class = "btn btn-default" })
             </form>
         </div>
     </div>

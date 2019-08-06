@@ -53,7 +53,7 @@
             @Html.DisplayFor(modelItem => item.SportyBet)
         </td>
         <td>
-            @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }, new {@class = "btn btn-link" } ) |*@
+            @Html.ActionLink("Edit", "NormaliseOddSelection", new { normal = item.Normal }, new {@class = "btn btn-link" } ) |
             <form method="post">
                 <input name="normal" type="hidden" value="@item.Normal"/>
                 <button type="submit" class="btn btn-link">Delete</button>
