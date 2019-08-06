@@ -109,10 +109,10 @@ namespace dutchBet.Controllers
 
             if (NormalisedSelections != null)
             {
-                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
-                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
-                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet == x.SelectionFull));
-                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet == x.SelectionFull));
+                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja.Replace(" ","") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
             }
 
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m=>m.SelectionFull).ToList();
@@ -124,7 +124,7 @@ namespace dutchBet.Controllers
         }
 
         [HttpPost]
-        public ActionResult NormaliseOddSelection(string normal, NormalisedSelection NS)
+        public ActionResult NormaliseOddSelection(string nval, NormalisedSelection NS)
         {
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
 
@@ -137,32 +137,40 @@ namespace dutchBet.Controllers
                 NormalisedSelections = new List<NormalisedSelection>();
             }
 
-            if (!string.IsNullOrWhiteSpace(normal) && NormalisedSelections != null && NS.Normal == normal)
+            if (string.IsNullOrWhiteSpace(NS.Normal))
             {
-                var editNormal = NormalisedSelections.FirstOrDefault(n => n.Normal == normal);
-                if (editNormal ==null)
-                {
-                    ViewBag.Msg = "Error! The Normal to edit does not exist.";
-                }
-                else
-                {
-                    editNormal.NairaBet = NS.NairaBet;
-                    editNormal.MerryBet = NS.MerryBet;
-                    editNormal.Bet9ja = NS.Bet9ja;
-                    editNormal.BetPawa = NS.BetPawa;
-                    editNormal.SportyBet = NS.SportyBet;
-
-                    ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
-                }
-            }
-            else if (NormalisedSelections!=null && NormalisedSelections.Any(m=>m.Normal == NS.Normal))
-            {
-                ViewBag.Msg = "Error! The Normal already exists.";
+                ViewBag.Msg = "Error! The Normal nust not be empty.";
             }
             else
             {
-                NormalisedSelections.Add(NS);
-                ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
+
+                if (!string.IsNullOrWhiteSpace(nval) && NormalisedSelections != null && NS.Normal == nval)
+                {
+                    var editNormal = NormalisedSelections.FirstOrDefault(n => n.Normal == nval);
+                    if (editNormal == null)
+                    {
+                        ViewBag.Msg = "Error! The Normal to edit does not exist.";
+                    }
+                    else
+                    {
+                        editNormal.NairaBet = NS.NairaBet;
+                        editNormal.MerryBet = NS.MerryBet;
+                        editNormal.Bet9ja = NS.Bet9ja;
+                        editNormal.BetPawa = NS.BetPawa;
+                        editNormal.SportyBet = NS.SportyBet;
+
+                        ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
+                    }
+                }
+                else if (NormalisedSelections != null && NormalisedSelections.Any(m => m.Normal == NS.Normal))
+                {
+                    ViewBag.Msg = "Error! The Normal already exists.";
+                }
+                else
+                {
+                    NormalisedSelections.Add(NS);
+                    ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
+                }
             }
 
             var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
@@ -186,10 +194,10 @@ namespace dutchBet.Controllers
 
             if (NormalisedSelections != null)
             {
-                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == x.SelectionFull));
-                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == x.SelectionFull));
-                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet == x.SelectionFull));
-                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet == x.SelectionFull));
+                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
             }
 
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull).ToList();
