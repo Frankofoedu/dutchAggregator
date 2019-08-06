@@ -98,7 +98,7 @@ namespace DutchBetTest
                     {
                         if (b9Match != null)
                         {
-                            var bet9jaMatchOdd = b9Match.Odds.FirstOrDefault(m => m.SelectionFull == ItemNS1.Bet9ja);
+                            var bet9jaMatchOdd = b9Match.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.Bet9ja.Replace(" ", ""));
                             if (bet9jaMatchOdd != null)
                             {
                                 double odd = 0f;
@@ -114,7 +114,7 @@ namespace DutchBetTest
                     {
                         if (bpMatch != null)
                         {
-                            var betPawaMatchOdd = bpMatch.Odds.FirstOrDefault(m => m.SelectionFull == ItemNS1.BetPawa);
+                            var betPawaMatchOdd = bpMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.BetPawa.Replace(" ", ""));
                             if (betPawaMatchOdd != null)
                             {
                                 double odd = 0f;
@@ -130,7 +130,7 @@ namespace DutchBetTest
                     {
                         if (mbMatch != null)
                         {
-                            var merrybetMatchOdd = mbMatch.Odds.FirstOrDefault(m => m.SelectionFull == ItemNS1.MerryBet);
+                            var merrybetMatchOdd = mbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.MerryBet.Replace(" ", ""));
                             if (merrybetMatchOdd != null)
                             {
                                 double odd = 0f;
@@ -150,7 +150,7 @@ namespace DutchBetTest
                     {
                         if (b9Match != null)
                         {
-                            var bet9jaMatchOdd = b9Match.Odds.FirstOrDefault(m => m.SelectionFull == ItemNS2.Bet9ja);
+                            var bet9jaMatchOdd = b9Match.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.Bet9ja.Replace(" ", ""));
                             if (bet9jaMatchOdd != null)
                             {
                                 double odd = 0f;
@@ -166,7 +166,7 @@ namespace DutchBetTest
                     {
                         if (bpMatch != null)
                         {
-                            var betPawaMatchOdd = bpMatch.Odds.FirstOrDefault(m => m.SelectionFull == ItemNS2.BetPawa);
+                            var betPawaMatchOdd = bpMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.BetPawa.Replace(" ", ""));
                             if (betPawaMatchOdd != null)
                             {
                                 double odd = 0f;
@@ -182,7 +182,7 @@ namespace DutchBetTest
                     {
                         if (mbMatch != null)
                         {
-                            var merrybetMatchOdd = mbMatch.Odds.FirstOrDefault(m => m.SelectionFull == ItemNS2.MerryBet);
+                            var merrybetMatchOdd = mbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.MerryBet.Replace(" ", ""));
                             if (merrybetMatchOdd != null)
                             {
                                 double odd = 0f;
