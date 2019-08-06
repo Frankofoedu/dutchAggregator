@@ -58,7 +58,7 @@ namespace Scraper
                         {
                             TimeOfMatch = matchStart.TimeOfDay.ToString(),
                             DateOfMatch = matchStart.Date.ToString(),
-                            TeamNames = item.data.homeTeamName + " " + item.data.awayTeamName,
+                            TeamNames = item.data.homeTeamName + " - " + item.data.awayTeamName,
                             Odds = v.outcomes.Select(l => new SportyBetOdds
                             {
                                 Selection = l.desc,

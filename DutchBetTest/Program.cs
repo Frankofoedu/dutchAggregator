@@ -53,33 +53,27 @@ namespace DutchBetTest
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
             bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
+            var sportybet = Jobs.LoadFromXML<SportyBet>(BetConstants.sportyBetFilePath);
+            var sportybetMatches = new List<SportyBetMatches>();
+            sportybet.ForEach(n => sportybetMatches.AddRange(n.Matches));
+            sportybetMatches = sportybetMatches.ToList();
 
-            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
+            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).ToList();
 
-            var maxCount = 0;
-
-            if (bet9jaMatches.Count >= betPawaMatches.Count)
-            {
-                if (bet9jaMatches.Count >= merrybetMatches.Count) { maxCount = bet9jaMatches.Count; }
-                else { maxCount = merrybetMatches.Count; }
-            }
-            else
-            {
-                if (betPawaMatches.Count >= merrybetMatches.Count) { maxCount = betPawaMatches.Count; }
-                else { maxCount = merrybetMatches.Count; }
-            }
-
+            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).ToList();
 
             foreach (var bpMatch in betPawaMatches)
             {
                 var b9Match = Jobs.SameMatch(bpMatch, bet9jaMatches);
                 var mbMatch = Jobs.SameMatch(bpMatch, merrybetMatches);
-                var bp = (bpMatch != null ? bpMatch.TeamNames : "no b9 match") + "    ";
-                var b9 = (b9Match != null ? b9Match.TeamNames : "no b9 match") + "   ";
-                var mb = mbMatch != null ? mbMatch.TeamNames : "no mb match";
+                var sbMatch = Jobs.SameMatch(bpMatch, sportybetMatches);
 
-                Console.WriteLine(bp + b9 + mb);
+                var bp = (bpMatch != null ? bpMatch.TeamNames : "no bp match") + "    ";
+                var b9 = (b9Match != null ? b9Match.TeamNames : "no b9 match") + "   ";
+                var mb = mbMatch != null ? mbMatch.TeamNames : "no mb match" + "   ";
+                var sb = sbMatch != null ? sbMatch.TeamNames : "no sb match";
+
+                Console.WriteLine(bp + b9 + mb + sb);
 
                 foreach (var item in TwoWayCompares)
                 {
@@ -142,6 +136,22 @@ namespace DutchBetTest
                         }
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ItemNS1.SportyBet))
+                    {
+                        if (sbMatch != null)
+                        {
+                            var sportybetMatchOdd = sbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.SportyBet.Replace(" ", ""));
+                            if (sportybetMatchOdd != null)
+                            {
+                                double odd = 0f;
+                                if (double.TryParse(sportybetMatchOdd.Value, out odd))
+                                {
+                                    match.MatchOdds1.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "sportybet" });
+                                }
+                            }
+                        }
+                    }
+
 
 
                     var ItemNS2 = NormalisedSelections.First(m => m.Normal == item.Selection2);
@@ -194,6 +204,22 @@ namespace DutchBetTest
                         }
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ItemNS2.SportyBet))
+                    {
+                        if (sbMatch != null)
+                        {
+                            var sportybetMatchOdd = sbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.SportyBet.Replace(" ", ""));
+                            if (sportybetMatchOdd != null)
+                            {
+                                double odd = 0f;
+                                if (double.TryParse(sportybetMatchOdd.Value, out odd))
+                                {
+                                    match.MatchOdds2.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "sportybet" });
+                                }
+                            }
+                        }
+                    }
+
                     for (int i = 0; i < match.MatchOdds1.Count; i++)
                     {
                         var odd1 = match.MatchOdds1[i];
@@ -233,7 +259,7 @@ namespace DutchBetTest
             int profitable = 0;
             foreach (var item in ProfitableReturns)
             {
-                if (item.PercentageReturns > 97)
+                if (item.PercentageReturns > 98)
                 {
                     profitable++;
                     Console.WriteLine(item.Team + "__" + item.Site1 + "__" + item.Game1 + "__" + item.Odd1 + "__" + item.Site2 + "__" + item.Game2 + "__" + item.Odd2 + "__ (" + item.PercentageReturns + ")");

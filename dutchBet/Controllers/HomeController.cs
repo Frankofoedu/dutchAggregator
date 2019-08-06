@@ -109,10 +109,10 @@ namespace dutchBet.Controllers
 
             if (NormalisedSelections != null)
             {
-                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja.Replace(" ","") == x.SelectionFull.Replace(" ", "")));
-                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
-                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
-                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja==null?false: m.Bet9ja.Replace(" ","") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == null ? false : m.BetPawa.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet == null ? false : m.MerryBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet == null ? false : m.SportyBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
             }
 
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m=>m.SelectionFull).ToList();
@@ -194,10 +194,10 @@ namespace dutchBet.Controllers
 
             if (NormalisedSelections != null)
             {
-                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
-                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
-                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
-                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchBet9ja.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.Bet9ja == null ? false : m.Bet9ja.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchBetPawa.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.BetPawa == null ? false : m.BetPawa.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchMerryBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.MerryBet == null ? false : m.MerryBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
+                largestSelectionMatchSportyBet.Odds.RemoveAll(x => NormalisedSelections.Any(m => m.SportyBet == null ? false : m.SportyBet.Replace(" ", "") == x.SelectionFull.Replace(" ", "")));
             }
 
             ViewBag.Bet9jaOdds = largestSelectionMatchBet9ja.Odds.OrderBy(m => m.SelectionFull).ToList();

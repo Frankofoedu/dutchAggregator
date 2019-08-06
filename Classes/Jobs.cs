@@ -185,6 +185,62 @@ namespace Classes
             }
         }
 
+        class SbMatchWithDistance
+        {
+            public int Distance { get; set; }
+            public SportyBetMatches Match { get; set; }
+        }
+        public static SportyBetMatches SameMatch(DailyPawaMatches M1, List<SportyBetMatches> Ms2)
+        {
+            var sportybetMatches = Ms2.Where(m => Jobs.SameMatch(m.TeamNames, M1.TeamNames)).ToList();
+
+            if (sportybetMatches.Count <= 0)
+            {
+                var timeSbMatches = Ms2.Where(n => n.TimeOfMatch == M1.TimeOfMatch).ToList();
+
+                var LM = timeSbMatches.Select(m => new SbMatchWithDistance()
+                {
+                    Distance = ComputeLevenshteinDistance(M1.TeamNames, m.TeamNames),
+                    Match = m
+                }).OrderBy(n => n.Distance).ToList();
+
+                if (LM.Count > 0)
+                {
+                    if (LM[0].Distance <= 10) { return LM[0].Match; }
+                }
+
+                return null;
+            }
+            else if (sportybetMatches.Count == 1)
+            {
+                return sportybetMatches[0];
+            }
+            else
+            {
+                var timeSBMatches = sportybetMatches.Where(n => n.TimeOfMatch == M1.TimeOfMatch).ToList();
+
+                if (timeSBMatches.Count == 1)
+                {
+                    return timeSBMatches[0];
+                }
+                else if (timeSBMatches.Count <1)
+                {
+                    return null;
+                }
+                else
+                {
+                    List<int> LevenshteinScores = new List<int>();
+                    foreach (var M2 in timeSBMatches)
+                    {
+                        LevenshteinScores.Add(ComputeLevenshteinDistance(M1.TeamNames, M2.TeamNames));
+                    }
+
+                    var i = LevenshteinScores.IndexOf(LevenshteinScores.Min());
+                    return timeSBMatches[i];
+                }
+            }
+        }
+
 
         /// <summary>
         /// Compute the Levenshtein Distance between two strings.
