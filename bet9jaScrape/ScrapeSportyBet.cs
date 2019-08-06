@@ -72,11 +72,11 @@ namespace Scraper
 
                 }
 
-                return returnData.GroupBy(q => q.League).Select(w => new SportyBet { League = w.Key, Matches = w.SelectMany(e => e.Matches).ToList() })
+                var s = returnData.GroupBy(q => q.League).Select(w => new SportyBet { League = w.Key, Matches = w.SelectMany(e => e.Matches).ToList() })
                     .SelectMany(u => u.Matches.GroupBy(o=> o.TeamNames).Select(p=> new SportyBet { League = u.League, Matches= p.ToList() })).ToList();
-                
 
-                
+
+                return s;
             }
             catch (Exception e)
             {

@@ -13,7 +13,7 @@ namespace Classes
         public string TeamNames { get; set; }
         public string TimeOfMatch { get; set; }
         public DateTime DateOfMatch { get; set; }
-        public List<Classes.BetPawaOdds> Odds { get; set; }
+        public List<BetPawaOdds> Odds { get; set; }
     }
 
 
