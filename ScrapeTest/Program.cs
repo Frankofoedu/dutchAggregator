@@ -23,7 +23,7 @@ namespace ScrapeTest
             //var sptData = spt.ScrapeSportyBetDailyAsync(client).Result;
 
             //  Console.WriteLine(Jobs.SaveToXML(sptData, folder +  "sportybet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
-            
+
             Console.WriteLine("Testing Sportybet");
             var ssb = new ScrapeSportyBet();
             var ssbrtn = await ssb.ScrapeSportyBetDailyAsync(client);

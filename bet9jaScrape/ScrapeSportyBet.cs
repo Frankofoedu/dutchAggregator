@@ -97,9 +97,7 @@ namespace Scraper
                     matchGrouped.Add(sb);
                 }
                 return matchGrouped;
-                
 
-                
             }
             catch (Exception e)
             {

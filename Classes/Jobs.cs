@@ -119,6 +119,10 @@ namespace Classes
                 {
                     return timeB9Matches[0];
                 }
+                else if (timeB9Matches.Count < 1)
+                {
+                    return null;
+                }
                 else
                 {
                     List<int> LevenshteinScores = new List<int>();
@@ -170,6 +174,10 @@ namespace Classes
                 if (timeMBMatches.Count == 1)
                 {
                     return timeMBMatches[0];
+                }
+                else if (timeMBMatches.Count <1)
+                {
+                    return null;
                 }
                 else
                 {

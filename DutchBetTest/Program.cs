@@ -70,7 +70,7 @@ namespace DutchBetTest
 
                 var bp = (bpMatch != null ? bpMatch.TeamNames : "no bp match") + "    ";
                 var b9 = (b9Match != null ? b9Match.TeamNames : "no b9 match") + "   ";
-                var mb = mbMatch != null ? mbMatch.TeamNames : "no mb match" + "   ";
+                var mb = (mbMatch != null ? mbMatch.TeamNames : "no mb match") + "   ";
                 var sb = sbMatch != null ? sbMatch.TeamNames : "no sb match";
 
                 Console.WriteLine(bp + b9 + mb + sb);
@@ -114,7 +114,7 @@ namespace DutchBetTest
                                 double odd = 0f;
                                 if (double.TryParse(betPawaMatchOdd.Value, out odd))
                                 {
-                                    match.MatchOdds1.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "betpawa" });
+                                    match.MatchOdds1.Add(new MatchOdds() { Odd = odd, Site = "betpawa" });
                                 }
                             }
                         }
@@ -259,7 +259,7 @@ namespace DutchBetTest
             int profitable = 0;
             foreach (var item in ProfitableReturns)
             {
-                if (item.PercentageReturns > 98)
+                if (item.PercentageReturns > 100)
                 {
                     profitable++;
                     Console.WriteLine(item.Team + "__" + item.Site1 + "__" + item.Game1 + "__" + item.Odd1 + "__" + item.Site2 + "__" + item.Game2 + "__" + item.Odd2 + "__ (" + item.PercentageReturns + ")");
