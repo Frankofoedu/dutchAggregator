@@ -49,6 +49,7 @@
     <Compile Include="Bet9ja.cs" />
     <Compile Include="Bet9jaData\Bet9jaReceivedData.cs" />
     <Compile Include="Bet9jaData\Bet9jaSingleReceivedData.cs" />
+    <Compile Include="BetData.cs" />
     <Compile Include="BetPawaData\SingleReceivedData.cs" />
     <Compile Include="CalcClasses\TwoOddsReturn.cs" />
     <Compile Include="Constants\BetConstants.cs" />
