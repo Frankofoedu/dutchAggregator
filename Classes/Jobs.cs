@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +59,9 @@ namespace Classes
         /// <returns></returns>
         public static bool SameMatch(string M1, string M2)
         {
+            M1 = M1.ToLower().Replace("united", "").Replace("town", "").Replace("city", "").Replace("rangers", "");
+            M2 = M2.ToLower().Replace("united", "").Replace("town", "").Replace("city", "").Replace("rangers", "");
+
             var homeNawayM1 = new List<string>();
             var homeNawayM2 = new List<string>();
             var M1homeArr = new List<string>();
@@ -93,7 +97,7 @@ namespace Classes
 
             if (bet9jaMatches.Count <= 0)
             {
-                var timeB9Matches = Ms2.Where(n => DateTime.Parse(n.MatchTime).TimeOfDay.ToString() == M1.TimeOfMatch).ToList();
+                var timeB9Matches = Ms2.Where(n => DateTime.ParseExact(n.MatchTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture).TimeOfDay.ToString() == M1.TimeOfMatch).ToList();
 
                 var LM = timeB9Matches.Select(m => new B9MatchWithDistance() {
                     Distance = ComputeLevenshteinDistance(M1.TeamNames, m.TeamNames),
@@ -113,7 +117,7 @@ namespace Classes
             }
             else
             {
-                var timeB9Matches = bet9jaMatches.Where(n=> DateTime.Parse(n.MatchTime).TimeOfDay.ToString() == M1.TimeOfMatch).ToList();
+                var timeB9Matches = bet9jaMatches.Where(n=> DateTime.ParseExact(n.MatchTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture).TimeOfDay.ToString() == M1.TimeOfMatch).ToList();
 
                 if (timeB9Matches.Count == 1)
                 {
