@@ -12,7 +12,7 @@ namespace Scraper
 {
     public class ScrapeSportyBet
     {
-        public async Task<List<SportyBet>> ScrapeSportyBetDailyAsync(HttpClient client)
+        public async Task<List<BetMatch>> ScrapeSportyBetDailyAsync(HttpClient client)
         {
             var currdate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
@@ -44,57 +44,62 @@ namespace Scraper
 
                 Console.WriteLine("All Matches parsed");
 
-                var returnData = new List<SportyBet>();
-                var oddsng = new List<SportyBetMatches>();
+                var returnData = new List<BetMatch>();
                 foreach (var item in responses.ToList())
                 {
                     var matchStart = DateTimeOffset.FromUnixTimeMilliseconds(item.data.estimateStartTime).DateTime;
-                                    
 
-                    returnData.Add(new SportyBet
+                    foreach (var match in item.data.markets)
                     {
-                        League = item.data.sport.category.tournament.name,
-                        Matches = item.data.markets.Select(v => new SportyBetMatches
+                        var Odds = match.outcomes.Select(l => new BetOdds
                         {
-                            TimeOfMatch = matchStart.TimeOfDay.ToString(),
-                            DateOfMatch = matchStart.Date.ToString(),
-                            TeamNames = item.data.homeTeamName + " - " + item.data.awayTeamName,
-                            Odds = v.outcomes.Select(l => new SportyBetOdds
-                            {
-                                Selection = l.desc,
-                                MainType = v.desc,
-                                Type = l.desc,
-                                Value = l.odds
-                            }).ToList()
-                        }).ToList()
-                    });
-                   
+                            Selection = l.desc,
+                            MainType = match.desc,
+                            Type = l.desc,
+                            Value = l.odds
+                        }).ToList();
 
+                        returnData.Add(new BetMatch
+                        {
+                            League = item.data.sport.category.tournament.name,
+                            DateTimeOfMatch = matchStart,
+                            TeamNames = item.data.homeTeamName + " - " + item.data.awayTeamName,
+                            Odds = Odds,
+                            Country = item.data.sport.category.name,
+                        });
+                    }
+                }
+                var leagues = new List<string>();
+
+                foreach (var item in returnData)
+                {
+                    if(! leagues.Any(m=> m == item.League))
+                    {
+                        leagues.Add(item.League);
+                    }
                 }
 
+                var matchGrouped = new List<BetMatch>();
 
-                var leagueGrouped = returnData.GroupBy(q => q.League).Select(w => new SportyBet { League = w.Key, Matches = w.SelectMany(e => e.Matches).ToList() });
-
-                var matchGrouped = new List<SportyBet>();
-
-                foreach (var item in leagueGrouped)
+                foreach (var item in leagues)
                 {
-                    var sb = new SportyBet() { League = item.League, Matches = new List<SportyBetMatches>()};
-                    var matchgroup = item.Matches.GroupBy(o => o.TeamNames);
-
+                    var sbg = returnData.Where(m => m.League == item);
+                    var matchgroup = sbg.GroupBy(m => m.TeamNames);
 
                     foreach (var i in matchgroup)
                     {
-                        sb.Matches.Add(new SportyBetMatches()
+                        var sb = new BetMatch()
                         {
-                            DateOfMatch = i.First().DateOfMatch,
+                            Country = i.First().Country,
                             TeamNames = i.First().TeamNames,
-                            TimeOfMatch = i.First().TimeOfMatch,
-                            Odds = i.SelectMany(n => n.Odds).ToList()
-                        });
-                    }
+                            DateTimeOfMatch = i.First().DateTimeOfMatch,
+                            Odds = i.SelectMany(n => n.Odds).ToList(),
+                            League = i.First().League,
+                            Site = i.First().Site,
+                        };
 
-                    matchGrouped.Add(sb);
+                        matchGrouped.Add(sb);
+                    }
                 }
                 return matchGrouped;
 

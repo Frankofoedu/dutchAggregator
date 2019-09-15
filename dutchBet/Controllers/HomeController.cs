@@ -88,19 +88,13 @@ namespace dutchBet.Controllers
                 SubmittedNormal = NormalisedSelections.FirstOrDefault(m => m.Normal == normal);
             }
 
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
-            var bet9jaMatches = new List<Bet9jaMatches>();
-            bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
-              bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+            var bet9jaMatches= Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var SportyData = Jobs.LoadFromXML<SportyBet>(BetConstants.sportyBetFilePath);
-            var sportyBetMatches = new List<SportyBetMatches>();
-            SportyData.ForEach(n => sportyBetMatches.AddRange(n.Matches));
-            sportyBetMatches = sportyBetMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+            var sportyBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var merryBetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
+            var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
@@ -173,19 +167,13 @@ namespace dutchBet.Controllers
                 }
             }
 
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
-            var bet9jaMatches = new List<Bet9jaMatches>();
-            bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
-            bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+            var bet9jaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var SportyData = Jobs.LoadFromXML<SportyBet>(BetConstants.sportyBetFilePath);
-            var sportyBetMatches = new List<SportyBetMatches>();
-            SportyData.ForEach(n => sportyBetMatches.AddRange(n.Matches));
-            sportyBetMatches = sportyBetMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+            var sportyBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var merryBetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
+            var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
