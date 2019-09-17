@@ -7,6 +7,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -23,7 +24,118 @@ namespace Scraper
 
     public class ScrapeBet9ja
     {
-        public async Task<List<Bet9ja>> ScrapeJsonAsync(HttpClient client)
+
+
+        public async Task<List<BetMatch>> ScrapeJsonAsync(HttpClient client)
+        {
+            var listEvents = new List<BetMatch>();
+            try
+            {
+                //request to get all matches
+
+                var payload = "{\"IDSport\":590,\"IDGruppoQuota\":-1}";
+
+                HttpContent c = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                var uri = "https://web.bet9ja.com/Controls/ControlsWS.asmx/OddsTodayFullEvent";
+                var response = await client.PostAsync(uri, c);
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadAsStringAsync();
+
+                    var t = JsonConvert.DeserializeObject<Bet9jaReceivedData>(data);
+
+                    var soccerData = t.d.Where(x => x.Sport.Trim() == "Soccer").FirstOrDefault();
+
+                    if (soccerData != null)
+                    {
+                        //get list of ids for todays match
+                        var listIds = soccerData.Detail.SottoEventiList.Select(m => m.IDSottoEvento).ToList();
+
+                        foreach (var id in listIds)
+                        {
+
+                            var postObject = JsonConvert.SerializeObject(new SendData() { IDSottoEvento = id, IDGruppoQuota = 0 });
+
+                            var httpResponse = client.PostAsync("https://web.bet9ja.com/Controls/ControlsWS.asmx/GetSubEventDetails",
+                                           new StringContent(postObject, Encoding.UTF8, "application/json")).Result;
+
+                            if (httpResponse.IsSuccessStatusCode)
+                            {
+                                var d = await httpResponse.Content.ReadAsStringAsync();
+
+                                //var g = new JObject(d);
+
+                                var singleData = JsonConvert.DeserializeObject<Bet9jaSingleReceivedData>(d);
+
+                                if (singleData != null)
+                                {
+
+                                    var y = singleData.d.ClassiQuotaList;
+                                    var oddsngames = new List<Bet9jaMatches>();
+                                    var listmatch = new List<BetMatch>();
+
+
+                                    foreach (var item in y)
+                                    {
+                                        var odds = new List<BetOdds>();
+                                        foreach (var m in item.QuoteList)
+                                        {
+                                            odds.Add(new BetOdds { Value = m.Quota, Selection = m.TipoQuota, Type = item.ClasseQuota });
+                                        }
+                                        listmatch.Add(new BetMatch { Odds = odds,
+                                            DateTimeOfMatch = DateTime.ParseExact(singleData.d.SrtDataInizio, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                                            TeamNames = singleData.d.SottoEvento
+                                        });
+                                    }
+
+                                    var compOdds = listmatch.GroupBy(x => x.TeamNames).First().SelectMany(m => m.Odds);
+
+
+                                    listEvents.Add(new BetMatch {
+                                        Odds = compOdds.ToList(),
+                                        DateTimeOfMatch = DateTime.ParseExact(singleData.d.SrtDataInizio, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                                        TeamNames = singleData.d.SottoEvento,
+                                        League = singleData.d.Evento,
+                                        Site = "bet9ja"
+                                    });
+
+                                }
+
+                            }
+                        }
+
+                        //var qbets = listEvents.GroupBy(x => x.League).ToList();
+                        //listEvents.Clear();
+                        //foreach (var item in qbets)
+                        //{
+                        //    var tbets = item;
+                        //    var bb = tbets.SelectMany(cb => cb.Matches);
+
+                        //    listEvents.Add(new Bet9ja { League = item.Key, Matches = bb.ToList() });
+                        //}
+
+                        //.Select(m => new Bet9ja { League = m.Key, Matches = m.ToList() });
+                        return listEvents;
+                    }
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\n Http Exception Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+
+            return null;
+        }
+
+
+        public async Task<List<Bet9ja>> ScrapeJsonAsyncReplaced(HttpClient client)
         {
             var listEvents = new List<Bet9ja>();
             try

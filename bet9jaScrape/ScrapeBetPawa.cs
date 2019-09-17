@@ -76,9 +76,9 @@ namespace Scraper
             return betOverview;
         }
 
-        public List<DailyPawaMatches> ScrapeDaily(HttpClient client)
+        public List<BetMatch> ScrapeDaily(HttpClient client)
         {
-                var betOverview = new List<DailyPawaMatches>();
+                var betOverview = new List<BetMatch>();
 
                 Console.WriteLine("-----Scraping started");
 
@@ -151,7 +151,6 @@ namespace Scraper
                         }
                     }
 
-                    var bpMatches = new List<BetPawaMatches>();
 
                     for (int i = 0; i < paths.Count; i++)
                     {
@@ -161,16 +160,16 @@ namespace Scraper
 
                         var data = JsonConvert.DeserializeObject<SingleReceivedData.RootObject>(oddsResponseBody);
 
-                        betOverview.Add(new DailyPawaMatches()
+                        betOverview.Add(new BetMatch()
                         {
                             League = data.Data.League,
-                            DateOfMatch = DateTime.Parse(data.Data.StartsRaw).Date,
+                            DateTimeOfMatch = DateTime.Parse(data.Data.StartsRaw),
                             TeamNames = data.Data.Name,
-                            TimeOfMatch = DateTime.Parse(data.Data.StartsRaw).TimeOfDay.ToString(),
+                            Site = "betpawa",
+                            Country = data.Data.CountryPath,
                             Odds = data.Data.Markets.SelectMany(x => x.Prices.Select(
-                                m => new BetPawaOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name + m.Hcp, Value = m.Cost })).ToList()
+                                m => new BetOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name + m.Hcp, Value = m.Cost })).ToList()
                         });
-
                     }
 
 

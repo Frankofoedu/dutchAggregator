@@ -29,7 +29,6 @@ namespace Classes
         {
             get
             {
-
                 return string.IsNullOrWhiteSpace(MainType) ? (Type + "-" + Selection).ToLower() : (MainType + "-" + Type + "-" + Selection).ToLower();
             }
         }

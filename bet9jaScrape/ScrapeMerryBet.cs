@@ -6,23 +6,22 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Classes;
 
 namespace Scraper
 {
 
     public class ScrapeMerryBet
     {
-        public List<MerrybetData> ScrapeDaily(HttpClient client)
+        public List<BetMatch> ScrapeDaily(HttpClient client)
         {
             var currdate = DateTime.Now.ToString("yyyy'-'MM'-'dd");
             var tomodate = DateTime.Now.AddDays(1).ToString("yyyy'-'MM'-'dd");
-            var listEvents = new List<MerrybetData>();
+            var listEvents = new List<BetMatch>();
             var jsonSettings = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
-
 
             try
             {
-
                 //get todays data
                 string FirstresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + currdate).Result;
 
@@ -46,11 +45,10 @@ namespace Scraper
 
                     if (singleEventData.data != null)
                     {
-
                         var mbOdds = singleEventData.data.eventGames.
                                                         SelectMany(x => x.outcomes.
-                                                        Select(m => new DailyMerrybetOdds()
-                                                        { MainType = x.gameName, Selection = m.outcomeName, Value = m.outcomeOdds.ToString() }))
+                                                        Select(m => new BetOdds()
+                                                        { Type = x.gameName, Selection = m.outcomeName, Value = m.outcomeOdds.ToString() }))
                                                         .ToList();
 
                         var teamNames = singleEventData.data.eventName.Split('-');
@@ -67,13 +65,14 @@ namespace Scraper
                             continue;
                         }
 
-                        var mbOddsnGames = new MerrybetData()
+                        var mbOddsnGames = new BetMatch()
                         {
-                            DateOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime.Date.ToString(),
+                            DateTimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime,
                             League = singleEventData.data.category3Name,
                             TeamNames = singleEventData.data.eventName,
                             Odds = mbOdds,
-                            TimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime.ToLocalTime().TimeOfDay.ToString()
+                            Country = singleEventData.data.category2Name,
+                            Site = "merrybet"
                         };
 
                         listEvents.Add(mbOddsnGames);

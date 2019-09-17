@@ -19,10 +19,10 @@ namespace ScrapeTest
 
 
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
-            //var spt = new ScrapeSportyBet();
-            //var sptData = spt.ScrapeSportyBetDailyAsync(client).Result;
+            var spt = new ScrapeSportyBet();
+            var sptData = spt.ScrapeSportyBetDailyAsync(client).Result;
 
-            //  Console.WriteLine(Jobs.SaveToXML(sptData, folder +  "sportybet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
+            Console.WriteLine(Jobs.SaveToXML(sptData, folder + "sportybet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
             Console.WriteLine("Testing Sportybet");
             var ssb = new ScrapeSportyBet();
@@ -34,11 +34,11 @@ namespace ScrapeTest
             var rtn = action.ScrapeJsonAsync(client).Result;
             if (rtn == null)
             {
-                rtn = new List<Bet9ja>();
+                rtn = new List<BetMatch>();
             }
             Console.WriteLine(Jobs.SaveToXML(rtn, folder + "bet9ja" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
-            Console.WriteLine("TestInG BEtPawa");
+            Console.WriteLine("Fetchig Betpawa");
             var at = new ScrapeBetPawa();
             var bps = at.ScrapeDaily(client);
             Console.WriteLine(Jobs.SaveToXML(bps, folder + "betPawa" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
