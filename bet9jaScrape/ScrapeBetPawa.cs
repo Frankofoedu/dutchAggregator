@@ -162,11 +162,11 @@ namespace Scraper
 
                         betOverview.Add(new BetMatch()
                         {
-                            League = data.Data.League,
+                            League = data.Data.League.Replace(data.Data.Region, "").Trim(),
                             DateTimeOfMatch = DateTime.Parse(data.Data.StartsRaw),
                             TeamNames = data.Data.Name,
                             Site = "betpawa",
-                            Country = data.Data.CountryPath,
+                            Country = data.Data.Region,
                             Odds = data.Data.Markets.SelectMany(x => x.Prices.Select(
                                 m => new BetOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name + m.Hcp, Value = m.Cost })).ToList()
                         });

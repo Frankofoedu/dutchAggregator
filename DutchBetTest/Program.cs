@@ -14,6 +14,7 @@ using Classes.MerryBet;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using Newtonsoft.Json;
 
 namespace DutchBetTest
 {
@@ -26,12 +27,82 @@ namespace DutchBetTest
 
             Console.WriteLine("Started...");
 
-            Analyse();
+            //Analyse();
+
+
+            //var bet9jaMatch = Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath).First();
+
+            //var sportyBetMatch = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath).First();
+
+            //var betPawaMatch = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath).First();
+
+            //var merryBetMatch = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath)[5];
+
+            //bet9jaMatch.Odds.Clear();
+            //sportyBetMatch.Odds.Clear();
+            //betPawaMatch.Odds.Clear();
+            //merryBetMatch.Odds.Clear();
+
+            //Console.WriteLine(toPrettyString(bet9jaMatch) + "\n\n\n");
+            //Console.WriteLine(toPrettyString(sportyBetMatch) + "\n\n\n");
+            //Console.WriteLine(toPrettyString(betPawaMatch) + "\n\n\n");
+            //Console.WriteLine(toPrettyString(merryBetMatch) + "\n\n\n");
+
+
+            //var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath);
+            //merryBetMatches.ForEach(m => m.Odds.Clear());
+            //Console.WriteLine(toPrettyString(merryBetMatches) + "\n");
+
+            newAnalyse();
+
 
             Console.WriteLine("Done...");
             Console.ReadLine();
         }
 
+        public static void newAnalyse()
+        {
+            var bet9jaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath);
+            var sportyBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath);
+            var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath);
+            var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath);
+
+            for (int i = 0; i < bet9jaMatches.Count; i++)
+            {
+                var b9match = bet9jaMatches[i];
+
+                var sbLeagueNTimeTrimmed = sportyBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
+                var bpLeagueNTimeTrimmed = betPawaMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
+                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
+
+                b9match.Odds.Clear();
+                sbLeagueNTimeTrimmed.ForEach(m => m.Odds.Clear());
+                bpLeagueNTimeTrimmed.ForEach(m => m.Odds.Clear());
+                mbLeagueNTimeTrimmed.ForEach(m => m.Odds.Clear());
+
+                var bpMatch = new BetMatch();
+                var mbMatch = new BetMatch();
+                var sbMatch = new BetMatch();
+
+                if (bpLeagueNTimeTrimmed.Count == 1) { bpMatch = bpLeagueNTimeTrimmed[0]; }
+                else if (bpLeagueNTimeTrimmed.Count < 1) { bpMatch = null; }
+                else { bpMatch = Jobs.SameMatch(b9match, bpLeagueNTimeTrimmed); }
+
+                if (mbLeagueNTimeTrimmed.Count == 1) { mbMatch = mbLeagueNTimeTrimmed[0]; }
+                else if (mbLeagueNTimeTrimmed.Count < 1) { mbMatch = null; }
+                else { mbMatch = Jobs.SameMatch(b9match, mbLeagueNTimeTrimmed); }
+
+                if (sbLeagueNTimeTrimmed.Count == 1) { sbMatch = sbLeagueNTimeTrimmed[0]; }
+                else if (sbLeagueNTimeTrimmed.Count < 1) { sbMatch = null; }
+                else { sbMatch = Jobs.SameMatch(b9match, sbLeagueNTimeTrimmed); }
+
+                Console.WriteLine("\n\n\n\n\n Bet9ja Match : " + toPrettyString(b9match) + 
+                    "\n \n sportybets found : " + toPrettyString(sbMatch) +
+                    "\n \n Betpawas found : " + toPrettyString(bpMatch) +
+                    "\n \n Merrybets found : " + toPrettyString(mbMatch)
+                    );
+            }
+        }
         public static void Analyse()
         {
             var NormalisedSelections = new List<NormalisedSelection>();
@@ -388,5 +459,19 @@ namespace DutchBetTest
 
         }
 
+
+        public static string toPrettyString<T>(List<T> Obj)
+        {
+            var str = JsonConvert.SerializeObject(Obj, Formatting.Indented);
+
+            return str;
+        }
+
+        public static string toPrettyString<T>(T Obj)
+        {
+            var str = JsonConvert.SerializeObject(Obj, Formatting.Indented);
+
+            return str;
+        }
     }
 }

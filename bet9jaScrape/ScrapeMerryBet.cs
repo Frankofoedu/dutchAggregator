@@ -26,13 +26,13 @@ namespace Scraper
                 string FirstresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + currdate).Result;
 
                 //get next day data
-                string SecondresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + tomodate).Result;
+                //string SecondresponseBody = client.GetStringAsync("https://merrybet.com/rest/search/events/search-by-date/" + tomodate).Result;
 
                 //get first day list of events id
-                var t = JsonConvert.DeserializeObject<SearchData>(FirstresponseBody).data.Where(m => m.category1Name == "Soccer").Select(x => x.eventId).ToList();
+                var t = JsonConvert.DeserializeObject<SearchData>(FirstresponseBody).data.Where(m => m.category1Name == "Soccer" && !m.category3Name.ToLower().Contains("special") && m.eventType == 1).Select(x => x.eventId).ToList();
 
                 //get second day list of events id and add to previous list
-                t.AddRange(JsonConvert.DeserializeObject<SearchData>(SecondresponseBody).data.Where(m => m.category1Name == "Soccer").Select(x => x.eventId).ToList());
+                //t.AddRange(JsonConvert.DeserializeObject<SearchData>(SecondresponseBody).data.Where(m => m.category1Name == "Soccer" && !m.category3Name.ToLower().Contains("special") && m.eventType == 1).Select(x => x.eventId).ToList());
 
                 for (int i = 0; i < t.Count; i++)
                 {
@@ -65,15 +65,32 @@ namespace Scraper
                             continue;
                         }
 
-                        var mbOddsnGames = new BetMatch()
+                        var mbOddsnGames = new BetMatch();
+
+                        if (singleEventData.data.category3Name.ToLower() == "group stage")
                         {
-                            DateTimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime,
-                            League = singleEventData.data.category3Name,
-                            TeamNames = singleEventData.data.eventName,
-                            Odds = mbOdds,
-                            Country = singleEventData.data.category2Name,
-                            Site = "merrybet"
-                        };
+                            mbOddsnGames = new BetMatch()
+                            {
+                                DateTimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime.AddHours(1),
+                                League = singleEventData.data.category2Name,
+                                TeamNames = singleEventData.data.eventName,
+                                Odds = mbOdds,
+                                Country = singleEventData.data.category3Name,
+                                Site = "merrybet"
+                            };
+                        }
+                        else
+                        {
+                            mbOddsnGames = new BetMatch()
+                            {
+                                DateTimeOfMatch = DateTimeOffset.FromUnixTimeMilliseconds(singleEventData.data.eventStart).DateTime.AddHours(1),
+                                League = singleEventData.data.category3Name,
+                                TeamNames = singleEventData.data.eventName,
+                                Odds = mbOdds,
+                                Country = singleEventData.data.category2Name,
+                                Site = "merrybet"
+                            };
+                        }
 
                         listEvents.Add(mbOddsnGames);
 

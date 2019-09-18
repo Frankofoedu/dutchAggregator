@@ -254,6 +254,47 @@ namespace Classes
         }
 
 
+        class BetMatchWithDistance
+        {
+            public int Distance { get; set; }
+            public BetMatch Match { get; set; }
+        }
+        public static BetMatch SameMatch(BetMatch M1, List<BetMatch> Ms2)
+        {
+            var filteredMatches = Ms2.Where(m => Jobs.SameMatch(m.TeamNames, M1.TeamNames)).ToList();
+
+            if (filteredMatches.Count <= 0)
+            {
+                var LM = Ms2.Select(m => new BetMatchWithDistance()
+                {
+                    Distance = ComputeLevenshteinDistance(M1.TeamNames, m.TeamNames),
+                    Match = m
+                }).OrderBy(n => n.Distance).ToList();
+
+                if (LM.Count > 0)
+                {
+                    if (LM[0].Distance <= 10) { return LM[0].Match; }
+                }
+
+                return null;
+            }
+            else if (filteredMatches.Count == 1)
+            {
+                return filteredMatches[0];
+            }
+            else
+            {
+                List<int> LevenshteinScores = new List<int>();
+                foreach (var M2 in filteredMatches)
+                {
+                    LevenshteinScores.Add(ComputeLevenshteinDistance(M1.TeamNames, M2.TeamNames));
+                }
+
+                var i = LevenshteinScores.IndexOf(LevenshteinScores.Min());
+                return filteredMatches[i];
+            }
+        }
+
         /// <summary>
         /// Compute the Levenshtein Distance between two strings.
         /// </summary>

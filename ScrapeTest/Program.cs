@@ -19,10 +19,6 @@ namespace ScrapeTest
 
 
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
-            var spt = new ScrapeSportyBet();
-            var sptData = spt.ScrapeSportyBetDailyAsync(client).Result;
-
-            Console.WriteLine(Jobs.SaveToXML(sptData, folder + "sportybet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
 
             Console.WriteLine("Testing Sportybet");
             var ssb = new ScrapeSportyBet();
