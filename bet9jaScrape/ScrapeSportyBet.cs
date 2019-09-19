@@ -45,16 +45,17 @@ namespace Scraper
                 Console.WriteLine("All Matches parsed");
 
                 var returnData = new List<BetMatch>();
+                //loop through each match
                 foreach (var item in responses.ToList())
                 {
                     var matchStart = DateTimeOffset.FromUnixTimeMilliseconds(item.data.estimateStartTime).DateTime;
 
-                    foreach (var match in item.data.markets)
+                    foreach (var market in item.data.markets)
                     {
-                        var Odds = match.outcomes.Select(l => new BetOdds
+                        var Odds = market.outcomes.Select(l => new BetOdds
                         {
                             Selection = l.desc,
-                            MainType = match.desc,
+                            MainType = market.desc,
                             Type = l.desc,
                             Value = l.odds
                         }).ToList();
