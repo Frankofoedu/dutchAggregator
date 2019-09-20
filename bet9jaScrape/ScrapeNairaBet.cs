@@ -14,7 +14,7 @@ namespace Scraper
         {
             var url = "https://www.nairabet.com/UK/Sports#action=filtered-market-group-list&datefilter=20190918";
 
-
+            return null;
         }
     }
 }

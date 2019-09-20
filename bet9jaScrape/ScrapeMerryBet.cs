@@ -76,7 +76,7 @@ namespace Scraper
                                 TeamNames = singleEventData.data.eventName,
                                 Odds = mbOdds,
                                 Country = singleEventData.data.category3Name,
-                                Site = "merrybet"
+                                Site = "merryBet"
                             };
                         }
                         else
@@ -88,7 +88,7 @@ namespace Scraper
                                 TeamNames = singleEventData.data.eventName,
                                 Odds = mbOdds,
                                 Country = singleEventData.data.category2Name,
-                                Site = "merrybet"
+                                Site = "merryBet"
                             };
                         }
 

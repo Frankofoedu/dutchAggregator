@@ -165,7 +165,7 @@ namespace Scraper
                             League = data.Data.League.Replace(data.Data.Region, "").Trim(),
                             DateTimeOfMatch = DateTime.Parse(data.Data.StartsRaw),
                             TeamNames = data.Data.Name,
-                            Site = "betpawa",
+                            Site = "betPawa",
                             Country = data.Data.Region,
                             Odds = data.Data.Markets.SelectMany(x => x.Prices.Select(
                                 m => new BetOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name + m.Hcp, Value = m.Cost })).ToList()

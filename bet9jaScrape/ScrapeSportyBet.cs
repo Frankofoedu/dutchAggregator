@@ -96,7 +96,7 @@ namespace Scraper
                             DateTimeOfMatch = i.First().DateTimeOfMatch,
                             Odds = i.SelectMany(n => n.Odds).ToList(),
                             League = i.First().League,
-                            Site = "sporty",
+                            Site = "sportyBet",
                         };
 
                         matchGrouped.Add(sb);
