@@ -45,6 +45,7 @@ namespace Scraper
 
                     var t = JsonConvert.DeserializeObject<Bet9jaReceivedData>(data);
 
+                    //get only soccer matches
                     var soccerData = t.d.Where(x => x.Sport.Trim() == "Soccer").FirstOrDefault();
 
                     if (soccerData != null)
