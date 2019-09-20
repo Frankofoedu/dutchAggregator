@@ -62,49 +62,6 @@ namespace DutchBetTest
 
         public static void newAnalyse()
         {
-            var bet9jaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath);
-            var sportyBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath);
-            var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath);
-            var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath);
-
-            for (int i = 0; i < bet9jaMatches.Count; i++)
-            {
-                var b9match = bet9jaMatches[i];
-
-                var sbLeagueNTimeTrimmed = sportyBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
-                var bpLeagueNTimeTrimmed = betPawaMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
-                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
-
-                b9match.Odds.Clear();
-                sbLeagueNTimeTrimmed.ForEach(m => m.Odds.Clear());
-                bpLeagueNTimeTrimmed.ForEach(m => m.Odds.Clear());
-                mbLeagueNTimeTrimmed.ForEach(m => m.Odds.Clear());
-
-                var bpMatch = new BetMatch();
-                var mbMatch = new BetMatch();
-                var sbMatch = new BetMatch();
-
-                if (bpLeagueNTimeTrimmed.Count == 1) { bpMatch = bpLeagueNTimeTrimmed[0]; }
-                else if (bpLeagueNTimeTrimmed.Count < 1) { bpMatch = null; }
-                else { bpMatch = Jobs.SameMatch(b9match, bpLeagueNTimeTrimmed); }
-
-                if (mbLeagueNTimeTrimmed.Count == 1) { mbMatch = mbLeagueNTimeTrimmed[0]; }
-                else if (mbLeagueNTimeTrimmed.Count < 1) { mbMatch = null; }
-                else { mbMatch = Jobs.SameMatch(b9match, mbLeagueNTimeTrimmed); }
-
-                if (sbLeagueNTimeTrimmed.Count == 1) { sbMatch = sbLeagueNTimeTrimmed[0]; }
-                else if (sbLeagueNTimeTrimmed.Count < 1) { sbMatch = null; }
-                else { sbMatch = Jobs.SameMatch(b9match, sbLeagueNTimeTrimmed); }
-
-                Console.WriteLine("\n\n\n\n\n Bet9ja Match : " + toPrettyString(b9match) + 
-                    "\n \n sportybets found : " + toPrettyString(sbMatch) +
-                    "\n \n Betpawas found : " + toPrettyString(bpMatch) +
-                    "\n \n Merrybets found : " + toPrettyString(mbMatch)
-                    );
-            }
-        }
-        public static void Analyse()
-        {
             var NormalisedSelections = new List<NormalisedSelection>();
             var TwoWayCompares = new List<TwoWayCompare>();
             var ProfitableReturns = new List<TwoOddsReturn>();
@@ -119,213 +76,41 @@ namespace DutchBetTest
                 TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(BetConstants.folder + "TwoWayComparism.xml");
             }
 
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
-            var bet9jaMatches = new List<Bet9jaMatches>();
-            bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
-            bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+            var bet9jaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath);
+            var sportyBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath);
+            var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath);
+            var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath);
 
-            var sportybet = Jobs.LoadFromXML<SportyBet>(BetConstants.sportyBetFilePath);
-            var sportybetMatches = new List<SportyBetMatches>();
-            sportybet.ForEach(n => sportybetMatches.AddRange(n.Matches));
-            sportybetMatches = sportybetMatches.ToList();
-
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).ToList();
-
-            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).ToList();
-
-            foreach (var bpMatch in betPawaMatches)
+            for (int i = 0; i < bet9jaMatches.Count; i++)
             {
-                var b9Match = Jobs.SameMatch(bpMatch, bet9jaMatches);
-                var mbMatch = Jobs.SameMatch(bpMatch, merrybetMatches);
-                var sbMatch = Jobs.SameMatch(bpMatch, sportybetMatches);
+                var b9match = bet9jaMatches[i];
 
-                var bp = (bpMatch != null ? bpMatch.TeamNames : "no bp match") + "    ";
-                var b9 = (b9Match != null ? b9Match.TeamNames : "no b9 match") + "   ";
-                var mb = (mbMatch != null ? mbMatch.TeamNames : "no mb match") + "   ";
-                var sb = sbMatch != null ? sbMatch.TeamNames : "no sb match";
+                var sbLeagueNTimeTrimmed = sportyBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
+                var bpLeagueNTimeTrimmed = betPawaMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
+                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
 
-                Console.WriteLine(bp + b9 + mb + sb);
+                var bpMatch = new BetMatch();
+                var mbMatch = new BetMatch();
+                var sbMatch = new BetMatch();
 
-                foreach (var item in TwoWayCompares)
-                {
-                    var match = new Match();
-                    match.Teams = bpMatch.TeamNames;
+                if (bpLeagueNTimeTrimmed.Count < 1) { bpMatch = null; }
+                else { bpMatch = Jobs.SameMatch(b9match, bpLeagueNTimeTrimmed); }
 
-                    match.Odd1Name = item.Selection1;
-                    match.Odd2Name = item.Selection2;
+                if (mbLeagueNTimeTrimmed.Count < 1) { mbMatch = null; }
+                else { mbMatch = Jobs.SameMatch(b9match, mbLeagueNTimeTrimmed); }
 
-                    match.MatchOdds1 = new List<MatchOdds>();
-                    match.MatchOdds2 = new List<MatchOdds>();
+                if (sbLeagueNTimeTrimmed.Count < 1) { sbMatch = null; }
+                else { sbMatch = Jobs.SameMatch(b9match, sbLeagueNTimeTrimmed); }
 
-                    var ItemNS1 = NormalisedSelections.First(m => m.Normal == item.Selection1);
+                Console.WriteLine("\n\nBet9ja Match : " + b9match.TeamNames +
+                    " ---sportybets found : " + (sbMatch != null ? sbMatch.TeamNames : "null") +
+                    " ---Betpawas found : " + (bpMatch != null ? bpMatch.TeamNames : "null") +
+                    " ---Merrybets found : " + (mbMatch != null ? mbMatch.TeamNames : "null")
+                    );
 
-                    if (!string.IsNullOrWhiteSpace(ItemNS1.Bet9ja))
-                    {
-                        if (b9Match != null)
-                        {
-                            var bet9jaMatchOdd = b9Match.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.Bet9ja.Replace(" ", ""));
-                            if (bet9jaMatchOdd != null)
-                            {
-                                double odd = 0f;
-                                if (double.TryParse(bet9jaMatchOdd.Value, out odd))
-                                {
-                                    match.MatchOdds1.Add(new MatchOdds() { Odd = odd, Site = "bet9ja" });
-                                }
-                            }
-                        }
-                    }
+                ProfitableReturns.AddRange(TwoWayCompare(b9match, bpMatch, mbMatch, sbMatch));
 
-                    if (!string.IsNullOrWhiteSpace(ItemNS1.BetPawa))
-                    {
-                        if (bpMatch != null)
-                        {
-                            var betPawaMatchOdd = bpMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.BetPawa.Replace(" ", ""));
-                            if (betPawaMatchOdd != null)
-                            {
-                                double odd = 0f;
-                                if (double.TryParse(betPawaMatchOdd.Value, out odd))
-                                {
-                                    match.MatchOdds1.Add(new MatchOdds() { Odd = odd, Site = "betpawa" });
-                                }
-                            }
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ItemNS1.MerryBet))
-                    {
-                        if (mbMatch != null)
-                        {
-                            var merrybetMatchOdd = mbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.MerryBet.Replace(" ", ""));
-                            if (merrybetMatchOdd != null)
-                            {
-                                double odd = 0f;
-                                if (double.TryParse(merrybetMatchOdd.Value, out odd))
-                                {
-                                    match.MatchOdds1.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "merrybet" });
-                                }
-                            }
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ItemNS1.SportyBet))
-                    {
-                        if (sbMatch != null)
-                        {
-                            var sportybetMatchOdd = sbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.SportyBet.Replace(" ", ""));
-                            if (sportybetMatchOdd != null)
-                            {
-                                double odd = 0f;
-                                if (double.TryParse(sportybetMatchOdd.Value, out odd))
-                                {
-                                    match.MatchOdds1.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "sportybet" });
-                                }
-                            }
-                        }
-                    }
-
-
-
-                    var ItemNS2 = NormalisedSelections.First(m => m.Normal == item.Selection2);
-
-                    if (!string.IsNullOrWhiteSpace(ItemNS2.Bet9ja))
-                    {
-                        if (b9Match != null)
-                        {
-                            var bet9jaMatchOdd = b9Match.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.Bet9ja.Replace(" ", ""));
-                            if (bet9jaMatchOdd != null)
-                            {
-                                double odd = 0f;
-                                if (double.TryParse(bet9jaMatchOdd.Value, out odd))
-                                {
-                                    match.MatchOdds2.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "bet9ja" });
-                                }
-                            }
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ItemNS2.BetPawa))
-                    {
-                        if (bpMatch != null)
-                        {
-                            var betPawaMatchOdd = bpMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.BetPawa.Replace(" ", ""));
-                            if (betPawaMatchOdd != null)
-                            {
-                                double odd = 0f;
-                                if (double.TryParse(betPawaMatchOdd.Value, out odd))
-                                {
-                                    match.MatchOdds2.Add(new MatchOdds() { Odd = odd, Site = "betpawa" });
-                                }
-                            }
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ItemNS2.MerryBet))
-                    {
-                        if (mbMatch != null)
-                        {
-                            var merrybetMatchOdd = mbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.MerryBet.Replace(" ", ""));
-                            if (merrybetMatchOdd != null)
-                            {
-                                double odd = 0f;
-                                if (double.TryParse(merrybetMatchOdd.Value, out odd))
-                                {
-                                    match.MatchOdds2.Add(new MatchOdds() { Odd = odd, Site = "merrybet" });
-                                }
-                            }
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ItemNS2.SportyBet))
-                    {
-                        if (sbMatch != null)
-                        {
-                            var sportybetMatchOdd = sbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.SportyBet.Replace(" ", ""));
-                            if (sportybetMatchOdd != null)
-                            {
-                                double odd = 0f;
-                                if (double.TryParse(sportybetMatchOdd.Value, out odd))
-                                {
-                                    match.MatchOdds2.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "sportybet" });
-                                }
-                            }
-                        }
-                    }
-
-                    for (int i = 0; i < match.MatchOdds1.Count; i++)
-                    {
-                        var odd1 = match.MatchOdds1[i];
-
-                        if (odd1.Odd == 0)
-                        {
-                            continue;
-                        }
-
-                        for (int j = 0; j < match.MatchOdds2.Count; j++)
-                        {
-                            var odd2 = match.MatchOdds2[j];
-
-                            if (odd2.Odd == 0)
-                            {
-                                continue;
-                            }
-
-                            var rtn = Jobs.calculateForTwoOdds(odd1.Odd, odd2.Odd);
-
-                            rtn.Site1 = odd1.Site;
-                            rtn.Site2 = odd2.Site;
-
-                            rtn.Game1 = match.Odd1Name;
-                            rtn.Game2 = match.Odd2Name;
-
-                            rtn.Team = match.Teams;
-
-                            ProfitableReturns.Add(rtn);
-                        }
-                    }
-                }
             }
-
-            Console.WriteLine("\n");
 
             int profitable = 0;
             foreach (var item in ProfitableReturns)
@@ -338,6 +123,237 @@ namespace DutchBetTest
             }
 
             Console.WriteLine("Profitable = " + profitable);
+        }
+
+        public static void Analyse()
+        {
+
+            //    var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
+            //    var bet9jaMatches = new List<Bet9jaMatches>();
+            //    bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
+            //    bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
+
+            //    var sportybet = Jobs.LoadFromXML<SportyBet>(BetConstants.sportyBetFilePath);
+            //    var sportybetMatches = new List<SportyBetMatches>();
+            //    sportybet.ForEach(n => sportybetMatches.AddRange(n.Matches));
+            //    sportybetMatches = sportybetMatches.ToList();
+
+            //    var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).ToList();
+
+            //    var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).ToList();
+
+            //    Console.WriteLine("\n");
+
+
+            //    int profitable = 0;
+            //    foreach (var item in ProfitableReturns)
+            //    {
+            //        if (item.PercentageReturns > 100)
+            //        {
+            //            profitable++;
+            //            Console.WriteLine(item.Team + "__" + item.Site1 + "__" + item.Game1 + "__" + item.Odd1 + "__" + item.Site2 + "__" + item.Game2 + "__" + item.Odd2 + "__ (" + item.PercentageReturns + ")");
+            //        }
+            //    }
+
+            //    Console.WriteLine("Profitable = " + profitable);
+        }
+
+        public static List<TwoOddsReturn> TwoWayCompare(BetMatch b9Match, BetMatch bpMatch, BetMatch mbMatch, BetMatch sbMatch)
+        {
+
+            var NormalisedSelections = new List<NormalisedSelection>();
+            var TwoWayCompares = new List<TwoWayCompare>();
+            var ProfitableReturns = new List<TwoOddsReturn>();
+
+
+            if (System.IO.File.Exists(BetConstants.folder + "NormalisedSelection.xml"))
+            {
+                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.folder + "NormalisedSelection.xml");
+            }
+            if (System.IO.File.Exists(BetConstants.folder + "TwoWayComparism.xml"))
+            {
+                TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(BetConstants.folder + "TwoWayComparism.xml");
+            }
+
+            foreach (var item in TwoWayCompares)
+            {
+                var match = new Match();
+                match.Teams = b9Match.TeamNames;
+
+                match.Odd1Name = item.Selection1;
+                match.Odd2Name = item.Selection2;
+
+                match.MatchOdds1 = new List<MatchOdds>();
+                match.MatchOdds2 = new List<MatchOdds>();
+
+                var ItemNS1 = NormalisedSelections.First(m => m.Normal == item.Selection1);
+
+                if (!string.IsNullOrWhiteSpace(ItemNS1.Bet9ja))
+                {
+                    if (b9Match != null)
+                    {
+                        var bet9jaMatchOdd = b9Match.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.Bet9ja.Replace(" ", ""));
+                        if (bet9jaMatchOdd != null)
+                        {
+                            double odd = 0f;
+                            if (double.TryParse(bet9jaMatchOdd.Value, out odd))
+                            {
+                                match.MatchOdds1.Add(new MatchOdds() { Odd = odd, Site = "bet9ja" });
+                            }
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(ItemNS1.BetPawa))
+                {
+                    if (bpMatch != null)
+                    {
+                        var betPawaMatchOdd = bpMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.BetPawa.Replace(" ", ""));
+                        if (betPawaMatchOdd != null)
+                        {
+                            double odd = 0f;
+                            if (double.TryParse(betPawaMatchOdd.Value, out odd))
+                            {
+                                match.MatchOdds1.Add(new MatchOdds() { Odd = odd, Site = "betpawa" });
+                            }
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(ItemNS1.MerryBet))
+                {
+                    if (mbMatch != null)
+                    {
+                        var merrybetMatchOdd = mbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.MerryBet.Replace(" ", ""));
+                        if (merrybetMatchOdd != null)
+                        {
+                            double odd = 0f;
+                            if (double.TryParse(merrybetMatchOdd.Value, out odd))
+                            {
+                                match.MatchOdds1.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "merrybet" });
+                            }
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(ItemNS1.SportyBet))
+                {
+                    if (sbMatch != null)
+                    {
+                        var sportybetMatchOdd = sbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS1.SportyBet.Replace(" ", ""));
+                        if (sportybetMatchOdd != null)
+                        {
+                            double odd = 0f;
+                            if (double.TryParse(sportybetMatchOdd.Value, out odd))
+                            {
+                                match.MatchOdds1.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "sportybet" });
+                            }
+                        }
+                    }
+                }
+
+
+
+                var ItemNS2 = NormalisedSelections.First(m => m.Normal == item.Selection2);
+
+                if (!string.IsNullOrWhiteSpace(ItemNS2.Bet9ja))
+                {
+                    if (b9Match != null)
+                    {
+                        var bet9jaMatchOdd = b9Match.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.Bet9ja.Replace(" ", ""));
+                        if (bet9jaMatchOdd != null)
+                        {
+                            double odd = 0f;
+                            if (double.TryParse(bet9jaMatchOdd.Value, out odd))
+                            {
+                                match.MatchOdds2.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "bet9ja" });
+                            }
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(ItemNS2.BetPawa))
+                {
+                    if (bpMatch != null)
+                    {
+                        var betPawaMatchOdd = bpMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.BetPawa.Replace(" ", ""));
+                        if (betPawaMatchOdd != null)
+                        {
+                            double odd = 0f;
+                            if (double.TryParse(betPawaMatchOdd.Value, out odd))
+                            {
+                                match.MatchOdds2.Add(new MatchOdds() { Odd = odd, Site = "betpawa" });
+                            }
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(ItemNS2.MerryBet))
+                {
+                    if (mbMatch != null)
+                    {
+                        var merrybetMatchOdd = mbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.MerryBet.Replace(" ", ""));
+                        if (merrybetMatchOdd != null)
+                        {
+                            double odd = 0f;
+                            if (double.TryParse(merrybetMatchOdd.Value, out odd))
+                            {
+                                match.MatchOdds2.Add(new MatchOdds() { Odd = odd, Site = "merrybet" });
+                            }
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(ItemNS2.SportyBet))
+                {
+                    if (sbMatch != null)
+                    {
+                        var sportybetMatchOdd = sbMatch.Odds.FirstOrDefault(m => m.SelectionFull.Replace(" ", "") == ItemNS2.SportyBet.Replace(" ", ""));
+                        if (sportybetMatchOdd != null)
+                        {
+                            double odd = 0f;
+                            if (double.TryParse(sportybetMatchOdd.Value, out odd))
+                            {
+                                match.MatchOdds2.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "sportybet" });
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < match.MatchOdds1.Count; i++)
+                {
+                    var odd1 = match.MatchOdds1[i];
+
+                    if (odd1.Odd == 0)
+                    {
+                        continue;
+                    }
+
+                    for (int j = 0; j < match.MatchOdds2.Count; j++)
+                    {
+                        var odd2 = match.MatchOdds2[j];
+
+                        if (odd2.Odd == 0)
+                        {
+                            continue;
+                        }
+
+                        var rtn = Jobs.calculateForTwoOdds(odd1.Odd, odd2.Odd);
+
+                        rtn.Site1 = odd1.Site;
+                        rtn.Site2 = odd2.Site;
+
+                        rtn.Game1 = match.Odd1Name;
+                        rtn.Game2 = match.Odd2Name;
+
+                        rtn.Team = match.Teams;
+
+                        ProfitableReturns.Add(rtn);
+                    }
+                }
+            }
+
+            return ProfitableReturns;
         }
 
         public static void TestNameComparison()
