@@ -115,7 +115,7 @@ namespace DutchBetTest
             int profitable = 0;
             foreach (var item in ProfitableReturns)
             {
-                if (item.PercentageReturns > 99)
+                if (item.PercentageReturns > 97.5)
                 {
                     profitable++;
                     Console.WriteLine(item.Team + "__" + item.Site1 + "__" + item.Game1 + "__" + item.Odd1 + "__" + item.Site2 + "__" + item.Game2 + "__" + item.Odd2 + "__ (" + item.PercentageReturns + ")");

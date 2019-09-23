@@ -53,8 +53,7 @@ namespace Scraper
                         //get list of ids for todays match
                         var listIds = soccerData.Detail.SottoEventiList.Select(m => m.IDSottoEvento).ToList();
 
-                        foreach (var id in listIds)
-                        {
+                        Parallel.ForEach(listIds, async (id) => {
 
                             var postObject = JsonConvert.SerializeObject(new SendData() { IDSottoEvento = id, IDGruppoQuota = 0 });
 
@@ -84,7 +83,9 @@ namespace Scraper
                                         {
                                             odds.Add(new BetOdds { Value = m.Quota, Selection = m.TipoQuota, Type = item.ClasseQuota });
                                         }
-                                        listmatch.Add(new BetMatch { Odds = odds,
+                                        listmatch.Add(new BetMatch
+                                        {
+                                            Odds = odds,
                                             DateTimeOfMatch = DateTime.ParseExact(singleData.d.SrtDataInizio, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
                                             TeamNames = singleData.d.SottoEvento
                                         });
@@ -93,7 +94,8 @@ namespace Scraper
                                     var compOdds = listmatch.GroupBy(x => x.TeamNames).First().SelectMany(m => m.Odds);
 
 
-                                    listEvents.Add(new BetMatch {
+                                    listEvents.Add(new BetMatch
+                                    {
                                         Odds = compOdds.ToList(),
                                         DateTimeOfMatch = DateTime.ParseExact(singleData.d.SrtDataInizio, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
                                         TeamNames = singleData.d.SottoEvento,
@@ -104,7 +106,7 @@ namespace Scraper
                                 }
 
                             }
-                        }
+                        });
 
                         //var qbets = listEvents.GroupBy(x => x.League).ToList();
                         //listEvents.Clear();
@@ -117,6 +119,8 @@ namespace Scraper
                         //}
 
                         //.Select(m => new Bet9ja { League = m.Key, Matches = m.ToList() });
+
+                        Console.WriteLine("--Bet9ja Done");
                         return listEvents;
                     }
                 }

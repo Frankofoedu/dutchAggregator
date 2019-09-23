@@ -80,8 +80,6 @@ namespace Scraper
         {
                 var betOverview = new List<BetMatch>();
 
-                Console.WriteLine("-----Scraping started");
-
                 try
                 {
                     //get all initial page
@@ -99,85 +97,91 @@ namespace Scraper
 
                     var listEventsIds = GetRemainingEvents(t.Data.RemainingEventIds, 1);
 
-                    //implement task class
-                    //var tasks = listEventsIds.Select(
+                //implement task class
+                //var tasks = listEventsIds.Select(
 
-                    //    urls => client.PostAsync("https://www.betpawa.ng/events/ws/getEventsByIds",
-                    //                   new StringContent(JsonConvert.SerializeObject(new SendData()
-                    //                   { MarketTypeGrouping = "_1X2", EventIds = urls }), 
-                    //                   Encoding.UTF8, "application/json"))
+                //    urls => client.PostAsync("https://www.betpawa.ng/events/ws/getEventsByIds",
+                //                   new StringContent(JsonConvert.SerializeObject(new SendData()
+                //                   { MarketTypeGrouping = "_1X2", EventIds = urls }), 
+                //                   Encoding.UTF8, "application/json"))
 
 
-                    //);
+                //);
 
-                    //await Task.WhenAll(tasks);
+                //await Task.WhenAll(tasks);
 
-                    //var responses = tasks.Select(task => task.Result);
+                //var responses = tasks.Select(task => task.Result);
 
-                    //foreach (var item in responses)
-                    //{
-                    //    if (item.IsSuccessStatusCode)
-                    //    {
+                //foreach (var item in responses)
+                //{
+                //    if (item.IsSuccessStatusCode)
+                //    {
 
-                    //    }
-                    //}
-                    //end task implement
+                //    }
+                //}
+                //end task implement
 
-                    foreach (var ids in listEventsIds)
+                //var tsks = listEventsIds.Select(ids =>
+                //{
+
+                //});
+
+                Parallel.ForEach(listEventsIds, (ids) =>
+                {
+
+                    var postObject = JsonConvert.SerializeObject(new SendData() { MarketTypeGrouping = "_1X2", EventIds = ids });
+
+
+                    var response = client.PostAsync("https://www.betpawa.ng/events/ws/getEventsByIds",
+                                   new StringContent(postObject, Encoding.UTF8, "application/json")).Result;
+
+
+                    if (response.IsSuccessStatusCode)
                     {
-                        var postObject = JsonConvert.SerializeObject(new SendData() { MarketTypeGrouping = "_1X2", EventIds = ids });
+                        //Console.WriteLine("-----Response received");
+                        var m = response.Content.ReadAsStringAsync().Result;
 
-                        Console.WriteLine("-----Query sent");
-                        var response = client.PostAsync("https://www.betpawa.ng/events/ws/getEventsByIds",
-                                       new StringContent(postObject, Encoding.UTF8, "application/json")).Result;
+                        //add path for event id
+                        var data = JsonConvert.DeserializeObject<RootObject>(m);
 
-
-                        if (response.IsSuccessStatusCode)
+                        foreach (var item in data.Data)
                         {
-                            Console.WriteLine("-----Response received");
-                            var m = response.Content.ReadAsStringAsync().Result;
+                            if (!(item.StartsRaw.Date <= DateTime.Today.AddDays(1)))
+                                break;
 
-                            //add path for event id
-                            var data = JsonConvert.DeserializeObject<RootObject>(m);
+                            paths.Add(item.Id);
 
-                            foreach (var item in data.Data)
-                            {
-                                if (!(item.StartsRaw.Date <= DateTime.Today.AddDays(1)))
-                                    break;
-
-                                paths.Add(item.Id);
-
-                            }
                         }
                     }
+                });
 
 
-                    for (int i = 0; i < paths.Count; i++)
+                for (int i = 0; i < paths.Count; i++)
+                {
+                    var id = paths[i];
+                    //get data for each match
+                    string oddsResponseBody = client.GetStringAsync("https://www.betpawa.ng/events/ws/getPricesForEvent/" + id).Result;
+
+                    var data = JsonConvert.DeserializeObject<SingleReceivedData.RootObject>(oddsResponseBody);
+
+                    betOverview.Add(new BetMatch()
                     {
-                        var id = paths[i];
-                        //get data for each match
-                        string oddsResponseBody = client.GetStringAsync("https://www.betpawa.ng/events/ws/getPricesForEvent/" + id).Result;
-
-                        var data = JsonConvert.DeserializeObject<SingleReceivedData.RootObject>(oddsResponseBody);
-
-                        betOverview.Add(new BetMatch()
-                        {
-                            League = data.Data.League.Replace(data.Data.Region, "").Trim(),
-                            DateTimeOfMatch = DateTime.Parse(data.Data.StartsRaw),
-                            TeamNames = data.Data.Name,
-                            Site = "betPawa",
-                            Country = data.Data.Region,
-                            Odds = data.Data.Markets.SelectMany(x => x.Prices.Select(
-                                m => new BetOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name + m.Hcp, Value = m.Cost })).ToList()
-                        });
-                    }
-
-
-
-                    Console.WriteLine("-----Scraping Done");
-
-                    return betOverview;
+                        League = data.Data.League.Replace(data.Data.Region, "").Trim(),
+                        DateTimeOfMatch = DateTime.Parse(data.Data.StartsRaw),
+                        TeamNames = data.Data.Name,
+                        Site = "betPawa",
+                        Country = data.Data.Region,
+                        Odds = data.Data.Markets.SelectMany(x => x.Prices.Select(
+                            m => new BetOdds { MainType = x.GroupName, Type = x.GroupedName, Selection = m.Name + m.Hcp, Value = m.Cost })).ToList()
+                    });
                 }
+
+
+
+                Console.WriteLine("--Betpawa Done");
+
+                return betOverview;
+            }
                 catch (HttpRequestException e)
                 {
                     Console.WriteLine("\nException Caught!");

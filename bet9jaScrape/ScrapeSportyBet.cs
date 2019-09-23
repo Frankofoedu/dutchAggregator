@@ -18,11 +18,8 @@ namespace Scraper
 
             try
             {
-                Console.WriteLine("Started scraping sportybet");
                 //get todays data
                 string FirstresponseBody = client.GetStringAsync("https://www.sportybet.com/api/ng/factsCenter/pcUpcomingEvents?sportId=sr%3Asport%3A1&marketId=1%2C18%2C10%2C29%2C11%2C26%2C36%2C14&pageSize=100&pageNum=1&timeline=24&_t=" + currdate).Result;
-
-                Console.WriteLine("today's data received");
 
                 //serialize data
                 var t = JsonConvert.DeserializeObject<SearchData>(FirstresponseBody);
@@ -31,18 +28,19 @@ namespace Scraper
 
 
                 currdate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                var tasks = eventsId.Select(ids => client.GetStringAsync("https://www.sportybet.com/api/ng/factsCenter/event?eventId=" + ids + "&productId=3&_t=" + currdate));
-
-                Console.WriteLine("Query Sent");
+                var tasks = new List<Task<string>>();
+                try
+                {
+                    tasks = eventsId.Select(ids => client.GetStringAsync("https://www.sportybet.com/api/ng/factsCenter/event?eventId=" + ids + "&productId=3&_t=" + currdate)).ToList();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
 
                 await Task.WhenAll(tasks);
 
-                Console.WriteLine("All Matches received");
-
                 var responses = tasks.Select(task => JsonConvert.DeserializeObject<ReceievedData.SportyBetData>(task.Result));
-
-
-                Console.WriteLine("All Matches parsed");
 
                 var returnData = new List<BetMatch>();
                 //loop through each match
@@ -102,6 +100,7 @@ namespace Scraper
                         matchGrouped.Add(sb);
                     }
                 }
+                Console.WriteLine("--Sportybet Done.");
                 return matchGrouped;
 
             }
