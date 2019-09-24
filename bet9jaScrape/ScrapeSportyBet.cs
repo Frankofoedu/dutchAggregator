@@ -33,15 +33,9 @@ namespace Scraper
 
                 currdate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 var tasks = new List<Task<string>>();
-                try
-                {
-                    tasks = eventsId.Select(ids => client.GetStringAsync("https://www.sportybet.com/api/ng/factsCenter/event?eventId=" + ids + "&productId=3&_t=" + currdate)).ToList();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-
+                
+                tasks = eventsId.Select(ids => client.GetStringAsync("https://www.sportybet.com/api/ng/factsCenter/event?eventId=" + ids + "&productId=3&_t=" + currdate)).ToList();
+                
                 await Task.WhenAll(tasks);
 
                 var responses = tasks.Select(task => JsonConvert.DeserializeObject<ReceievedData.SportyBetData>(task.Result));
