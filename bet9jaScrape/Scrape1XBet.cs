@@ -97,7 +97,7 @@ namespace Scraper
                                                 Country = country,
                                                 League = league,
                                                 DateTimeOfMatch = date1,
-                                                Site = "1XBET",
+                                                Site = "1xBet",
                                                 TeamNames = $"{singleMatch.Value.O1} - {singleMatch.Value.O2}"
                                             };
 

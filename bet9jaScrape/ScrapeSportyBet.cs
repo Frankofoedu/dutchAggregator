@@ -14,9 +14,6 @@ namespace Scraper
     {
         public async Task<List<BetMatch>> ScrapeSportyBetDailyAsync(HttpClient client)
         {
-
-
-            Console.WriteLine("Testing Sportybet");
             var currdate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             try
