@@ -34,10 +34,8 @@ namespace Scraper
                 //get second day list of events id and add to previous list
                 //t.AddRange(JsonConvert.DeserializeObject<SearchData>(SecondresponseBody).data.Where(m => m.category1Name == "Soccer" && !m.category3Name.ToLower().Contains("special") && m.eventType == 1).Select(x => x.eventId).ToList());
 
-                for (int i = 0; i < t.Count; i++)
+                Parallel.ForEach(t, (eventId) =>
                 {
-                    //get id of event
-                    var eventId = t[i];
 
                     //get data for event
                     var singleresponse = client.GetStringAsync("https://merrybet.com/rest/market/events/" + eventId).Result;
@@ -62,7 +60,7 @@ namespace Scraper
                         catch (Exception e)
                         {
                             Console.WriteLine(mbOdds.Count + e.Message);
-                            continue;
+                            return;
                         }
 
                         var mbOddsnGames = new BetMatch();
@@ -76,7 +74,7 @@ namespace Scraper
                                 TeamNames = singleEventData.data.eventName,
                                 Odds = mbOdds,
                                 Country = singleEventData.data.category3Name,
-                                Site = "merrybet"
+                                Site = "merryBet"
                             };
                         }
                         else
@@ -88,7 +86,7 @@ namespace Scraper
                                 TeamNames = singleEventData.data.eventName,
                                 Odds = mbOdds,
                                 Country = singleEventData.data.category2Name,
-                                Site = "merrybet"
+                                Site = "merryBet"
                             };
                         }
 
@@ -99,8 +97,9 @@ namespace Scraper
                     {
                         Console.WriteLine("No data returned");
                     }
-                }
+                });
 
+                Console.WriteLine("--Merrybet Done");
                 return listEvents;
             }
             catch (HttpRequestException e)

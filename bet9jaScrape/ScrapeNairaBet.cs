@@ -12,7 +12,7 @@ namespace Scraper
     {
         public static Task< List<BetMatch>> Scrape(HttpClient client)
         {
-            // var url = "https://www.nairabet.com/UK/Sports#action=filtered-market-group-list&datefilter=20190918";
+            var url = "https://www.nairabet.com/UK/Sports#action=filtered-market-group-list&datefilter=20190918";
 
             return null;
         }
