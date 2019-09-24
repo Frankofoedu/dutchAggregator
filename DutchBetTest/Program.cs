@@ -81,13 +81,17 @@ namespace DutchBetTest
             var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath);
             var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath);
 
+            //loops through all bet9ja matches
             for (int i = 0; i < bet9jaMatches.Count; i++)
             {
                 var b9match = bet9jaMatches[i];
 
+
+                #region Get all Matches that match the league and time of current match
                 var sbLeagueNTimeTrimmed = sportyBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
                 var bpLeagueNTimeTrimmed = betPawaMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
-                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
+                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList(); 
+                #endregion
 
                 var bpMatch = new BetMatch();
                 var mbMatch = new BetMatch();
@@ -108,6 +112,8 @@ namespace DutchBetTest
                     " ---Merrybets found : " + (mbMatch != null ? mbMatch.TeamNames : "null")
                     );
 
+
+                //calculates the percentage return on the set of matches
                 ProfitableReturns.AddRange(TwoWayCompare(b9match, bpMatch, mbMatch, sbMatch));
 
             }
@@ -230,7 +236,7 @@ namespace DutchBetTest
                             double odd = 0f;
                             if (double.TryParse(merrybetMatchOdd.Value, out odd))
                             {
-                                match.MatchOdds1.Add(new Classes.CalcClasses.MatchOdds() { Odd = odd, Site = "merrybet" });
+                                match.MatchOdds1.Add(new MatchOdds() { Odd = odd, Site = "merrybet" });
                             }
                         }
                     }

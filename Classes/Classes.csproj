@@ -46,6 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="1XBet\1xBetMatchData.cs" />
+    <Compile Include="1XBet\BetsName.cs" />
+    <Compile Include="1XBet\BetsNameModel.cs" />
+    <Compile Include="1XBet\FootBallTypes.cs" />
+    <Compile Include="1XBet\SecondData.cs" />
     <Compile Include="Bet9ja.cs" />
     <Compile Include="Bet9jaData\Bet9jaReceivedData.cs" />
     <Compile Include="Bet9jaData\Bet9jaSingleReceivedData.cs" />

@@ -14,13 +14,17 @@ namespace Scraper
     {
         public async Task<List<BetMatch>> ScrapeSportyBetDailyAsync(HttpClient client)
         {
+
+
+            Console.WriteLine("Testing Sportybet");
             var currdate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             try
             {
                 Console.WriteLine("Started scraping sportybet");
                 //get todays data
-                string FirstresponseBody = client.GetStringAsync("https://www.sportybet.com/api/ng/factsCenter/pcUpcomingEvents?sportId=sr%3Asport%3A1&marketId=1%2C18%2C10%2C29%2C11%2C26%2C36%2C14&pageSize=100&pageNum=1&timeline=24&_t=" + currdate).Result;
+                string FirstresponseBody = await
+                    client.GetStringAsync("https://www.sportybet.com/api/ng/factsCenter/pcUpcomingEvents?sportId=sr%3Asport%3A1&marketId=1%2C18%2C10%2C29%2C11%2C26%2C36%2C14&pageSize=100&pageNum=1&timeline=24&_t=" + currdate);
 
                 Console.WriteLine("today's data received");
 
@@ -103,6 +107,8 @@ namespace Scraper
                     }
                 }
                 return matchGrouped;
+
+                
 
             }
             catch (Exception e)
