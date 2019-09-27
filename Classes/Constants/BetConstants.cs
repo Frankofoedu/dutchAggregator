@@ -16,5 +16,13 @@ namespace Classes.Constants
         public static readonly string sportyBetFilePath = folder + "sportyBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
         public static readonly string oneXBetFilePath = folder + "1xBet" + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml";
         public static readonly string normalizedFilePath = folder + "NormalisedSelection.xml";
+
+
+        public static readonly string bet9jaLeagueFilePath = folder + "bet9jaLeague.xml";
+        public static readonly string betPawaLeagueFilePath = folder + "betPawaLeague.xml";
+        public static readonly string merryBetLeagueFilePath = folder + "merryBetLeague.xml";
+        public static readonly string sportyBetLeagueFilePath = folder + "sportyBetLeague.xml";
+        public static readonly string oneXBetLeagueFilePath = folder + "1xBetLeague.xml";
+        public static readonly string normalizedLeagueFilePath = folder + "NormalizedLeague.xml";
     }
 }
