@@ -1,0 +1,163 @@
+﻿@using Classes
+@model NormalisedLeague
+
+@{
+    ViewBag.Title = "Normalise League";
+    var Bet9ja = (List<League>)ViewBag.Bet9jaLeagues;
+    var BetPawa = (List<League>)ViewBag.BetPawaLeagues;
+    var Merrybet = (List<League>)ViewBag.MerryBetLeagues;
+    var Sportybet = (List<League>)ViewBag.SportyBetLeagues;
+    var OneXBet = (List<League>)ViewBag.OneXBetLeagues;
+
+    string msg = ViewBag.Msg;
+}
+
+<h2>Normalise League</h2>
+
+@if (!string.IsNullOrWhiteSpace(msg))
+{
+    if (msg.Contains("Error"))
+    {
+        <div class="alert alert-dismissable alert-danger">
+            @msg
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-dismissable alert-success">
+            @msg
+        </div>
+    }
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post">
+                <div class="row">
+                    <div class="form-group">
+                        <label>Normalised</label>
+                        @Html.EditorFor(m => m.Normal, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Bet9ja</label>
+                        @Html.EditorFor(m => m.Bet9ja, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Betpawa</label>
+                        @Html.EditorFor(m => m.BetPawa, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Merrybet</label>
+                        @Html.EditorFor(m => m.MerryBet, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Sportybet</label>
+                        @Html.EditorFor(m => m.SportyBet, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>1XBet</label>
+                        @Html.EditorFor(m => m.OneXBet, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <input type="submit" value="Submit" class="btn btn-primary" />
+                @Html.ActionLink("Clear", "Index", "League", new { area = "" }, new { @class = "btn btn-default" })
+                @Html.ActionLink("View All", "ViewNormal", "League", new { area = "" }, new { @class = "btn btn-default" })
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div style="width:20%;">
+                    <h2>Bet9ja</h2>
+                    <ul class="list-unstyled">
+                        @for (int i = 0; i < Bet9ja.Count; i++)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3>@Bet9ja[i].LeagueId</h3></div>
+                                <div class="panel-body">
+                                    <p><b>League : </b> @Bet9ja[i].LeagueName</p>
+                                    <p><b>Country : </b> @Bet9ja[i].Country</p>
+                                </div>
+                            </div>
+                        }
+                    </ul>
+                </div>
+                <div style="width:20%;">
+                    <h2>BetPawa</h2>
+                    <ul class="list-unstyled">
+                        @for (int i = 0; i < BetPawa.Count; i++)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3>@BetPawa[i].LeagueId</h3></div>
+                                <div class="panel-body">
+                                    <p><b>League : </b> @BetPawa[i].LeagueName</p>
+                                    <p><b>Country : </b> @BetPawa[i].Country</p>
+                                </div>
+                            </div>
+                        }
+                    </ul>
+                </div>
+                <div style="width:20%;">
+                    <h2>Merrybet</h2>
+                    <ul class="list-unstyled">
+                        @for (int i = 0; i < Merrybet.Count; i++)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3>@Merrybet[i].LeagueId</h3></div>
+                                <div class="panel-body">
+                                    <p><b>League : </b> @Merrybet[i].LeagueName</p>
+                                    <p><b>Country : </b> @Merrybet[i].Country</p>
+                                </div>
+                            </div>
+                        }
+                    </ul>
+                </div>
+                <div style="width:20%;">
+                    <h2>SportyBet</h2>
+                    <ul class="list-unstyled">
+                        @for (int i = 0; i < Sportybet.Count; i++)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3>@Sportybet[i].LeagueId</h3></div>
+                                <div class="panel-body">
+                                    <p><b>League : </b> @Sportybet[i].LeagueName</p>
+                                    <p><b>Country : </b> @Sportybet[i].Country</p>
+                                </div>
+                            </div>
+                        }
+                    </ul>
+                </div>
+                <div style="width:20%;">
+                    <h2>1XBet</h2>
+                    <ul class="list-unstyled">
+                        @for (int i = 0; i < OneXBet.Count; i++)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3>@OneXBet[i].LeagueId</h3></div>
+                                <div class="panel-body">
+                                    <p><b>League : </b> @OneXBet[i].LeagueName</p>
+                                    <p><b>Country : </b> @OneXBet[i].Country</p>
+                                </div>
+                            </div>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

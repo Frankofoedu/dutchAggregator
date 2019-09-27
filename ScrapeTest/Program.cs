@@ -22,8 +22,8 @@ namespace ScrapeTest
 
             var Scrapetasks = new List<Task<List<BetMatch>>>();
 
-            Console.WriteLine("Fetching 1XBET");
-            Scrapetasks.Add(Scrape1XBet.Scrape(client));
+            //Console.WriteLine("Fetching 1XBET");
+            //Scrapetasks.Add(Scrape1XBet.Scrape(client));
 
             Console.WriteLine("Fetching Betpawa");
             var at = new ScrapeBetPawa();

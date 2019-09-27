@@ -62,8 +62,10 @@
     <Compile Include="Jobs.cs" />
     <Compile Include="DailyBetPawa.cs" />
     <Compile Include="BetPawa.cs" />
+    <Compile Include="League.cs" />
     <Compile Include="MerryBet\MerrybetData.cs" />
     <Compile Include="MerryBet\SearchData.cs" />
+    <Compile Include="NormalisedLeague.cs" />
     <Compile Include="NormalisedSelection.cs" />
     <Compile Include="CalcClasses\Match.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

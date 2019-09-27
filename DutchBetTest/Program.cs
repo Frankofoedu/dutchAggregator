@@ -27,32 +27,6 @@ namespace DutchBetTest
 
             Console.WriteLine("Started...");
 
-            //Analyse();
-
-
-            //var bet9jaMatch = Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath).First();
-
-            //var sportyBetMatch = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath).First();
-
-            //var betPawaMatch = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath).First();
-
-            //var merryBetMatch = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath)[5];
-
-            //bet9jaMatch.Odds.Clear();
-            //sportyBetMatch.Odds.Clear();
-            //betPawaMatch.Odds.Clear();
-            //merryBetMatch.Odds.Clear();
-
-            //Console.WriteLine(toPrettyString(bet9jaMatch) + "\n\n\n");
-            //Console.WriteLine(toPrettyString(sportyBetMatch) + "\n\n\n");
-            //Console.WriteLine(toPrettyString(betPawaMatch) + "\n\n\n");
-            //Console.WriteLine(toPrettyString(merryBetMatch) + "\n\n\n");
-
-
-            //var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath);
-            //merryBetMatches.ForEach(m => m.Odds.Clear());
-            //Console.WriteLine(toPrettyString(merryBetMatches) + "\n");
-
             newAnalyse();
 
 
@@ -121,7 +95,7 @@ namespace DutchBetTest
             int profitable = 0;
             foreach (var item in ProfitableReturns)
             {
-                if (item.PercentageReturns > 97.5)
+                if (item.PercentageReturns > 100)
                 {
                     profitable++;
                     Console.WriteLine(item.Team + "__" + item.Site1 + "__" + item.Game1 + "__" + item.Odd1 + "__" + item.Site2 + "__" + item.Game2 + "__" + item.Odd2 + "__ (" + item.PercentageReturns + ")");
@@ -129,39 +103,6 @@ namespace DutchBetTest
             }
 
             Console.WriteLine("Profitable = " + profitable);
-        }
-
-        public static void Analyse()
-        {
-
-            //    var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
-            //    var bet9jaMatches = new List<Bet9jaMatches>();
-            //    bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
-            //    bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
-
-            //    var sportybet = Jobs.LoadFromXML<SportyBet>(BetConstants.sportyBetFilePath);
-            //    var sportybetMatches = new List<SportyBetMatches>();
-            //    sportybet.ForEach(n => sportybetMatches.AddRange(n.Matches));
-            //    sportybetMatches = sportybetMatches.ToList();
-
-            //    var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).ToList();
-
-            //    var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).ToList();
-
-            //    Console.WriteLine("\n");
-
-
-            //    int profitable = 0;
-            //    foreach (var item in ProfitableReturns)
-            //    {
-            //        if (item.PercentageReturns > 100)
-            //        {
-            //            profitable++;
-            //            Console.WriteLine(item.Team + "__" + item.Site1 + "__" + item.Game1 + "__" + item.Odd1 + "__" + item.Site2 + "__" + item.Game2 + "__" + item.Odd2 + "__ (" + item.PercentageReturns + ")");
-            //        }
-            //    }
-
-            //    Console.WriteLine("Profitable = " + profitable);
         }
 
         public static List<TwoOddsReturn> TwoWayCompare(BetMatch b9Match, BetMatch bpMatch, BetMatch mbMatch, BetMatch sbMatch)

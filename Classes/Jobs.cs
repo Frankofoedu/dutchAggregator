@@ -273,7 +273,7 @@ namespace Classes
 
                 if (LM.Count > 0)
                 {
-                    if (LM[0].Distance <= 15) { return LM[0].Match; }
+                    if (LM[0].Distance <= 8) { return LM[0].Match; }
                 }
 
                 return null;
