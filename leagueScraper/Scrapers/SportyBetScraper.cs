@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Classes;
 using leagueScraper.Data;
 using leagueScraper.Data.SportyBet;
-using leagueScraper.Model;
 using Newtonsoft.Json;
 using Converter = leagueScraper.Data.SportyBet.Converter;
 

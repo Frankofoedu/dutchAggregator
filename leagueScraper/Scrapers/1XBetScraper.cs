@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Classes;
 using leagueScraper.Data._1XBet;
-using leagueScraper.Model;
 using Newtonsoft.Json;
 
 namespace leagueScraper.Scrapers
