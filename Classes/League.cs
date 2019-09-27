@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace leagueScraper.Model
+namespace Classes
 {
     public class League
     {
