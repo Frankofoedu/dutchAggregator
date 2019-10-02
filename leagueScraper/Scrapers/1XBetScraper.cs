@@ -29,6 +29,8 @@ namespace leagueScraper.Scrapers
             var leagues = new List<League>();
             foreach (var lg in filteredData.L)
             {
+                if (lg.LL.ToLower().Contains("statistics") || lg.LL.ToLower().Contains("friendlies") || lg.LL.ToLower().Contains("special")|| lg.LL.ToLower().Contains("specials")) continue;
+
                 (var country, var countryId, var leagueName, var leagueId) = (lg.Cn, lg.Ci, lg.LL, lg.Li);
 
                 leagues.Add(new League { Country = country, CountryId = countryId.ToString(), LeagueId = leagueId.ToString(), LeagueName = leagueName, Site = "1XBet" });
