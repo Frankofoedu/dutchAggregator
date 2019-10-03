@@ -18,28 +18,40 @@ namespace leagueScraper.Scrapers
 
         public static async Task<List<League>> ScrapeAsync(HttpClient client)
         {
-            var json = await ApiUtility.GetAsync(client, URL);
-
-            var data = JsonConvert.DeserializeObject<SportyBetData>(json, Converter.Settings);
-
-            if (data == null) return null;
-
-
-            var leagues = new List<League>();
-            foreach (var cat in data.Data.SportList)
+            try
             {
-                (var country, var countryId) = (cat.Name, cat.Id);
+                var json = await ApiUtility.GetAsync(client, URL);
 
-                foreach (var lg in cat.Tournaments)
+                var data = JsonConvert.DeserializeObject<SportyBetData>(json, Converter.Settings);
+
+                if (data == null) return null;
+
+
+                var leagues = new List<League>();
+                foreach (var cat in data.Data.SportList[0].Categories)
                 {
-                    (var leagueName, var leagueId) = (lg.Name, lg.Id);
+                    (var country, var countryId) = (cat.Name, cat.Id);
 
-                    leagues.Add(new League { Country = country, CountryId = countryId.ToString(), LeagueId = leagueId.ToString(), LeagueName = leagueName, Site = "SportyBet" });
+                    if (cat.Tournaments == null) continue;
+
+
+                    foreach (var lg in cat.Tournaments)
+                    {
+                        (var leagueName, var leagueId) = (lg.Name, lg.Id);
+
+                        leagues.Add(new League { Country = country, CountryId = countryId.ToString(), LeagueId = leagueId.ToString(), LeagueName = leagueName, Site = "SportyBet" });
+                    }
+
                 }
-                
-            }
 
-            return leagues;
+                return leagues;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+           
         }
     }
 }

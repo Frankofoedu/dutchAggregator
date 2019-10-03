@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Classes;
 using leagueScraper.Scrapers;
 
 namespace leagueScraper
@@ -11,13 +13,27 @@ namespace leagueScraper
         static async Task Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-           var bet9JaLeagues = await Bet9jaScraper.ScrapeAsync(client);
+            var leagueList = new List<List<League>>();
 
-            var merrybetLeagues = await MerryBetScraper.ScrapeAsync(client);
 
-            var _1xbet = await _1XBetScraper.ScrapeAsync(client);
+            leagueList.Add(await Bet9jaScraper.ScrapeAsync(client));
 
-            var sportybet = await SportyBetScraper.ScrapeAsync(client);
+            leagueList.Add( await MerryBetScraper.ScrapeAsync(client));
+
+            leagueList.Add(await _1XBetScraper.ScrapeAsync(client));
+
+            leagueList.Add( await SportyBetScraper.ScrapeAsync(client));
+
+
+            foreach (var listLeague in leagueList)
+            {
+                var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
+                Jobs.SaveToXML(listLeague, folder + $"{listLeague[0].Site}-leagueFile");
+            }
+
+            Console.WriteLine("Done");
+
+            Console.Read();
 
         }
 
