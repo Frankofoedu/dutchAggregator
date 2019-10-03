@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Classes;
+using Classes.Constants;
 using leagueScraper.Data;
 using leagueScraper.Data.SportyBet;
 using Newtonsoft.Json;
@@ -39,7 +40,7 @@ namespace leagueScraper.Scrapers
                     {
                         (var leagueName, var leagueId) = (lg.Name, lg.Id);
 
-                        leagues.Add(new League { Country = country, CountryId = countryId.ToString(), LeagueId = leagueId.ToString(), LeagueName = leagueName, Site = "SportyBet" });
+                        leagues.Add(new League { Country = country, CountryId = countryId.ToString(), LeagueId = leagueId.ToString(), LeagueName = leagueName, Site = BetConstants.SPORTYBETNAME });
                     }
 
                 }

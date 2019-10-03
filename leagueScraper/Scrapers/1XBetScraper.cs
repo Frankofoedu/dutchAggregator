@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Classes;
+using Classes.Constants;
 using leagueScraper.Data._1XBet;
 using Newtonsoft.Json;
 
@@ -33,7 +34,7 @@ namespace leagueScraper.Scrapers
 
                 (var country, var countryId, var leagueName, var leagueId) = (lg.Cn, lg.Ci, lg.LL, lg.Li);
 
-                leagues.Add(new League { Country = country, CountryId = countryId.ToString(), LeagueId = leagueId.ToString(), LeagueName = leagueName, Site = "1XBet" });
+                leagues.Add(new League { Country = country, CountryId = countryId.ToString(), LeagueId = leagueId.ToString(), LeagueName = leagueName, Site = BetConstants.ONEXBETNAME });
                 
             }
 

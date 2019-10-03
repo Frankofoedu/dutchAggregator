@@ -28,7 +28,7 @@ namespace leagueScraper
             foreach (var listLeague in leagueList)
             {
                 var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
-                Jobs.SaveToXML(listLeague, folder + $"{listLeague[0].Site}-leagueFile");
+                Jobs.SaveToXML(listLeague, folder + $"{listLeague[0].Site}league.xml");
             }
 
             Console.WriteLine("Done");
