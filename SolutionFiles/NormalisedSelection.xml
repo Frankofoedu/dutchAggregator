@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfNormalisedSelection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <NormalisedSelection>
+    <Normal>1x2-full time-1</Normal>
+    <Bet9ja>1x2-1</Bet9ja>
+    <BetPawa>1x2-full time-1</BetPawa>
+    <MerryBet>1x2-1</MerryBet>
+    <SportyBet>1x2-home-home</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>1x2-full time-2</Normal>
+    <Bet9ja>1x2-2</Bet9ja>
+    <BetPawa>1x2-full time-2</BetPawa>
+    <MerryBet>1x2-2</MerryBet>
+    <SportyBet>1x2-away-away</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>1x2-full time-x</Normal>
+    <Bet9ja>1x2-x</Bet9ja>
+    <BetPawa>1x2-full time-x</BetPawa>
+    <MerryBet>1x2-draw</MerryBet>
+    <SportyBet>1x2-draw-draw</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>double chance-full time-12</Normal>
+    <Bet9ja>double chance-12</Bet9ja>
+    <BetPawa>double chance-full time-12</BetPawa>
+    <MerryBet>double chance-1 or 2</MerryBet>
+    <SportyBet>double chance-home or away-home or away</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>double chance-full time-1x</Normal>
+    <Bet9ja>double chance-1x</Bet9ja>
+    <BetPawa>double chance-full time-1x</BetPawa>
+    <MerryBet>double chance-1 or draw</MerryBet>
+    <SportyBet>double chance-home or draw-home or draw</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>double chance-full time-x2</Normal>
+    <Bet9ja>double chance-x2</Bet9ja>
+    <BetPawa>double chance-full time-x2</BetPawa>
+    <MerryBet>double chance-draw or 2</MerryBet>
+    <SportyBet>double chance-draw or away-draw or away</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>draw no bet-full time-1</Normal>
+    <Bet9ja>dnb-1 </Bet9ja>
+    <BetPawa>draw no bet-full time-1</BetPawa>
+    <MerryBet>draw no bet-1</MerryBet>
+    <SportyBet>dnb-home-home</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>draw no bet-full time-2</Normal>
+    <Bet9ja>dnb-2 </Bet9ja>
+    <BetPawa>draw no bet-full time-2</BetPawa>
+    <MerryBet>draw no bet-2</MerryBet>
+    <SportyBet>dnb-away-away</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>1x2-first half-1</Normal>
+    <Bet9ja>half time-1 ht</Bet9ja>
+    <BetPawa>1x2-first half-1</BetPawa>
+    <MerryBet>1st half - 1x2-1</MerryBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>1x2-first half-2</Normal>
+    <Bet9ja>half time-2 ht</Bet9ja>
+    <BetPawa>1x2-first half-2</BetPawa>
+    <MerryBet>1st half - 1x2-2</MerryBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>1x2-first half-x</Normal>
+    <Bet9ja>half time-x ht</Bet9ja>
+    <BetPawa>1x2-first half-x</BetPawa>
+    <MerryBet>1st half - 1x2-draw</MerryBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>both teams to score-full time-no</Normal>
+    <BetPawa>both teams to score-full time-no</BetPawa>
+    <MerryBet>both teams to score-no</MerryBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>both teams to score-full time-yes</Normal>
+    <BetPawa>both teams to score-full time-yes</BetPawa>
+    <MerryBet>both teams to score-yes</MerryBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-over1.5</Normal>
+    <Bet9ja>o/u 1.5 -over</Bet9ja>
+    <BetPawa>over/under-full time-over1.5</BetPawa>
+    <MerryBet>under/over 1.5 goals-over 1.5 goals</MerryBet>
+    <SportyBet>o/u-over 1.5-over 1.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-under1.5</Normal>
+    <Bet9ja>o/u 1.5 -under</Bet9ja>
+    <BetPawa>over/under-full time-under1.5</BetPawa>
+    <MerryBet>under/over 1.5 goals-under 1.5 goals</MerryBet>
+    <SportyBet>o/u-under 1.5-under 1.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-over2.5</Normal>
+    <Bet9ja>o/u 2.5 -over</Bet9ja>
+    <BetPawa>over/under-full time-over2.5</BetPawa>
+    <MerryBet>under/over 2.5 goals-over 2.5 goals</MerryBet>
+    <SportyBet>o/u-over 2.5-over 2.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-over3.5</Normal>
+    <Bet9ja>o/u 3.5 -over</Bet9ja>
+    <BetPawa>over/under-full time-over3.5</BetPawa>
+    <MerryBet>under/over 3.5 goals-over 3.5 goals</MerryBet>
+    <SportyBet>o/u-over 3.5-over 3.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-under2.5</Normal>
+    <Bet9ja>o/u 2.5 -under</Bet9ja>
+    <BetPawa>over/under-full time-under2.5</BetPawa>
+    <MerryBet>under/over 2.5 goals-under 2.5 goals</MerryBet>
+    <SportyBet>o/u-under 2.5-under 2.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-under3.5</Normal>
+    <Bet9ja>o/u 3.5 -under</Bet9ja>
+    <BetPawa>over/under-full time-under3.5</BetPawa>
+    <MerryBet>under/over 3.5 goals-under 3.5 goals</MerryBet>
+    <SportyBet>o/u-under 3.5-under 3.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-over4.5</Normal>
+    <Bet9ja>o/u 4.5-over</Bet9ja>
+    <BetPawa>over/under-full time-over4.5</BetPawa>
+    <MerryBet>under/over 4.5 goals-over 4.5 goals</MerryBet>
+    <SportyBet>o/u-over 4.5-over 4.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-under4.5</Normal>
+    <Bet9ja>o/u 4.5-under</Bet9ja>
+    <BetPawa>over/under-full time-under4.5</BetPawa>
+    <MerryBet>under/over 4.5 goals-under 4.5 goals</MerryBet>
+    <SportyBet>o/u-under 4.5-under 4.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-over0.5</Normal>
+    <Bet9ja>o/u 0.5-over</Bet9ja>
+    <BetPawa>over/under-full time-over0.5</BetPawa>
+    <MerryBet>under/over 0.5 goals-over 0.5 goals</MerryBet>
+    <SportyBet>o/u-over 0.5-over 0.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>over/under-full time-under0.5</Normal>
+    <Bet9ja>o/u 0.5-under</Bet9ja>
+    <BetPawa>over/under-full time-under0.5</BetPawa>
+    <MerryBet>under/over 0.5 goals-under 0.5 goals</MerryBet>
+    <SportyBet>o/u-under 0.5-under 0.5</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>correct score-full time-0-0</Normal>
+    <Bet9ja>correct score-0-0</Bet9ja>
+    <BetPawa>correct score-full time-0-0</BetPawa>
+    <MerryBet>correct score-0:0</MerryBet>
+    <SportyBet>correct score-0:0-0:0</SportyBet>
+  </NormalisedSelection>
+  <NormalisedSelection>
+    <Normal>total goals exact-full time-0</Normal>
+    <BetPawa>total goals exact-full time-0</BetPawa>
+    <MerryBet>exact goals-0</MerryBet>
+  </NormalisedSelection>
+</ArrayOfNormalisedSelection>
