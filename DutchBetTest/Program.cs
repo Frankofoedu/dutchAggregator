@@ -20,10 +20,10 @@ namespace DutchBetTest
 {
     class Program
     {
-        
+
         static void Main(string[] args)
         {
-            
+
 
             Console.WriteLine("Started...");
 
@@ -64,7 +64,7 @@ namespace DutchBetTest
                 #region Get all Matches that match the league and time of current match
                 var sbLeagueNTimeTrimmed = sportyBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
                 var bpLeagueNTimeTrimmed = betPawaMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
-                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList(); 
+                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
                 #endregion
 
                 var bpMatch = new BetMatch();
@@ -95,7 +95,7 @@ namespace DutchBetTest
             int profitable = 0;
             foreach (var item in ProfitableReturns)
             {
-                if (item.PercentageReturns >100)
+                if (item.PercentageReturns > 100)
                 {
                     profitable++;
                     Console.WriteLine(item.Team + "__" + item.Site1 + "__" + item.Game1 + "__" + item.Odd1 + "__" + item.Site2 + "__" + item.Game2 + "__" + item.Odd2 + "__ (" + item.PercentageReturns + ")");
@@ -267,10 +267,8 @@ namespace DutchBetTest
                     }
                 }
 
-                for (int i = 0; i < match.MatchOdds1.Count; i++)
+                foreach (var odd1 in match.MatchOdds1)
                 {
-                    var odd1 = match.MatchOdds1[i];
-
                     if (odd1.Odd == 0)
                     {
                         continue;
@@ -339,11 +337,12 @@ namespace DutchBetTest
             {
                 var bet9jaMatch = Jobs.SameMatch(item, bet9jaMatches);
 
-                if (bet9jaMatch==null)
+                if (bet9jaMatch == null)
                 {
                     Console.WriteLine(item.TeamNames + " ----- Not Found");
                 }
-                else {
+                else
+                {
                     totalFound++;
                     Console.WriteLine(item.TeamNames + " ----- " + bet9jaMatch.TeamNames + "--- Found");
                 }
