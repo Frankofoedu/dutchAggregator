@@ -74,6 +74,9 @@
     <Compile Include="SportyBetData\ReceivedData.cs" />
     <Compile Include="TwoWayCompare.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Files\NormalisedSelection.xml" />
+    <Content Include="Files\TwoWayComparism.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

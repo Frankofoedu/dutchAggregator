@@ -39,35 +39,25 @@
                         <label>Normalised</label>
                         @Html.EditorFor(m => m.Normal, new { htmlAttributes = new { @class = "form-control" } })
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group">
                         <label>Bet9ja</label>
-                        @Html.EditorFor(m => m.Bet9ja, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(m => m.Bet9ja, new { htmlAttributes = new { @class = "form-control", data_name = "Bet9ja"  } })
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group">
                         <label>Betpawa</label>
-                        @Html.EditorFor(m => m.BetPawa, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(m => m.BetPawa, new { htmlAttributes = new { @class = "form-control", data_name = "Betpawa"  } })
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group">
                         <label>Merrybet</label>
-                        @Html.EditorFor(m => m.MerryBet, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(m => m.MerryBet, new { htmlAttributes = new { @class = "form-control", data_name = "Merrybet"  } })
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group">
                         <label>Sportybet</label>
-                        @Html.EditorFor(m => m.SportyBet, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(m => m.SportyBet, new { htmlAttributes = new { @class = "form-control", data_name = "Sportybet" } })
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group">
                         <label>1XBet</label>
-                        @Html.EditorFor(m => m.OneXBet, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(m => m.OneXBet, new { htmlAttributes = new { @class = "form-control", data_name = "OneXBet"  } })
                     </div>
                 </div>
                 <input type="submit" value="Submit" class="btn btn-primary" />
@@ -81,76 +71,74 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div style="width:20%;">
+                <div class="col-sm-2" style="width:20%;">
                     <h2>Bet9ja</h2>
                     <ul class="list-unstyled">
                         @for (int i = 0; i < Bet9ja.Count; i++)
                         {
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3>@Bet9ja[i].LeagueId</h3></div>
+                                <div class="panel-heading"><h3><b>League : </b> @Bet9ja[i].LeagueName</h3></div>
                                 <div class="panel-body">
-                                    <p><b>League : </b> @Bet9ja[i].LeagueName</p>
-                                    <p><b>Country : </b> @Bet9ja[i].Country</p>
+                                    
+                                    <p><b>Country : </b> @Bet9ja[i].Country <i data-value="@Bet9ja[i].LeagueId" data-site="Bet9ja" class="fa fa-hand-pointer pull-right fa-clickable heart fa-3x"></i></p>
                                 </div>
                             </div>
                         }
                     </ul>
                 </div>
-                <div style="width:20%;">
+                <div class="col-sm-2" style="width:20%;">
                     <h2>BetPawa</h2>
                     <ul class="list-unstyled">
                         @for (int i = 0; i < BetPawa.Count; i++)
                         {
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3>@BetPawa[i].LeagueId</h3></div>
+                                <div class="panel-heading"><h3><b>League : </b> @BetPawa[i].LeagueName  </h3></div>
                                 <div class="panel-body">
-                                    <p><b>League : </b> @BetPawa[i].LeagueName</p>
-                                    <p><b>Country : </b> @BetPawa[i].Country</p>
+                                    <p><b>Country : </b>@BetPawa[i].Country <i data-value="@BetPawa[i].LeagueId" data-site="BetPawa" class="fa fa-hand-pointer pull-right fa-clickable heart fa-3x"></i></p>
+                                    
                                 </div>
                             </div>
                         }
                     </ul>
                 </div>
-                <div style="width:20%;">
+                <div class="col-sm-2" style="width:20%;">
                     <h2>Merrybet</h2>
                     <ul class="list-unstyled">
                         @for (int i = 0; i < Merrybet.Count; i++)
                         {
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3>@Merrybet[i].LeagueId</h3></div>
+                                <div class="panel-heading"><h3><b>League : </b> @Merrybet[i].LeagueName </h3></div>
                                 <div class="panel-body">
-                                    <p><b>League : </b> @Merrybet[i].LeagueName</p>
-                                    <p><b>Country : </b> @Merrybet[i].Country</p>
+                                    <p><b>Country : </b> @Merrybet[i].Country <i data-value="@Merrybet[i].LeagueId" data-site="MerryBet" class="fa fa-hand-pointer pull-right fa-clickable heart fa-3x"></i></p>
                                 </div>
                             </div>
                         }
                     </ul>
                 </div>
-                <div style="width:20%;">
+                <div class="col-sm-2" style="width:20%;">
                     <h2>SportyBet</h2>
                     <ul class="list-unstyled">
                         @for (int i = 0; i < Sportybet.Count; i++)
                         {
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3>@Sportybet[i].LeagueId</h3></div>
+                                <div class="panel-heading"><h3><b>League : </b>@Sportybet[i].LeagueName </h3></div>
                                 <div class="panel-body">
-                                    <p><b>League : </b> @Sportybet[i].LeagueName</p>
-                                    <p><b>Country : </b> @Sportybet[i].Country</p>
+                                  
+                                    <p><b>Country : </b> @Sportybet[i].Country <i data-value="@Sportybet[i].LeagueId" data-site="SportyBet" class="fa fa-hand-pointer pull-right fa-clickable heart fa-3x"></i></p>
                                 </div>
                             </div>
                         }
                     </ul>
                 </div>
-                <div style="width:20%;">
+                <div class="col-sm-2" style="width:20%;">
                     <h2>1XBet</h2>
                     <ul class="list-unstyled">
                         @for (int i = 0; i < OneXBet.Count; i++)
                         {
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3>@OneXBet[i].LeagueId</h3></div>
+                                <div class="panel-heading"><h3><b>League : </b> @OneXBet[i].LeagueName </h3></div>
                                 <div class="panel-body">
-                                    <p><b>League : </b> @OneXBet[i].LeagueName</p>
-                                    <p><b>Country : </b> @OneXBet[i].Country</p>
+                                    <p><b>Country : </b> @OneXBet[i].Country <i data-value="@OneXBet[i].LeagueId" data-site="OneXBet" class="fa fa-hand-pointer pull-right fa-clickable heart fa-3x"></i></p>
                                 </div>
                             </div>
                         }
@@ -161,3 +149,5 @@
         </div>
     </div>
 </div>
+
+

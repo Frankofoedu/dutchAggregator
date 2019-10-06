@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfTwoWayCompare xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TwoWayCompare>
+    <Selection1>1x2-full time-1</Selection1>
+    <Selection2>double chance-full time-x2</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>1x2-full time-2</Selection1>
+    <Selection2>double chance-full time-1x</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>1x2-full time-x</Selection1>
+    <Selection2>double chance-full time-12</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>draw no bet-full time-1</Selection1>
+    <Selection2>draw no bet-full time-2</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>both teams to score-full time-no</Selection1>
+    <Selection2>both teams to score-full time-yes</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>over/under-full time-over1.5</Selection1>
+    <Selection2>over/under-full time-under1.5</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>over/under-full time-over2.5</Selection1>
+    <Selection2>over/under-full time-under2.5</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>over/under-full time-over3.5</Selection1>
+    <Selection2>over/under-full time-under3.5</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>over/under-full time-over4.5</Selection1>
+    <Selection2>over/under-full time-under4.5</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>over/under-full time-over0.5</Selection1>
+    <Selection2>over/under-full time-under0.5</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>over/under-full time-over0.5</Selection1>
+    <Selection2>correct score-full time-0-0</Selection2>
+  </TwoWayCompare>
+  <TwoWayCompare>
+    <Selection1>over/under-full time-over0.5</Selection1>
+    <Selection2>total goals exact-full time-0</Selection2>
+  </TwoWayCompare>
+</ArrayOfTwoWayCompare>

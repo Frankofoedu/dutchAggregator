@@ -21,10 +21,10 @@ namespace DutchBetTest
 {
     class Program
     {
-        
+
         static void Main(string[] args)
         {
-            
+
 
             Console.WriteLine("Started...");
 
@@ -65,7 +65,7 @@ namespace DutchBetTest
                 #region Get all Matches that match the league and time of current match
                 var sbLeagueNTimeTrimmed = sportyBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
                 var bpLeagueNTimeTrimmed = betPawaMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
-                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList(); 
+                var mbLeagueNTimeTrimmed = merryBetMatches.Where(m => (b9match.League.ToLower().Contains(m.League.ToLower()) || m.League.ToLower().Contains(b9match.League.ToLower())) && m.DateTimeOfMatch.ToUniversalTime().Equals(b9match.DateTimeOfMatch.ToUniversalTime())).ToList();
                 #endregion
 
                 var bpMatch = new BetMatch();
@@ -268,10 +268,8 @@ namespace DutchBetTest
                     }
                 }
 
-                for (int i = 0; i < match.MatchOdds1.Count; i++)
+                foreach (var odd1 in match.MatchOdds1)
                 {
-                    var odd1 = match.MatchOdds1[i];
-
                     if (odd1.Odd == 0)
                     {
                         continue;
@@ -340,11 +338,12 @@ namespace DutchBetTest
             {
                 var bet9jaMatch = Jobs.SameMatch(item, bet9jaMatches);
 
-                if (bet9jaMatch==null)
+                if (bet9jaMatch == null)
                 {
                     Console.WriteLine(item.TeamNames + " ----- Not Found");
                 }
-                else {
+                else
+                {
                     totalFound++;
                     Console.WriteLine(item.TeamNames + " ----- " + bet9jaMatch.TeamNames + "--- Found");
                 }

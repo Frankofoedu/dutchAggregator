@@ -17,7 +17,7 @@ namespace dutchBet.Controllers
         // GET: League
         public ActionResult Index(string normal)
         {
-            if (System.IO.File.Exists(BetConstants.normalizedFilePath))
+            if (System.IO.File.Exists(BetConstants.normalizedLeagueFilePath))
             {
                 NormalisedLeagues = FileUtility.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
             }
@@ -25,17 +25,64 @@ namespace dutchBet.Controllers
             {
                 SubmittedNormal = NormalisedLeagues.FirstOrDefault(m => m.Normal == normal);
             }
+            var bet9jaLeagues = new List<League>();
+            var sportyBetLeagues = new List<League>();
+            var betPawaLeagues = new List<League>();
+            var merryBetLeagues = new List<League>
+                ();
+            var oneXBetLeagues = new List<League>();
 
-            var bet9jaLeagues = FileUtility.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n=>n.LeagueName).ToList();
+            try
+            {
+                 bet9jaLeagues = Jobs.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+                                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            try
+            {
+                sportyBetLeagues = Jobs.LoadFromXML<League>(BetConstants.sportyBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var sportyBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.sportyBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            }
+            catch (Exception ex)
+            {
 
-            var betPawaLeagues = FileUtility.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+                Console.WriteLine(ex.ToString());
+                
+            }
+            try
+            {
 
-            var merryBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+                betPawaLeagues = Jobs.LoadFromXML<League>(BetConstants.betPawaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var oneXBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.oneXBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                
+            }
+            try
+            {
 
+                merryBetLeagues = Jobs.LoadFromXML<League>(BetConstants.merryBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                
+            }
+            try
+            {
+                oneXBetLeagues = Jobs.LoadFromXML<League>(BetConstants.oneXBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+                
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+            }
             if (NormalisedLeagues != null)
             {
                 bet9jaLeagues.RemoveAll(x => NormalisedLeagues.Any(m => m.Bet9ja == null ? false : m.Bet9ja == x.LeagueId));
@@ -45,11 +92,11 @@ namespace dutchBet.Controllers
                 oneXBetLeagues.RemoveAll(x => NormalisedLeagues.Any(m => m.OneXBet == null ? false : m.SportyBet == x.LeagueId));
             }
 
-            ViewBag.Bet9jaLeagues = bet9jaLeagues;
-            ViewBag.SportyBetLeagues = sportyBetLeagues;
-            ViewBag.BetPawaLeagues = betPawaLeagues;
-            ViewBag.MerryBetLeagues = merryBetLeagues;
-            ViewBag.OneXBetLeagues = oneXBetLeagues;
+            ViewBag.Bet9jaLeagues = bet9jaLeagues.OrderBy(x=> x.Country).ToList();
+            ViewBag.SportyBetLeagues = sportyBetLeagues.OrderBy(x => x.Country).ToList();
+            ViewBag.BetPawaLeagues = betPawaLeagues.OrderBy(x => x.Country).ToList();
+            ViewBag.MerryBetLeagues = merryBetLeagues.OrderBy(x => x.Country).ToList();
+            ViewBag.OneXBetLeagues = oneXBetLeagues.OrderBy(x => x.Country).ToList();
 
             return View(SubmittedNormal);
         }
@@ -71,6 +118,7 @@ namespace dutchBet.Controllers
             if (string.IsNullOrWhiteSpace(NL.Normal))
             {
                 ViewBag.Msg = "Error! The Normal can not be empty.";
+                return View();
             }
             else
             {

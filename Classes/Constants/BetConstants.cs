@@ -18,11 +18,24 @@ namespace Classes.Constants
         public static readonly string normalizedFilePath = folder + "NormalisedSelection.xml";
 
 
-        public static readonly string bet9jaLeagueFilePath = folder + "bet9jaLeague.xml";
-        public static readonly string betPawaLeagueFilePath = folder + "betPawaLeague.xml";
-        public static readonly string merryBetLeagueFilePath = folder + "merryBetLeague.xml";
-        public static readonly string sportyBetLeagueFilePath = folder + "sportyBetLeague.xml";
-        public static readonly string oneXBetLeagueFilePath = folder + "1xBetLeague.xml";
+
+
+        #region SiteNames
+
+        public const string BET9JANAME = "bet9ja";
+        public const string ONEXBETNAME = "1xbet";
+        public const string MERRYBETNAME = "merrybet";
+        public const string SPORTYBETNAME = "sportybet";
+        public const string BETPAWANAME = "betpawa";
+
+        #endregion
+
+
+        public static readonly string bet9jaLeagueFilePath = folder + $"{BET9JANAME}league.xml";
+        public static readonly string betPawaLeagueFilePath = folder + $"{BETPAWANAME}league.xml";
+        public static readonly string merryBetLeagueFilePath = folder + $"{MERRYBETNAME}league.xml";
+        public static readonly string sportyBetLeagueFilePath = folder + $"{SPORTYBETNAME}league.xml";
+        public static readonly string oneXBetLeagueFilePath = folder + $"{ONEXBETNAME}league.xml";
         public static readonly string normalizedLeagueFilePath = folder + "NormalizedLeague.xml";
     }
 }
