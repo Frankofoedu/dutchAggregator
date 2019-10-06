@@ -15,6 +15,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using Newtonsoft.Json;
+using Utilities;
 
 namespace DutchBetTest
 {
@@ -43,17 +44,17 @@ namespace DutchBetTest
 
             if (System.IO.File.Exists(BetConstants.folder + "NormalisedSelection.xml"))
             {
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.folder + "NormalisedSelection.xml");
+                NormalisedSelections = FileUtility.LoadFromXML<NormalisedSelection>(BetConstants.folder + "NormalisedSelection.xml");
             }
             if (System.IO.File.Exists(BetConstants.folder + "TwoWayComparism.xml"))
             {
-                TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(BetConstants.folder + "TwoWayComparism.xml");
+                TwoWayCompares = FileUtility.LoadFromXML<TwoWayCompare>(BetConstants.folder + "TwoWayComparism.xml");
             }
 
-            var bet9jaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath);
-            var sportyBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath);
-            var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath);
-            var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath);
+            var bet9jaMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath);
+            var sportyBetMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath);
+            var betPawaMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath);
+            var merryBetMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath);
 
             //loops through all bet9ja matches
             for (int i = 0; i < bet9jaMatches.Count; i++)
@@ -71,13 +72,13 @@ namespace DutchBetTest
                 var mbMatch = new BetMatch();
                 var sbMatch = new BetMatch();
 
-                if (bpLeagueNTimeTrimmed.Count < 1) { bpMatch = null; }
+                if (bpLeagueNTimeTrimmed.Count() < 1) { bpMatch = null; }
                 else { bpMatch = Jobs.SameMatch(b9match, bpLeagueNTimeTrimmed); }
 
-                if (mbLeagueNTimeTrimmed.Count < 1) { mbMatch = null; }
+                if (mbLeagueNTimeTrimmed.Count() < 1) { mbMatch = null; }
                 else { mbMatch = Jobs.SameMatch(b9match, mbLeagueNTimeTrimmed); }
 
-                if (sbLeagueNTimeTrimmed.Count < 1) { sbMatch = null; }
+                if (sbLeagueNTimeTrimmed.Count() < 1) { sbMatch = null; }
                 else { sbMatch = Jobs.SameMatch(b9match, sbLeagueNTimeTrimmed); }
 
                 Console.WriteLine("\n\nBet9ja Match : " + b9match.TeamNames +
@@ -115,11 +116,11 @@ namespace DutchBetTest
 
             if (System.IO.File.Exists(BetConstants.folder + "NormalisedSelection.xml"))
             {
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.folder + "NormalisedSelection.xml");
+                NormalisedSelections = FileUtility.LoadFromXML<NormalisedSelection>(BetConstants.folder + "NormalisedSelection.xml");
             }
             if (System.IO.File.Exists(BetConstants.folder + "TwoWayComparism.xml"))
             {
-                TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(BetConstants.folder + "TwoWayComparism.xml");
+                TwoWayCompares = FileUtility.LoadFromXML<TwoWayCompare>(BetConstants.folder + "TwoWayComparism.xml");
             }
 
             foreach (var item in TwoWayCompares)
@@ -308,17 +309,17 @@ namespace DutchBetTest
 
             Console.WriteLine("Loading bet9ja data from file");
 
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
+            var bet9jaData = FileUtility.LoadFromXML<Bet9ja>(BetConstants.bet9jaFilePath);
             var bet9jaMatches = new List<Bet9jaMatches>();
             bet9jaData.ForEach(n => bet9jaMatches.AddRange(n.Matches));
             bet9jaMatches = bet9jaMatches.OrderByDescending(m => m.Odds.Count()).ToList();
 
 
             Console.WriteLine("Loading betPawa data from file");
-            var betPawaMatches = Jobs.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
+            var betPawaMatches = FileUtility.LoadFromXML<DailyPawaMatches>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
 
             Console.WriteLine("Loading merrybet data from file");
-            var merrybetMatches = Jobs.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
+            var merrybetMatches = FileUtility.LoadFromXML<MerrybetData>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count()).ToList();
 
 
 
@@ -374,10 +375,10 @@ namespace DutchBetTest
         {
 
             Console.WriteLine("Loading bet9ja data from file");
-            var bet9jaData = Jobs.LoadFromXML<Bet9ja>("bet9ja7-26-2019.xml");
+            var bet9jaData = FileUtility.LoadFromXML<Bet9ja>("bet9ja7-26-2019.xml");
 
             Console.WriteLine("Loading betPawa data from file");
-            var betPawaData = Jobs.LoadFromXML<BetPawa>("betPawa7-26-2019.xml");
+            var betPawaData = FileUtility.LoadFromXML<BetPawa>("betPawa7-26-2019.xml");
 
             var betpawatodaymatches = new List<BetPawaMatches>();
             var bet9jatodaymatches = new List<Bet9jaMatches>();

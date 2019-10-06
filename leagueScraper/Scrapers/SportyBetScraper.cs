@@ -7,6 +7,7 @@ using Classes;
 using leagueScraper.Data;
 using leagueScraper.Data.SportyBet;
 using Newtonsoft.Json;
+using Utilities;
 using Converter = leagueScraper.Data.SportyBet.Converter;
 
 namespace leagueScraper.Scrapers

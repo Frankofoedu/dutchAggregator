@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Utilities;
 
 namespace ScrapeTest
 {
@@ -22,8 +23,8 @@ namespace ScrapeTest
 
             var Scrapetasks = new List<Task<List<BetMatch>>>();
 
-            //Console.WriteLine("Fetching 1XBET");
-            //Scrapetasks.Add(Scrape1XBet.Scrape(client));
+            Console.WriteLine("Fetching 1XBET");
+            Scrapetasks.Add(Scrape1XBet.Scrape(client));
 
             Console.WriteLine("Fetching Betpawa");
             var at = new ScrapeBetPawa();
@@ -49,7 +50,7 @@ namespace ScrapeTest
             {
                 if (task.Result != null)
                 {
-                    Console.WriteLine(Jobs.SaveToXML(task.Result, folder + task.Result.First().Site + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
+                    Console.WriteLine(FileUtility.SaveToXML(task.Result, folder + task.Result.First().Site + DateTime.Now.ToShortDateString().Replace('/', '-').Replace('.', '_') + ".xml"));
                 }
             }
 

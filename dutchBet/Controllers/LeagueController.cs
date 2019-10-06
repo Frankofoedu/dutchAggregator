@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Utilities;
 
 namespace dutchBet.Controllers
 {
@@ -18,22 +19,22 @@ namespace dutchBet.Controllers
         {
             if (System.IO.File.Exists(BetConstants.normalizedFilePath))
             {
-                NormalisedLeagues = Jobs.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
+                NormalisedLeagues = FileUtility.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
             }
             if (!string.IsNullOrWhiteSpace(normal) & NormalisedLeagues != null)
             {
                 SubmittedNormal = NormalisedLeagues.FirstOrDefault(m => m.Normal == normal);
             }
 
-            var bet9jaLeagues = Jobs.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n=>n.LeagueName).ToList();
+            var bet9jaLeagues = FileUtility.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n=>n.LeagueName).ToList();
 
-            var sportyBetLeagues = Jobs.LoadFromXML<League>(BetConstants.sportyBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var sportyBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.sportyBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var betPawaLeagues = Jobs.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var betPawaLeagues = FileUtility.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var merryBetLeagues = Jobs.LoadFromXML<League>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var merryBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var oneXBetLeagues = Jobs.LoadFromXML<League>(BetConstants.oneXBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var oneXBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.oneXBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
             if (NormalisedLeagues != null)
             {
@@ -60,7 +61,7 @@ namespace dutchBet.Controllers
 
             if (System.IO.File.Exists(BetConstants.normalizedLeagueFilePath))
             {
-                NormalisedLeagues = Jobs.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
+                NormalisedLeagues = FileUtility.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
             }
             else
             {
@@ -90,7 +91,7 @@ namespace dutchBet.Controllers
                         editNormal.SportyBet = NL.SportyBet;
                         editNormal.OneXBet = NL.OneXBet;
 
-                        ViewBag.Msg = Jobs.SaveToXML(NormalisedLeagues, BetConstants.normalizedLeagueFilePath);
+                        ViewBag.Msg = FileUtility.SaveToXML(NormalisedLeagues, BetConstants.normalizedLeagueFilePath);
                     }
                 }
                 else if (NormalisedLeagues != null && NormalisedLeagues.Any(m => m.Normal == NL.Normal))
@@ -100,19 +101,19 @@ namespace dutchBet.Controllers
                 else
                 {
                     NormalisedLeagues.Add(NL);
-                    ViewBag.Msg = Jobs.SaveToXML(NormalisedLeagues, BetConstants.normalizedLeagueFilePath);
+                    ViewBag.Msg = FileUtility.SaveToXML(NormalisedLeagues, BetConstants.normalizedLeagueFilePath);
                 }
             }
 
-            var bet9jaLeagues = Jobs.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var bet9jaLeagues = FileUtility.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var sportyBetLeagues = Jobs.LoadFromXML<League>(BetConstants.sportyBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var sportyBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.sportyBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var betPawaLeagues = Jobs.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var betPawaLeagues = FileUtility.LoadFromXML<League>(BetConstants.bet9jaLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var merryBetLeagues = Jobs.LoadFromXML<League>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var merryBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
-            var oneXBetLeagues = Jobs.LoadFromXML<League>(BetConstants.oneXBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
+            var oneXBetLeagues = FileUtility.LoadFromXML<League>(BetConstants.oneXBetLeagueFilePath).OrderByDescending(m => m.Country).ThenBy(n => n.LeagueName).ToList();
 
             if (NormalisedLeagues != null)
             {
@@ -136,7 +137,7 @@ namespace dutchBet.Controllers
         {
             if (System.IO.File.Exists(BetConstants.normalizedLeagueFilePath))
             {
-                NormalisedLeagues = Jobs.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
+                NormalisedLeagues = FileUtility.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
             }
 
             return View(NormalisedLeagues);
@@ -147,12 +148,12 @@ namespace dutchBet.Controllers
         {
             if (System.IO.File.Exists(BetConstants.normalizedLeagueFilePath))
             {
-                NormalisedLeagues = Jobs.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
+                NormalisedLeagues = FileUtility.LoadFromXML<NormalisedLeague>(BetConstants.normalizedLeagueFilePath);
             }
 
             NormalisedLeagues.RemoveAll(n => n.Normal == normal);
 
-            Jobs.SaveToXML(NormalisedLeagues, BetConstants.normalizedLeagueFilePath);
+            FileUtility.SaveToXML(NormalisedLeagues, BetConstants.normalizedLeagueFilePath);
 
             return View(NormalisedLeagues);
         }

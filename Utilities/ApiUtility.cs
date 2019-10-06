@@ -4,9 +4,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace leagueScraper
+namespace Utilities
 {
-   static class ApiUtility
+   public static class ApiUtility
     {
         public static async Task<string> GetAsync(HttpClient client, string uri)
         {

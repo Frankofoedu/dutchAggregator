@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Utilities;
 
 namespace dutchBet.Controllers
 {
@@ -81,20 +82,20 @@ namespace dutchBet.Controllers
         {
             if (System.IO.File.Exists(BetConstants.normalizedFilePath))
             {
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
+                NormalisedSelections = FileUtility.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
             }
             if (!string.IsNullOrWhiteSpace(normal) & NormalisedSelections!=null)
             {
                 SubmittedNormal = NormalisedSelections.FirstOrDefault(m => m.Normal == normal);
             }
 
-            var bet9jaMatches= Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath).OrderByDescending(m => m.Odds.Count());
+            var bet9jaMatches= FileUtility.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var sportyBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath).OrderByDescending(m => m.Odds.Count());
+            var sportyBetMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
+            var merryBetMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
@@ -124,7 +125,7 @@ namespace dutchBet.Controllers
 
             if (System.IO.File.Exists(BetConstants.normalizedFilePath))
             {
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
+                NormalisedSelections = FileUtility.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
             }
             else
             {
@@ -153,7 +154,7 @@ namespace dutchBet.Controllers
                         editNormal.BetPawa = NS.BetPawa;
                         editNormal.SportyBet = NS.SportyBet;
 
-                        ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
+                        ViewBag.Msg = FileUtility.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
                     }
                 }
                 else if (NormalisedSelections != null && NormalisedSelections.Any(m => m.Normal == NS.Normal))
@@ -163,17 +164,17 @@ namespace dutchBet.Controllers
                 else
                 {
                     NormalisedSelections.Add(NS);
-                    ViewBag.Msg = Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
+                    ViewBag.Msg = FileUtility.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
                 }
             }
 
-            var bet9jaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath).OrderByDescending(m => m.Odds.Count());
+            var bet9jaMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.bet9jaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var sportyBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath).OrderByDescending(m => m.Odds.Count());
+            var sportyBetMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.sportyBetFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var betPawaMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
+            var betPawaMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.betPawaFilePath).OrderByDescending(m => m.Odds.Count());
 
-            var merryBetMatches = Jobs.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
+            var merryBetMatches = FileUtility.LoadFromXML<BetMatch>(BetConstants.merryBetFilePath).OrderByDescending(m => m.Odds.Count());
 
             var largestSelectionMatchBet9ja = bet9jaMatches.First();
             var largestSelectionMatchBetPawa = betPawaMatches.First();
@@ -200,7 +201,7 @@ namespace dutchBet.Controllers
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
             if (System.IO.File.Exists(BetConstants.normalizedFilePath))
             {
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
+                NormalisedSelections = FileUtility.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
             }
 
             return View(NormalisedSelections);
@@ -212,12 +213,12 @@ namespace dutchBet.Controllers
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
             if (System.IO.File.Exists(BetConstants.normalizedFilePath))
             {
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
+                NormalisedSelections = FileUtility.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
             }
 
             NormalisedSelections.RemoveAll( n=>  n.Normal == normal);
 
-            Jobs.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
+            FileUtility.SaveToXML(NormalisedSelections, BetConstants.normalizedFilePath);
 
             return View(NormalisedSelections);
         }
@@ -229,11 +230,11 @@ namespace dutchBet.Controllers
             if (System.IO.File.Exists(BetConstants.normalizedFilePath))
             {
                 
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
+                NormalisedSelections = FileUtility.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
             }
             if (System.IO.File.Exists(folder + "TwoWayComparism.xml"))
             {
-                TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(folder + "TwoWayComparism.xml");
+                TwoWayCompares = FileUtility.LoadFromXML<TwoWayCompare>(folder + "TwoWayComparism.xml");
             }
 
             ViewBag.NS = NormalisedSelections;
@@ -248,11 +249,11 @@ namespace dutchBet.Controllers
             var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "xml/");
             if (System.IO.File.Exists(BetConstants.normalizedFilePath))
             {
-                NormalisedSelections = Jobs.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
+                NormalisedSelections = FileUtility.LoadFromXML<NormalisedSelection>(BetConstants.normalizedFilePath);
             }
             if (System.IO.File.Exists(folder + "TwoWayComparism.xml"))
             {
-                TwoWayCompares = Jobs.LoadFromXML<TwoWayCompare>(folder + "TwoWayComparism.xml");
+                TwoWayCompares = FileUtility.LoadFromXML<TwoWayCompare>(folder + "TwoWayComparism.xml");
             }
             else { TwoWayCompares = new List<TwoWayCompare>(); }
 
@@ -263,7 +264,7 @@ namespace dutchBet.Controllers
             }
             else {
                 TwoWayCompares.Add(TWC);
-                ViewBag.Msg = Jobs.SaveToXML(TwoWayCompares, folder + "TwoWayComparism.xml");
+                ViewBag.Msg = FileUtility.SaveToXML(TwoWayCompares, folder + "TwoWayComparism.xml");
             }
 
             ViewBag.NS = NormalisedSelections;

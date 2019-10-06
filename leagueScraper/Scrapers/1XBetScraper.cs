@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Classes;
 using leagueScraper.Data._1XBet;
 using Newtonsoft.Json;
+using Utilities;
 
 namespace leagueScraper.Scrapers
 {

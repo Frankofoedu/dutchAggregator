@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Classes;
 using leagueScraper.Data.MerryBetData;
 using Newtonsoft.Json;
+using Utilities;
 
 namespace leagueScraper.Scrapers
 {
